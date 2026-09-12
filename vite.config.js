@@ -300,6 +300,7 @@ function escapeHtml(str) {
 }
 
 export default defineConfig({
+  base: './',
   plugins: [incidentEmailDispatcherPlugin()],
   server: {
     port: 5173,
