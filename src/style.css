@@ -2974,3 +2974,192 @@ nav.main-nav a.nav-comms-highlight::before {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==============================================================================
+   COMPREHENSIVE MOBILE LAYOUT FIXES — 768px and below
+   ============================================================================== */
+@media (max-width: 768px) {
+
+  /* --- NAV BAR: prevent horizontal overflow, scale down controls --- */
+  header {
+    overflow: hidden;
+  }
+  .nav-container {
+    padding: 0.6rem 0.9rem;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+  .logo-tag {
+    font-size: 1rem;
+    gap: 0.45rem;
+    flex-shrink: 0;
+  }
+  .logo-badge {
+    display: none;
+  }
+  nav.main-nav {
+    display: none;
+  }
+  .nav-controls {
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+  .btn-icon {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+  }
+  .mode-switch-wrapper {
+    padding: 2px;
+  }
+  .mode-btn {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.65rem;
+    gap: 0.3rem;
+    letter-spacing: 0.03em;
+  }
+  /* Hide mode icon on very small nav to save space */
+  .mode-btn .mode-icon {
+    display: none;
+  }
+
+  /* --- HERO SECTION --- */
+  .hero-section {
+    padding: 5.5rem 1.2rem 3rem;
+    gap: 2.5rem;
+  }
+  .hero-stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn-cyber-primary,
+  .btn-cyber-ghost {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+
+  /* --- SECTION PADDING --- */
+  section {
+    padding: 4rem 1.2rem;
+  }
+
+  /* --- ARMORY SECTION: full-width single column layout --- */
+  #armory {
+    padding: 3rem 1.2rem 4rem;
+    overflow: hidden;
+  }
+  .armory-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+  .weapon-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .weapon-tab-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Weapon showcase deck: collapse blueprint + sidebar to stacked */
+  .weapon-showcase-stage {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem;
+    max-width: 100%;
+  }
+  .weapon-blueprint-stage {
+    width: 100%;
+    max-width: 100%;
+  }
+  .blueprint-img-wrapper {
+    aspect-ratio: 4/3;
+  }
+  .tactical-slash-sidebar {
+    min-height: unset;
+  }
+
+  /* Weapon data stats grid: single column */
+  .weapon-data-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* --- COMPONENT PIPELINE (comp cards) --- */
+  .comp-card-header {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .comp-card-title {
+    font-size: 0.75rem;
+  }
+
+  /* --- AUXILIARY DIAGNOSTICS: single column --- */
+  .aux-diagnostics-container {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem;
+  }
+
+  /* --- SIMULATOR CONSOLE --- */
+  .simulator-console {
+    grid-template-columns: 1fr !important;
+    padding: 1.25rem 1rem;
+  }
+
+  /* --- SECTION HEADINGS: prevent horizontal overflow --- */
+  .section-heading {
+    font-size: clamp(1.6rem, 5vw, 2.5rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* --- FOOTER --- */
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+/* ==============================================================================
+   EXTRA SMALL PHONES — 430px and below
+   ============================================================================== */
+@media (max-width: 430px) {
+  .nav-container {
+    padding: 0.55rem 0.7rem;
+  }
+  .logo-tag {
+    font-size: 0.88rem;
+  }
+  .mode-btn {
+    font-size: 0.67rem;
+    padding: 0.35rem 0.5rem;
+  }
+  .hero-stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .stat-val {
+    font-size: 1.4rem;
+  }
+  .hero-section {
+    padding: 5rem 1rem 2.5rem;
+  }
+  #armory {
+    padding: 2.5rem 0.9rem 3rem;
+  }
+  .weapon-tab-btn {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.6rem;
+  }
+  .stage-hud-top,
+  .stage-hud-bottom {
+    font-size: 0.72rem;
+    padding: 0.55rem 0.85rem;
+  }
+  .diag-box {
+    padding: 0.6rem;
+  }
+}
