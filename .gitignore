@@ -14,3 +14,4 @@ dispatches/
 .DS_Store
 Thumbs.db
 .tools/
+.mingit/
