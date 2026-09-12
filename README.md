@@ -133,12 +133,13 @@ The optimized production bundle will be generated in the `dist/` directory.
 
 ## 👤 Author & Submission Information
 
-* **Candidate / Developer:** Immuzzz
+* **Candidate Name:** Immanuel John Sajan
+* **Department / Branch:** Artificial Intelligence & Data Science
 * **Institution:** Jyothi College of Engineering
 * **GitHub Profile:** [@Immuzzz](https://github.com/Immuzzz)
-* **Target Recipient / Contact:** `shieldxshield7@gmail.com`
+* **Direct Contact / Developer Email:** `shieldxshield7@gmail.com`
 * **Evaluation Submission:** WHITEMATRIX Software Solutions (`hr@whitematrix.co.in`)
-* **Project Name:** `ECLIPSE - Superhero Emergency Help Portal & Incident Dispatch System`
+* **Project Title:** `ECLIPSE - Superhero Emergency Help Portal & Incident Dispatch System`
 
 ---
 *Built with passion, precision, and relativistic physics for the WHITEMATRIX TechAscent Machine Test.*
