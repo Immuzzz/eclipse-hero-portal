@@ -115,31 +115,3 @@ Open your browser and navigate to `http://localhost:5173/`.
 ```bash
 npm run build
 ```
-The optimized production bundle will be generated in the `dist/` directory.
-
----
-
-## 📋 Evaluation Checklist (TechAscent Machine Test)
-
-| Requirement | Implementation Details | Status |
-| :--- | :--- | :---: |
-| **Original Superhero** | Complete original identity (ECLIPSE / Dr. Kaelen Mercer), compelling quantum rift origin story, signature equipment, and dual operational modes. | ✅ **Pass** |
-| **Modern & Responsive Website** | High-tech cybernetic interface, smooth animations, audio feedback, fully responsive across desktop, tablet, and mobile displays. | ✅ **Pass** |
-| **Conversational Chatbot** | Interactive in-character bot greeting visitors, collecting Name, Age, Location, Email, and Grievance through natural dialogue. | ✅ **Pass** |
-| **Automated Email Notification** | Real-time email automation sending all visitor telemetry and grievances to `shieldxshield7@gmail.com` immediately upon submission. | ✅ **Pass** |
-| **Public Hosting** | Publicly accessible 24/7 on GitHub Pages at [https://immuzzz.github.io/eclipse-hero-portal/](https://immuzzz.github.io/eclipse-hero-portal/). | ✅ **Pass** |
-
----
-
-## 👤 Author & Submission Information
-
-* **Candidate Name:** Immanuel John Sajan
-* **Department / Branch:** Artificial Intelligence & Data Science
-* **Institution:** Jyothi College of Engineering
-* **GitHub Profile:** [@Immuzzz](https://github.com/Immuzzz)
-* **Direct Contact / Developer Email:** `shieldxshield7@gmail.com`
-* **Evaluation Submission:** WHITEMATRIX Software Solutions (`hr@whitematrix.co.in`)
-* **Project Title:** `ECLIPSE - Superhero Emergency Help Portal & Incident Dispatch System`
-
----
-*Built with passion, precision, and relativistic physics for the WHITEMATRIX TechAscent Machine Test.*
