@@ -1,0 +1,19 @@
+{
+  "name": "eclipse-hero-showcase",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "isomorphic-git": "^1.42.2",
+    "vite": "^5.4.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "nodemailer": "^10.0.9"
+  }
+}
