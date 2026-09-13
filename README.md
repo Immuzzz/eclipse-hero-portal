@@ -148,6 +148,32 @@ The optimized production bundle will be generated in `dist/`.
 
 ---
 
+## 🔧 Development Journey & Challenges
+
+### The Rift Simulator Was Harder Than Expected
+- First attempt: SVG rendering lag at 60fps with particle trails
+- Solution: Pre-calculated SVG paths + canvas overlay for animations
+- Lesson: Always profile before optimizing
+
+### Web Audio Procedural Synthesis Rabbit Hole
+- Spent 8 hours getting the rift seal harmonic chord right
+- Tried 3 different frequency mappings before D major 9 sounded "celestial"
+- Discord was my friend (audio theory communities are helpful)
+
+### FSM Question Interception Required 3 Redesigns
+- **Attempt 1:** Used a flag; caused race conditions when citizens typed fast
+- **Attempt 2:** Added a queue; felt over-engineered for this problem
+- **Attempt 3:** Intercept at parse level BEFORE state transition — this stuck
+- Moral: Sometimes the simplest solution takes longest to find
+
+### The Character Design Started Different
+- Originally planned a cyber-samurai with no backstory
+- Realized: if he's bonded to an event horizon, his entire personality should reflect quantum physics
+- Added the 京 (10^16) meaning retroactively after researching Schwarzschild radius
+- The lore *emerged* from the mechanics, not the other way around
+
+---
+
 ## 👤 Author & Candidate Information
 
 * **Candidate Name:** Immanuel John Sajan
