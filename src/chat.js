@@ -347,7 +347,7 @@ export class EclipseChatbot {
 
   generateReassurance(citizen) {
     const isTranscendent = this.currentMode === 'transcendent';
-    const weaponName = isTranscendent ? 'Nihil Veritas' : 'The Muramasa Odachi';
+    const weaponName = isTranscendent ? 'Nihil Veritas' : 'The Compressed Odachi';
     const eta = citizen.location.toLowerCase().includes('orbit') ? '1.5 seconds' : '4.5 seconds';
 
     return `Take a deep breath, ${citizen.name}. You are not alone in this fight anymore. I'm on my way.
@@ -378,7 +378,7 @@ I'm right here with you. What does it look like around you right now? Or ask me 
 
     // Weapons / Sword questions
     if (q.includes('weapon') || q.includes('sword') || q.includes('blade') || q.includes('odachi') || q.includes('nihil')) {
-      return `I carry two sovereign blades forged from the singularity crisis:\n\n1. **The Muramasa Odachi (Mode 01)**: My relativistic katana. It folds space right along the edge, letting me slice through physical armor or kinetic energy barriers with zero drag.\n2. **Nihil Veritas (Mode 02)**: The Cosmic World-Stitcher. It doesn't cut flesh—it mends space-time ruptures and halts collapsing anomalies. If what you're dealing with is a void tear, this blade will seal it permanently.`;
+      return `I carry two sovereign blades forged from the singularity crisis:\n\n1. **The Compressed Odachi (Mode 01)**: My relativistic blade. It folds space right along the edge, letting me slice through physical armor or kinetic energy barriers with zero drag.\n2. **Nihil Veritas (Mode 02)**: The Cosmic World-Stitcher. It doesn't cut flesh—it mends space-time ruptures and halts collapsing anomalies. If what you're dealing with is a void tear, this blade will seal it permanently.`;
     }
 
     // Mode questions
@@ -386,13 +386,13 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       if (this.currentMode === 'transcendent') {
         return `Right now I'm operating in **MODE 02: TRANSCENDENT**. In this state, my cosmic wings unfurl and my singularity core expands to anchor reality itself against extinction-level hazards. I wield Nihil Veritas to suture spatial ruptures across entire continents.`;
       } else {
-        return `Right now I'm operating in **MODE 01: EVENT HORIZON**. All my gravimetric pressure is compressed to eliminate atmospheric drag. It gives me pinpoint hyper-velocity speed and razor-sharp Iaido cuts with the Muramasa Odachi. Fast, surgical, and lethal against ground threats.`;
+        return `Right now I'm operating in **MODE 01: EVENT HORIZON**. All my gravimetric pressure is compressed to eliminate atmospheric drag. It gives me pinpoint hyper-velocity speed and razor-sharp Iaido cuts with the Compressed Odachi. Fast, surgical, and lethal against ground threats.`;
       }
     }
 
     // Origin / Who are you / Real name
     if (q.includes('who are you') || q.includes('origin') || q.includes('real name') || q.includes('kaelen') || q.includes('human') || q.includes('scientist')) {
-      return `Before the Geneva-Exosphere Research Array catastrophe, I was Dr. Kaelen Mercer—an astrophysicist studying rogue micro-singularities. When our containment core ruptured, I chose to manually stabilize the exosphere anchor to protect the continents below. The gravitational singularity fused with my biology. I came back changed, but my human oath remains unbroken: Earth is my home, and I will defend every life upon it.`;
+      return `Before the sky cracked over Neo-Tokyo, I was Kaelen Mercer—an urban salvage diver who knew every alley and rooftop in Shinjuku. When the dimensional rift tore open, I threw myself into the breach to anchor the failing singularity before it could swallow our city. I came back bonded to the event horizon, but my human oath remains unbroken: Earth is my home, and I will defend every life upon it.`;
     }
 
     // What to do / Safety / Survival instructions

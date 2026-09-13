@@ -36,93 +36,93 @@ document.addEventListener('DOMContentLoaded', () => {
   const modeData = {
     'event-horizon': {
       title: 'EVENT HORIZON',
-      titleBadge: 'RELATIVISTIC DUELIST',
-      telemetry: 'SYSTEM: COMPRESSED // ACCELERATION: 0.94c // THREAT: VANGUARD',
-      desc: 'Condensing all internal gravimetric pressure into zero air resistance, Kei achieves instantaneous spatial folding. Slices through dreadnought armor and energy barriers with micro-molecular precision.',
+      titleBadge: 'CLOSE-QUARTERS DUELIST',
+      telemetry: 'OPERATIVE ARCHIVE // CALLSIGN: KEI (京) // GROUND PATROL',
+      desc: 'Total kinetic compression. In close combat, Kei collapses his own physical footprint to zero resistance. He does not charge enemies—he simply appears on the other side of their guard, sheath clicking shut as the strike connects.',
       views: {
         action: {
           src: './assets/mode-event-horizon-action.jpg',
-          label: 'ACTION IAIDO',
-          tag: 'TACTICAL DUEL FORM',
-          subtag: 'MID-COMBAT IAIDO CUT // COMPRESSED 99.8%'
+          label: 'TACTICAL IAIDO',
+          tag: 'TACTICAL IAIDO DRAW',
+          subtag: 'High-Velocity Monofilament Strike'
         },
         aerial: {
           src: './assets/mode-event-horizon-stand.jpg',
           label: 'GROUND ZERO',
-          tag: 'PROTOTYPE VIGIL STANCE',
-          subtag: 'PLANTED OBSIDIAN MONOFILAMENT // 100% ANCHOR'
+          tag: 'VIGIL STANCE',
+          subtag: 'Rooted Monofilament Ground Anchor'
         },
         focus: {
           src: './assets/mode-event-horizon-focus.jpg',
           label: 'DUELIST FOCUS',
-          tag: 'SPATIAL VORTEX DRAW',
-          subtag: 'CONCENTRATED PRESSURE // AMBER SIGHT'
+          tag: 'DUELIST CONCENTRATION',
+          subtag: 'Kinetic Trajectory Analysis'
         },
         cinematic: {
           src: './assets/mode-event-horizon-blitz.jpg',
           label: 'VELOCITY BLITZ',
-          tag: 'HYPER-VELOCITY BLITZ',
-          subtag: 'AFTERIMAGE SONIC BOOM // 0.94c SLIPSTREAM'
+          tag: 'SLIPSTREAM BLITZ',
+          subtag: 'Hyper-Velocity Kinetic Afterimage'
         },
         stance: {
           src: './assets/mode-event-horizon-guardian.jpg',
           label: 'URBAN SENTINEL',
-          tag: 'ROOFTOP PATROL',
-          subtag: 'NEO-SHINJUKU VIGIL // NIGHTFALL PATROL'
+          tag: 'URBAN SENTINEL',
+          subtag: 'Neo-Tokyo Skyline Night Patrol'
         }
       },
-      stat1Val: '0.94c',
-      stat1Label: 'Slipstream Velocity',
-      stat2Val: '50k T',
-      stat2Label: 'Kinetic Cleave Mass',
-      stat3Val: '100%',
+      stat1Val: 'INSTANT',
+      stat1Label: 'Draw Speed',
+      stat2Val: 'IAIDO',
+      stat2Label: 'Combat Stance',
+      stat3Val: 'CLEAVE',
       stat3Label: 'Barrier Bypass',
-      heroTag: 'TACTICAL DUEL FORM'
+      heroTag: 'CLOSE-QUARTERS IAIDO FORM'
     },
     'transcendent': {
       title: 'TRANSCENDENT',
-      titleBadge: 'PLANETARY SAVIOR',
-      telemetry: 'SYSTEM: TRANSCENDENT // ORBIT: EXOSPHERE // THREAT: EXTINCTION',
-      desc: 'Awakened only when the Earth faces cosmic annihilation. Floating in the upper exosphere, Kei becomes a living dimensional anchor, slicing open or stitching shut the fabric of space-time.',
+      titleBadge: 'DIMENSIONAL ANCHOR',
+      telemetry: 'EXOSPHERIC ASCENSION // THREAT: EXTINCTION // ORBIT READY',
+      desc: 'When planetary rifts breach global stability, Kei sheds physical constraints to ascend into the exosphere. Armed with the massive Nihil Veritas, his strikes become living gravitational sutures—cleaving anomalous breaches and stitching the sky back together.',
       views: {
         action: {
           src: './assets/mode-transcendent-action.jpg',
-          label: 'SAVIOR ASCENSION',
-          tag: 'PLANETARY SAVIOR FORM',
-          subtag: 'EXOSPHERE ORBIT // GENESIS SUTURE ENGAGED'
+          label: 'SAVIOR ASCENT',
+          tag: 'EXOSPHERIC ASCENSION',
+          subtag: 'Zero-Gravity Tactical Overwatch'
         },
         cleave: {
           src: './assets/mode-transcendent-cleave.jpg',
           label: 'GENESIS CLEAVE',
-          tag: 'DIMENSIONAL CLEAVE',
-          subtag: 'STITCHING CONTINENTAL FAULT // AURORA SWEEP'
+          tag: 'GENESIS CLEAVE',
+          subtag: 'Dimensional Rift Severance Strike'
         },
         cinematic: {
           src: './assets/mode-transcendent-stitch.jpg',
-          label: 'PLANETARY SUTURE',
-          tag: 'ORBITAL SUTURE CUT',
-          subtag: 'STARLIGHT THREADS SUTURE CONTINENTAL RIFT'
+          label: 'SKY SUTURE',
+          tag: 'ATMOSPHERIC SUTURE',
+          subtag: 'Sealing High-Altitude Spatial Tears'
         },
         stance: {
           src: './assets/mode-transcendent.jpg',
-          label: 'CANON ARCHIVE',
-          tag: 'ARCHIVE COSMIC FORM',
-          subtag: 'WHITE CREST & NIHIL VERITAS VOID CANON'
+          label: 'NIHIL VERITAS',
+          tag: 'NIHIL VERITAS DOCK',
+          subtag: 'Full Greatsword Deployment Stance'
         },
         maelstrom: {
           src: './assets/mode-transcendent-maelstrom.jpg',
-          label: 'COSMIC MAELSTROM',
-          tag: 'STARFALL CONVERGENCE',
-          subtag: 'CELESTIAL VOID & DUAL RESONANCE'
+          label: 'SINGULARITY',
+          tag: 'SINGULARITY DISCHARGE',
+          subtag: 'Orbital Convergence Horizon'
         }
       },
-      stat1Val: 'ORBITAL',
-      stat1Label: 'Operational Altitude',
-      stat2Val: 'INFINITE',
-      stat2Label: 'Gravitational Anchor',
-      stat3Val: 'GLOBAL',
-      stat3Label: 'Rift Sealing Reach',
-      heroTag: 'PLANETARY EXTINCTION FORM'
+      stat1Val: 'EXOSPHERE',
+      stat1Label: 'Combat Envelope',
+      stat2Val: 'ANCHOR',
+      stat2Label: 'Combat Stance',
+      stat3Val: 'SUTURE',
+      stat3Label: 'Rift Neutralization',
+      heroTag: 'EXOSPHERIC ANCHOR FORM'
     }
   };
 
