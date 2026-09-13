@@ -41,6 +41,7 @@ export class EclipseChatbot {
       status: 'AWAITING_INPUT'
     };
     this.messages = [];
+    this.lastSubmittedGrievance = null; // Prevent duplicate submissions
 
     // DOM Elements
     this.fab = null;
@@ -379,7 +380,7 @@ export class EclipseChatbot {
       }
 
       case STATES.EMAIL: {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(userInput)) {
           const retry = `Hey ${this.citizen.name}, that didn't look like a valid email. Could you double-check it for me (like name@example.com), or say 'skip' if you don't have one? I want to make sure my shelter updates and tracking packet reach you safely.`;
           this.addMessage('eclipse', retry);
@@ -397,6 +398,14 @@ export class EclipseChatbot {
       }
 
       case STATES.GRIEVANCE: {
+        // Prevent accidental double-submit
+        if (this.lastSubmittedGrievance === userInput) {
+          this.addMessage('eclipse', `I already have this incident logged, ${this.citizen.name}. Hold tight while I route the deployment.`);
+          this.showTyping(false);
+          break;
+        }
+        this.lastSubmittedGrievance = userInput;
+
         this.citizen.grievance = userInput;
         this.citizen.incidentId = `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
         this.citizen.timestamp = new Date().toLocaleString('en-US', {
@@ -875,7 +884,46 @@ I'm right here with you. What does it look like around you right now? Or ask me 
   renderAllMessages() {
     if (!this.messagesContainer) return;
     this.messagesContainer.innerHTML = '';
-    this.messages.forEach((m) => this.renderMessage(m));
+    
+    // Render only last 50 messages for performance
+    const toRender = this.messages.slice(-50);
+    
+    // Show "load more" button if there are older messages
+    if (this.messages.length > 50) {
+      const loadMoreBtn = document.createElement('button');
+      loadMoreBtn.className = 'comms-load-more-btn';
+      loadMoreBtn.style.cssText = `
+        background: transparent;
+        border: 1px dashed #8e95a5;
+        color: #8e95a5;
+        padding: 8px 12px;
+        margin: 12px auto;
+        display: block;
+        font-size: 11px;
+        font-family: 'Rajdhani', monospace;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s ease;
+      `;
+      loadMoreBtn.textContent = `↑ Load ${this.messages.length - 50} earlier messages`;
+      loadMoreBtn.addEventListener('mouseenter', () => {
+        loadMoreBtn.style.borderColor = '#00e5ff';
+        loadMoreBtn.style.color = '#00e5ff';
+      });
+      loadMoreBtn.addEventListener('mouseleave', () => {
+        loadMoreBtn.style.borderColor = '#8e95a5';
+        loadMoreBtn.style.color = '#8e95a5';
+      });
+      loadMoreBtn.addEventListener('click', () => {
+        // Render all messages
+        this.messagesContainer.innerHTML = '';
+        this.messages.forEach((m) => this.renderMessage(m));
+        loadMoreBtn.remove();
+      });
+      this.messagesContainer.appendChild(loadMoreBtn);
+    }
+    
+    toRender.forEach((m) => this.renderMessage(m));
     this.scrollToBottom();
   }
 
@@ -898,6 +946,31 @@ I'm right here with you. What does it look like around you right now? Or ask me 
     requestAnimationFrame(() => {
       this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
     });
+  }
+
+  showErrorBanner(message) {
+    if (!this.messagesContainer) return;
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'comms-error-banner cyber-cut';
+    errorDiv.style.cssText = `
+      background: rgba(255, 68, 102, 0.15);
+      border: 1px solid #ff4466;
+      color: #ff4466;
+      padding: 10px 12px;
+      margin: 8px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-family: 'Rajdhani', monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    errorDiv.innerHTML = `<span>⚠️</span><span>${this.escapeHtml(message)}</span>`;
+    this.messagesContainer.appendChild(errorDiv);
+    this.scrollToBottom();
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => errorDiv.remove(), 5000);
   }
 
   updatePlaceholder() {
@@ -1030,9 +1103,20 @@ I'm right here with you. What does it look like around you right now? Or ask me 
         citizen: this.citizen,
         messages: this.messages
       };
+      const serialized = JSON.stringify(data);
+      
+      // Check size before saving (2 chars ≈ 1 byte, 5MB ≈ 5,000,000 chars)
+      if (serialized.length > 5000000) {
+        console.warn('[ECLIPSE COMMS] Session storage nearing limit, pruning old messages');
+        // Keep only latest 50 messages to recover space
+        this.messages = this.messages.slice(-50);
+        data.messages = this.messages;
+      }
+      
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (err) {
-      console.warn('[ECLIPSE COMMS] Failed to save session:', err);
+      console.error('[ECLIPSE COMMS] Storage error:', err.message);
+      this.showErrorBanner('Failed to save session: Storage may be full');
     }
   }
 
