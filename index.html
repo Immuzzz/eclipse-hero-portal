@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEI (京) // THE DUAL SOVEREIGN - World Savior Superhero Showcase</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <script type="module" crossorigin src="./assets/main-CseGuORG.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-EupjR0U_.css">
+</head>
+<body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 00 // COMMAND OVERVIEW
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            ESTABLISHING RELATIVISTIC SLIPSTREAM...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
+  <!-- Dynamic Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Fullscreen Test Slash FX Layer -->
+  <div id="slash-overlay">
+    <div class="slash-blade-line"></div>
+  </div>
+
+  <!-- Fullscreen Mode Transformation FX Layer -->
+  <div id="mode-fx-overlay"></div>
+
+  <!-- Main Content Layer -->
+  <div class="content-layer">
+    <!-- Top HUD Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="./index.html" class="logo-tag">
+          <span class="logo-badge">RIFT-ANCHOR</span>
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
+        </a>
+
+        <nav class="main-nav">
+          <a href="./index.html" class="active">OVERVIEW</a>
+          <a href="./armory.html">ARMORY</a>
+          <a href="./origin.html">ORIGIN</a>
+          <a href="./simulator.html">SIMULATOR</a>
+          <a href="./vault.html">VAULT</a>
+          <a href="./comms.html" id="nav-comms-link" class="nav-comms-highlight">COMMS</a>
+        </nav>
+
+        <div class="nav-controls">
+          <!-- SFX Audio Toggle -->
+          <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
+            <span id="sfx-label">SFX: ON</span>
+          </button>
+
+          <!-- Mobile Cyber Menu Toggle -->
+          <button class="btn-icon cyber-cut mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+            <span class="mobile-nav-icon">
+              <span class="nav-bar bar-1"></span>
+              <span class="nav-bar bar-2"></span>
+              <span class="nav-bar bar-3"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cyber Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-hidden="true">
+      <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+      <div class="mobile-nav-panel cyber-cut">
+        <div class="mobile-nav-hud-top">
+          <span class="hud-glitch-text">OPERATIVE DIRECTORY &bull; SECTORS</span>
+          <button class="mobile-nav-close-btn" id="mobile-nav-close" aria-label="Close Navigation">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+          <a href="./index.html" class="mobile-nav-link" data-page="index">
+            <span class="nav-link-num">01</span>
+            <span class="nav-link-label">OVERVIEW</span>
+            <span class="nav-link-pill">[PORTAL]</span>
+          </a>
+          <a href="./armory.html" class="mobile-nav-link" data-page="armory">
+            <span class="nav-link-num">02</span>
+            <span class="nav-link-label">ARSENAL &amp; BLUEPRINTS</span>
+            <span class="nav-link-pill">[WEAPONS]</span>
+          </a>
+          <a href="./origin.html" class="mobile-nav-link" data-page="origin">
+            <span class="nav-link-num">03</span>
+            <span class="nav-link-label">OPERATIVE DOSSIER</span>
+            <span class="nav-link-pill">[ORIGIN]</span>
+          </a>
+          <a href="./simulator.html" class="mobile-nav-link" data-page="simulator">
+            <span class="nav-link-num">04</span>
+            <span class="nav-link-label">RIFT SIMULATOR</span>
+            <span class="nav-link-pill">[COMBAT]</span>
+          </a>
+          <a href="./vault.html" class="mobile-nav-link" data-page="vault">
+            <span class="nav-link-num">05</span>
+            <span class="nav-link-label">CANON ARCHIVE</span>
+            <span class="nav-link-pill">[VAULT]</span>
+          </a>
+          <a href="./comms.html" class="mobile-nav-link" data-page="comms">
+            <span class="nav-link-num">06</span>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
+        </div>
+        <div class="mobile-nav-hud-bottom">
+          <span class="hud-status-line">CALLSIGN: KEI // OPERATIONAL STATUS: ONLINE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <main id="hero" class="hero-section">
+      <div class="hero-content">
+        <div class="hero-telemetry cyber-cut">
+          <span id="hero-telemetry-text">OPERATIVE ARCHIVE // CALLSIGN: KEI (京) // GROUND PATROL</span>
+        </div>
+
+        <h1 class="hero-title">
+          KEI <span style="font-size:0.5em; opacity:0.85; font-family:sans-serif;">京</span><br />
+          <span id="hero-mode-title" class="glow-primary">EVENT HORIZON</span>
+        </h1>
+
+        <div class="section-tag" style="margin-bottom: 1rem;">
+          [ <span id="hero-title-badge">CLOSE-QUARTERS DUELIST</span> ]
+        </div>
+
+        <p class="hero-subtitle" id="hero-mode-desc">
+          Total kinetic compression. In close combat, Kei collapses his own physical footprint to zero resistance. He does not charge enemies—he simply appears on the other side of their guard, sheath clicking shut as the strike connects.
+        </p>
+
+        <!-- Master Hero Mode Switcher Deck (Tactical Stance Dock) -->
+        <div class="hero-mode-switch-container">
+          <div class="mode-switch-wrapper hero-mode-switch cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              <div class="mode-btn-content">
+                <span class="mode-btn-tag">STANCE 01</span>
+                <span class="mode-btn-name">EVENT HORIZON</span>
+              </div>
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              <div class="mode-btn-content">
+                <span class="mode-btn-tag">STANCE 02</span>
+                <span class="mode-btn-name">TRANSCENDENT</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="./armory.html" class="btn-cyber-primary cyber-cut">
+            <span>INSPECT ARSENAL</span>
+            <span>&rarr;</span>
+          </a>
+          <a href="./comms.html" id="hero-btn-comms" class="btn-cyber-ghost cyber-cut">
+            <span>NEURAL COMMS</span>
+            <span>&#x1F4E1;</span>
+          </a>
+          <a href="./simulator.html" class="btn-cyber-ghost cyber-cut">
+            <span>SIMULATE BATTLE</span>
+            <span>&#9889;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Visual Showcase (High-Viewability Holo-Display) -->
+      <div class="hero-visual-container is-portrait">
+
+        <!-- Main Artwork Frame with Ambient Glow & Cyber Accents -->
+        <div class="hero-image-frame is-portrait cyber-cut-hero fit-contain" id="hero-image-frame" title="Click to view full uncropped artwork">
+          <div class="hero-frame-corner top-l"></div>
+          <div class="hero-frame-corner top-r"></div>
+          <div class="hero-frame-corner bot-l"></div>
+          <div class="hero-frame-corner bot-r"></div>
+
+          <!-- Ambient blur backdrop behind image -->
+          <div class="hero-backdrop" id="hero-backdrop" style="background-image: url('./assets/mode-event-horizon-action-BbIDS6F4.jpg');"></div>
+
+          <img id="hero-main-img" src="./assets/mode-event-horizon-action-BbIDS6F4.jpg" alt="Kei Hero Art" />
+
+          <!-- Dynamic Holographic Cyber HUD Overlays -->
+          <div class="hero-holo-scanlines"></div>
+          <div class="hero-holo-glare"></div>
+          <div class="hero-holo-reticle" id="hero-holo-reticle">
+            <span class="reticle-target-cross"></span>
+            <span class="reticle-telemetry" id="reticle-telemetry-text">TGT: LOCK // 0.94c</span>
+          </div>
+        </div>
+
+        <!-- Integrated Holo Footer -->
+        <div class="holo-footer">
+          <div class="holo-tag-group">
+            <div class="holo-tag-main" id="frame-hero-tag">TACTICAL DUEL FORM</div>
+            <div class="holo-tag-sub" id="frame-hero-subtag">MID-COMBAT IAIDO CUT // COMPRESSED 99.8%</div>
+          </div>
+          <div class="holo-status-pill">
+            <span class="status-indicator"></span>
+            <span>4K ARCHIVE // CANON</span>
+          </div>
+        </div>
+
+        <!-- Dynamic View Angle / Visual Selector -->
+        <div class="hero-view-pills" id="hero-view-pills">
+          <!-- Dynamically populated per active mode -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Command Access Sector Portal Deck -->
+    <section class="portal-section">
+      <div class="section-header" style="text-align: center;">
+        <div class="section-tag" style="justify-content: center;">[ TACTICAL COMMAND HUBS ]</div>
+        <h2 class="section-title">FOUR DEFENSE SECTORS</h2>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 680px; margin: 0.75rem auto 0; line-height: 1.6;">
+          Explore dedicated operational sectors: tactical weapons blueprints, classified operative dossier, anomaly simulator, and the canon visual archive.
+        </p>
+      </div>
+
+      <div class="portal-grid">
+        <!-- Sector 01: Armory -->
+        <a href="./armory.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 01 // ARSENAL</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">ARSENAL &amp; BLUEPRINTS</div>
+            <div class="portal-desc">
+              16:9 widescreen schematics, interactive kinetic cleave calibration console, sub-molecular component breakdown, and blade metallurgy.
+            </div>
+          </div>
+          <div class="portal-footer">
+            <span style="color: var(--theme-primary);">COMPRESSED ODACHI</span>
+            <span style="color: var(--theme-secondary);">NIHIL VERITAS</span>
+          </div>
+        </a>
+
+        <!-- Sector 02: Origin -->
+        <a href="./origin.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 02 // DOSSIER</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">OPERATIVE DOSSIER</div>
+            <div class="portal-desc">
+              The Triple Confluence: Grounding human roots in Neo-Shinjuku, Solar Architect coronal shielding, and the fused dark-matter singularity.
+            </div>
+          </div>
+          <div class="portal-footer">
+            <span>CLASSIFIED LEVEL 5</span>
+            <span style="color: #a0ff90;">KAELEN MERCER</span>
+          </div>
+        </a>
+
+        <!-- Sector 03: Simulator -->
+        <a href="./simulator.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 03 // DEFENSE</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">RIFT SIMULATOR</div>
+            <div class="portal-desc">
+              Orbital anomaly monitoring, real-time tectonic fault tracking, and simulated exospheric deployment of Kei's Genesis Cleave.
+            </div>
+          </div>
+          <div class="portal-footer">
+            <span style="color: var(--theme-primary);">RADAR ACTIVE</span>
+            <span style="color: #a0ff90;">CRUST STABILITY 99.98%</span>
+          </div>
+        </a>
+
+        <!-- Sector 04: Vault -->
+        <a href="./vault.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 04 // ARCHIVE</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">CANON ARCHIVE</div>
+            <div class="portal-desc">
+              Comprehensive high-resolution visual vault containing 18 canon illustrations, combat action stills, and weapon schematics with lightbox zoom.
+            </div>
+          </div>
+          <div class="portal-footer">
+            <span>18 4K ASSETS</span>
+            <span style="color: #ffd000;">UNCROPPED CANON</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand-deck">
+          <div class="footer-title-row">
+            <span class="logo-badge">RIFT-ANCHOR</span>
+            <span class="footer-hero-title">KEI (京) // THE DUAL SOVEREIGN</span>
+          </div>
+          <div class="footer-sub-label">
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
+          </div>
+        </div>
+
+        <!-- Sector Quick Nav -->
+        <div class="footer-sector-nav">
+          <a href="./index.html" class="footer-nav-chip active">00 OVERVIEW</a>
+          <a href="./armory.html" class="footer-nav-chip">01 ARSENAL</a>
+          <a href="./origin.html" class="footer-nav-chip">02 DOSSIER</a>
+          <a href="./simulator.html" class="footer-nav-chip">03 SIMULATOR</a>
+          <a href="./vault.html" class="footer-nav-chip">04 ARCHIVE</a>
+          <a href="./comms.html" class="footer-nav-chip">05 COMMS</a>
+        </div>
+
+        <div class="footer-copyright-deck">
+          <div class="footer-copy-line">&copy; 2026 Immuzzz. All Rights Reserved.</div>
+          <div class="footer-status-line">STATUS: REALITY ANCHOR STABLE [100%]</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- High-Resolution Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Visual Archive Lightbox">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content cyber-cut">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-dot"></span>
+          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // KEI</span>
+        </div>
+        <span class="lightbox-subtag" id="lightbox-subtag">HIGH RESOLUTION CANON MASTER</span>
+      </div>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Fullscreen Visual Preview" />
+      </div>
+      <div class="lightbox-footer-bar">
+        <span class="lightbox-caption" id="lightbox-caption">KEI CANON SPEC</span>
+        <span class="lightbox-hint">&#9003; ESC OR CLICK OUTSIDE TO CLOSE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holographic Comms Floating Trigger Button -->
+  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Connect with Kaelen Mercer (Kei)" title="Field Comms // Operative Link">
+    <div class="fab-radar-ring"></div>
+    <div class="fab-glow-backdrop"></div>
+    <div class="fab-core">
+      <div class="fab-icon-box">
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.25-4 9.5-9 9.95V20a1 1 0 0 1-1-1v-2a1 1 0 0 0-1-1h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9a3 3 0 0 0-3 3v.5"></path>
+          <circle cx="12" cy="12" r="2"></circle>
+          <path d="M4.93 19.07A10 10 0 0 1 2 12"></path>
+        </svg>
+        <span class="fab-pulse-pip"></span>
+      </div>
+      <div class="fab-text">
+        <span class="fab-label">FIELD COMMS</span>
+        <span class="fab-sub">LINK KEI // ONLINE</span>
+      </div>
+    </div>
+    <span class="fab-unread-badge" id="comms-unread-badge" style="display:none;">!</span>
+  </button>
+
+  <!-- Holographic Comms Terminal Drawer / Window -->
+  <div id="holo-comm-drawer" class="holo-comm-drawer cyber-cut" role="dialog" aria-modal="true" aria-label="Kaelen Mercer Direct Comms Channel">
+    <!-- Holographic Visual Layers -->
+    <div class="drawer-holo-scanlines" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-left" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-right" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="drawer-avatar cyber-cut">
+          <img src="./assets/mode-event-horizon-focus-dGwraIyC.jpg" alt="Kaelen Mercer / Kei" id="drawer-header-avatar-img" />
+          <span class="avatar-live-beacon"></span>
+          <div class="avatar-radar-sweep" aria-hidden="true"></div>
+        </div>
+        <div class="drawer-title-wrap">
+          <div class="drawer-title-row">
+            <span class="drawer-title">KAELEN MERCER</span>
+            <span class="drawer-hero-badge">CALLSIGN: KEI</span>
+          </div>
+          <div class="drawer-sub" id="comms-mode-pill">
+            <span class="status-pulse-dot"></span> TACTICAL FIELD RADIO &bull; ENCRYPTED
+          </div>
+        </div>
+        <!-- Live Audio Comms Waveform Visualizer -->
+        <div class="voice-freq-visualizer" title="Orbital Transmission Signal" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="drawer-header-actions">
+        <a href="./comms.html" id="comms-expand-btn" class="drawer-action-btn" title="Open Full Dedicated Neural Comms Terminal" aria-label="Open Full Terminal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          <span>EXPAND</span>
+        </a>
+        <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          <span>RESET</span>
+        </button>
+        <button id="comms-close-btn" class="drawer-action-btn drawer-close-x" title="Minimize Comms Terminal" aria-label="Close Comms">&times;</button>
+      </div>
+    </div>
+
+    <!-- Telemetry Status Bar -->
+    <div class="comms-telemetry-bar">
+      <div class="telemetry-item">
+        <span class="telemetry-label">OPERATIVE:</span>
+        <span class="telemetry-value">KAELEN MERCER [ONLINE]</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">STATUS:</span>
+        <span class="telemetry-value">ON PATROL</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">CHANNEL:</span>
+        <span class="telemetry-value highlight">DIRECT FIELD LINK</span>
+      </div>
+    </div>
+
+    <!-- Message Stream -->
+    <div class="comms-messages-wrap" id="comms-messages-wrap"></div>
+
+    <!-- Typing Indicator -->
+    <div class="comms-typing-indicator" id="comms-typing-indicator" style="display: none;">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-label">Kaelen is replying...</span>
+    </div>
+
+    <!-- Quick Replies Bar -->
+    <div class="comms-quick-replies" id="comms-quick-replies"></div>
+
+    <!-- Input Bar -->
+    <div class="comms-input-bar">
+      <textarea id="comms-input" class="comms-textarea" rows="1" placeholder="Talk directly with Kaelen..." aria-label="Send message to Kaelen Mercer" aria-describedby="comms-help-text" autocomplete="off" spellcheck="false" maxlength="500"></textarea>
+      <button id="comms-send-btn" class="comms-send-btn cyber-cut" aria-label="Send Message to Kaelen">
+        <span>SEND</span>
+        <span class="send-arrow">&rarr;</span>
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

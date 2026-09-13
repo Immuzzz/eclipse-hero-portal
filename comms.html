@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEI (京) // NEURAL COMMS UPLINK - Direct Hero Terminal</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <script type="module" crossorigin src="./assets/main-CseGuORG.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-EupjR0U_.css">
+</head>
+<body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 05 // NEURAL COMMS UPLINK
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            INITIALIZING SECURE FIELD COMMS FREQUENCY...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
+  <!-- Dynamic Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Fullscreen Test Slash FX Layer -->
+  <div id="slash-overlay">
+    <div class="slash-blade-line"></div>
+  </div>
+
+  <!-- Fullscreen Mode Transformation FX Layer -->
+  <div id="mode-fx-overlay"></div>
+
+  <!-- Main Content Layer -->
+  <div class="content-layer">
+    <!-- Top HUD Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="./index.html" class="logo-tag">
+          <span class="logo-badge">RIFT-ANCHOR</span>
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
+        </a>
+
+        <nav class="main-nav">
+          <a href="./index.html">OVERVIEW</a>
+          <a href="./armory.html">ARMORY</a>
+          <a href="./origin.html">ORIGIN</a>
+          <a href="./simulator.html">SIMULATOR</a>
+          <a href="./vault.html">VAULT</a>
+          <a href="./comms.html" class="active nav-comms-highlight">COMMS</a>
+        </nav>
+
+        <div class="nav-controls">
+          <!-- Master Mode Switch (REDMAGIC Style) -->
+          <div class="mode-switch-wrapper cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              MODE I
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              MODE II
+            </button>
+          </div>
+
+          <!-- SFX Audio Toggle -->
+          <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
+            <span id="sfx-label">SFX: ON</span>
+          </button>
+
+          <!-- Mobile Cyber Menu Toggle -->
+          <button class="btn-icon cyber-cut mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+            <span class="mobile-nav-icon">
+              <span class="nav-bar bar-1"></span>
+              <span class="nav-bar bar-2"></span>
+              <span class="nav-bar bar-3"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cyber Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-hidden="true">
+      <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+      <div class="mobile-nav-panel cyber-cut">
+        <div class="mobile-nav-hud-top">
+          <span class="hud-glitch-text">OPERATIVE DIRECTORY &bull; SECTORS</span>
+          <button class="mobile-nav-close-btn" id="mobile-nav-close" aria-label="Close Navigation">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+          <a href="./index.html" class="mobile-nav-link" data-page="index">
+            <span class="nav-link-num">01</span>
+            <span class="nav-link-label">OVERVIEW</span>
+            <span class="nav-link-pill">[PORTAL]</span>
+          </a>
+          <a href="./armory.html" class="mobile-nav-link" data-page="armory">
+            <span class="nav-link-num">02</span>
+            <span class="nav-link-label">ARSENAL &amp; BLUEPRINTS</span>
+            <span class="nav-link-pill">[WEAPONS]</span>
+          </a>
+          <a href="./origin.html" class="mobile-nav-link" data-page="origin">
+            <span class="nav-link-num">03</span>
+            <span class="nav-link-label">OPERATIVE DOSSIER</span>
+            <span class="nav-link-pill">[ORIGIN]</span>
+          </a>
+          <a href="./simulator.html" class="mobile-nav-link" data-page="simulator">
+            <span class="nav-link-num">04</span>
+            <span class="nav-link-label">RIFT SIMULATOR</span>
+            <span class="nav-link-pill">[COMBAT]</span>
+          </a>
+          <a href="./vault.html" class="mobile-nav-link" data-page="vault">
+            <span class="nav-link-num">05</span>
+            <span class="nav-link-label">CANON ARCHIVE</span>
+            <span class="nav-link-pill">[VAULT]</span>
+          </a>
+          <a href="./comms.html" class="mobile-nav-link active" data-page="comms">
+            <span class="nav-link-num">06</span>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
+        </div>
+        <div class="mobile-nav-hud-bottom">
+          <span class="hud-status-line">CALLSIGN: KEI // COMMS FREQ: LOCKED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Full-Page Tactical Comms Terminal -->
+    <main id="full-page-terminal" class="comms-page-container">
+      <!-- Breadcrumb / Sector Header -->
+      <div class="comms-page-header">
+        <div class="comms-page-badge cyber-cut">
+          <span class="pulse-dot-red"></span>
+          <span>SECTOR 05 // NEURAL UPLINK</span>
+        </div>
+        <h1 class="comms-page-title">
+          DIRECT HERO CODEC <span class="comms-kanji">京</span>
+        </h1>
+        <p class="comms-page-desc">
+          High-bandwidth two-way quantum communication link with Kaelen Mercer (Kei). Citizen intake logs, emergency evacuation routing, and tactical status briefings are dispatched directly to headquarters.
+        </p>
+      </div>
+
+      <!-- Tactical Dual-Column Terminal Grid -->
+      <div class="comms-terminal-grid">
+        <!-- Left Column: Operative Codec Card & Biometric Telemetry -->
+        <aside class="comms-codec-panel cyber-cut">
+          <div class="codec-panel-hud-top">
+            <span class="hud-label">OPERATIVE VISUAL FEED</span>
+            <span class="hud-cipher">AES-512 SECURE</span>
+          </div>
+
+          <!-- Large Operative Codec Portrait -->
+          <div class="codec-portrait-container cyber-cut">
+            <div class="codec-portrait-wrap">
+              <img id="codec-operative-portrait" src="./assets/mode-event-horizon-focus-dGwraIyC.jpg" alt="Kaelen Mercer (Kei) Operative Portrait" />
+              <div class="codec-radar-sweep" aria-hidden="true"></div>
+              <div class="codec-scanlines" aria-hidden="true"></div>
+              <div class="codec-reticle-tl"></div>
+              <div class="codec-reticle-br"></div>
+            </div>
+            <div class="codec-identity-bar">
+              <div class="codec-identity-name">
+                <span class="operative-title">KAELEN MERCER</span>
+                <span class="operative-callsign">KEI // 京</span>
+              </div>
+              <span class="codec-live-tag">LIVE UPLINK</span>
+            </div>
+          </div>
+
+          <!-- Audio Waveform Visualizer -->
+          <div class="codec-audio-deck cyber-cut">
+            <div class="codec-deck-header">
+              <span class="deck-title">AUDIO FREQ MONITOR</span>
+              <span class="deck-freq">142.85 MHz</span>
+            </div>
+            <div class="codec-waveform" id="codec-waveform" aria-label="Audio Visualizer">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span>
+            </div>
+          </div>
+
+          <!-- Operative Telemetry Matrix -->
+          <div class="codec-telemetry-box cyber-cut">
+            <div class="telemetry-grid-row">
+              <span class="t-key">ACTIVE STANCE:</span>
+              <span class="t-val highlight" id="codec-stance-val">MODE I // RELATIVISTIC IAIDO (0.94c)</span>
+            </div>
+            <div class="telemetry-grid-row">
+              <span class="t-key">ATMOSPHERIC ETA:</span>
+              <span class="t-val" id="codec-eta-val">0.94c SLIPSTREAM // 4.5 SEC</span>
+            </div>
+            <div class="telemetry-grid-row">
+              <span class="t-key">ARMED BLADE:</span>
+              <span class="t-val" id="codec-weapon-val">THE COMPRESSED ODACHI (0.94c MONOFILAMENT)</span>
+            </div>
+            <div class="telemetry-grid-row">
+              <span class="t-key">QUANTUM LATENCY:</span>
+              <span class="t-val">&lt; 1.2 MS // DIRECT LINK</span>
+            </div>
+          </div>
+
+          <!-- Preset Frequency Distress Queries -->
+          <div class="codec-presets-section">
+            <div class="presets-header">
+              <span>PRIORITY FREQUENCY PRESETS</span>
+            </div>
+            <div class="preset-freq-grid">
+              <button class="preset-freq-btn cyber-cut" data-query="What happened during the Ground Zero incident in Neo-Tokyo?">
+                <span class="preset-num">01</span>
+                <span class="preset-text">GROUND ZERO REPORT</span>
+              </button>
+              <button class="preset-freq-btn cyber-cut" data-query="Tell me about your blades: The Compressed Odachi and Nihil Veritas.">
+                <span class="preset-num">02</span>
+                <span class="preset-text">WEAPONRY SPECS</span>
+              </button>
+              <button class="preset-freq-btn cyber-cut" data-query="What emergency safety instructions should civilians follow right now?">
+                <span class="preset-num">03</span>
+                <span class="preset-text">CIVILIAN EVAC PROTOCOL</span>
+              </button>
+              <button class="preset-freq-btn cyber-cut" data-query="Who are you under the mask? What is your human oath?">
+                <span class="preset-num">04</span>
+                <span class="preset-text">ORIGIN &amp; HUMAN VOW</span>
+              </button>
+              <button class="preset-freq-btn cyber-cut" data-query="I need to file a new emergency dispatch report.">
+                <span class="preset-num">05</span>
+                <span class="preset-text">NEW EMERGENCY DISPATCH</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Full Tactical Chat Feed & Input Deck -->
+        <section class="comms-chat-panel cyber-cut">
+          <!-- Terminal Chat Header -->
+          <div class="terminal-chat-header">
+            <div class="terminal-header-left">
+              <div class="terminal-signal-indicator">
+                <span class="sig-bar"></span>
+                <span class="sig-bar"></span>
+                <span class="sig-bar"></span>
+                <span class="sig-bar"></span>
+              </div>
+              <div class="terminal-status-info">
+                <span class="terminal-channel-title">SECURE FREQUENCY &bull; DIRECT HERO UPLINK</span>
+                <span class="terminal-channel-sub" id="comms-mode-pill">
+                  <span class="status-pulse-dot"></span> DIRECT HERO COMMS &bull; MODE 01
+                </span>
+              </div>
+            </div>
+
+            <div class="terminal-header-actions">
+              <button id="comms-reset-btn" class="drawer-action-btn cyber-cut" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                <span>RESET SESSION</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Message Stream -->
+          <div class="comms-messages-wrap" id="comms-messages-wrap"></div>
+
+          <!-- Typing Indicator -->
+          <div class="comms-typing-indicator" id="comms-typing-indicator" style="display: none;">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="typing-label">Kaelen is replying over the link...</span>
+          </div>
+
+          <!-- Dynamic Quick Replies Bar -->
+          <div class="comms-quick-replies" id="comms-quick-replies"></div>
+
+          <!-- Sticky Tactical Input Deck -->
+          <div class="comms-input-bar">
+            <textarea id="comms-input" class="comms-textarea" rows="1" placeholder="Talk directly with Kaelen..." aria-label="Send message to Kaelen Mercer" aria-describedby="comms-help-text" autocomplete="off" spellcheck="false" maxlength="500"></textarea>
+            <button id="comms-send-btn" class="comms-send-btn cyber-cut" aria-label="Send Message to Kaelen">
+              <span>TRANSMIT</span>
+              <span class="send-arrow">&rarr;</span>
+            </button>
+          </div>
+          <div class="comms-input-footnote">
+            <span>ENTER TO TRANSMIT &bull; DISPATCHES AUTOMATICALLY RELAYED TO SHIELDHQ</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand-deck">
+          <div class="footer-title-row">
+            <span class="logo-badge">RIFT-ANCHOR</span>
+            <span class="footer-hero-title">KEI (京) // THE DUAL SOVEREIGN</span>
+          </div>
+          <div class="footer-sub-label">
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
+          </div>
+        </div>
+
+        <!-- Sector Quick Nav -->
+        <div class="footer-sector-nav">
+          <a href="./index.html" class="footer-nav-chip">00 OVERVIEW</a>
+          <a href="./armory.html" class="footer-nav-chip">01 ARSENAL</a>
+          <a href="./origin.html" class="footer-nav-chip">02 DOSSIER</a>
+          <a href="./simulator.html" class="footer-nav-chip">03 SIMULATOR</a>
+          <a href="./vault.html" class="footer-nav-chip">04 ARCHIVE</a>
+          <a href="./comms.html" class="footer-nav-chip active">05 COMMS</a>
+        </div>
+
+        <div class="footer-copyright-deck">
+          <div class="footer-copy-line">&copy; 2026 Immuzzz. All Rights Reserved.</div>
+          <div class="footer-status-line">STATUS: REALITY ANCHOR STABLE [100%]</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+</body>
+</html>

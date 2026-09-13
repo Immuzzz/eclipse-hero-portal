@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEI (京) // ORIGIN - The Triple Confluence Dossier</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <script type="module" crossorigin src="./assets/main-CseGuORG.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-EupjR0U_.css">
+</head>
+<body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 02 // OPERATIVE DOSSIER
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            ESTABLISHING RELATIVISTIC SLIPSTREAM...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
+  <!-- Dynamic Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Fullscreen Test Slash FX Layer -->
+  <div id="slash-overlay">
+    <div class="slash-blade-line"></div>
+  </div>
+
+  <!-- Fullscreen Mode Transformation FX Layer -->
+  <div id="mode-fx-overlay"></div>
+
+  <!-- Main Content Layer -->
+  <div class="content-layer">
+    <!-- Top HUD Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="./index.html" class="logo-tag">
+          <span class="logo-badge">RIFT-ANCHOR</span>
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
+        </a>
+
+        <nav class="main-nav">
+          <a href="./index.html">OVERVIEW</a>
+          <a href="./armory.html">ARMORY</a>
+          <a href="./origin.html" class="active">ORIGIN</a>
+          <a href="./simulator.html">SIMULATOR</a>
+          <a href="./vault.html">VAULT</a>
+          <a href="./comms.html" id="nav-comms-link" class="nav-comms-highlight">COMMS</a>
+        </nav>
+
+        <div class="nav-controls">
+          <!-- Master Mode Switch (REDMAGIC Style) -->
+          <div class="mode-switch-wrapper cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              MODE I
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              MODE II
+            </button>
+          </div>
+
+          <!-- SFX Audio Toggle -->
+          <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
+            <span id="sfx-label">SFX: ON</span>
+          </button>
+
+          <!-- Mobile Cyber Menu Toggle -->
+          <button class="btn-icon cyber-cut mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+            <span class="mobile-nav-icon">
+              <span class="nav-bar bar-1"></span>
+              <span class="nav-bar bar-2"></span>
+              <span class="nav-bar bar-3"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cyber Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-hidden="true">
+      <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+      <div class="mobile-nav-panel cyber-cut">
+        <div class="mobile-nav-hud-top">
+          <span class="hud-glitch-text">OPERATIVE DIRECTORY &bull; SECTORS</span>
+          <button class="mobile-nav-close-btn" id="mobile-nav-close" aria-label="Close Navigation">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+          <a href="./index.html" class="mobile-nav-link" data-page="index">
+            <span class="nav-link-num">01</span>
+            <span class="nav-link-label">OVERVIEW</span>
+            <span class="nav-link-pill">[PORTAL]</span>
+          </a>
+          <a href="./armory.html" class="mobile-nav-link" data-page="armory">
+            <span class="nav-link-num">02</span>
+            <span class="nav-link-label">ARSENAL &amp; BLUEPRINTS</span>
+            <span class="nav-link-pill">[WEAPONS]</span>
+          </a>
+          <a href="./origin.html" class="mobile-nav-link" data-page="origin">
+            <span class="nav-link-num">03</span>
+            <span class="nav-link-label">OPERATIVE DOSSIER</span>
+            <span class="nav-link-pill">[ORIGIN]</span>
+          </a>
+          <a href="./simulator.html" class="mobile-nav-link" data-page="simulator">
+            <span class="nav-link-num">04</span>
+            <span class="nav-link-label">RIFT SIMULATOR</span>
+            <span class="nav-link-pill">[COMBAT]</span>
+          </a>
+          <a href="./vault.html" class="mobile-nav-link" data-page="vault">
+            <span class="nav-link-num">05</span>
+            <span class="nav-link-label">CANON ARCHIVE</span>
+            <span class="nav-link-pill">[VAULT]</span>
+          </a>
+          <a href="./comms.html" class="mobile-nav-link" data-page="comms">
+            <span class="nav-link-num">06</span>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
+        </div>
+        <div class="mobile-nav-hud-bottom">
+          <span class="hud-status-line">CALLSIGN: KEI // OPERATIONAL STATUS: ONLINE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subpage Main Content -->
+    <main class="subpage-container">
+      <!-- Sector Header -->
+      <div class="subpage-header">
+        <div class="subpage-breadcrumb">
+          <a href="./index.html">OVERVIEW</a>
+          <span>//</span>
+          <span>SECTOR 03: OPERATIVE DOSSIER</span>
+        </div>
+        <h1 class="subpage-title">
+          THE TRIPLE <span class="glow-primary">CONFLUENCE</span>
+        </h1>
+        <p class="subpage-desc">
+          The origin and classified history of Kaelen Mercer (Kei // 京). A former urban salvager caught in the Neo-Tokyo Rift collapse, bound to an ancient solar legacy and a dark-matter anomaly—standing as Earth's frontline bulwark between human life and cosmic collapse.
+        </p>
+      </div>
+
+      <!-- Dynamic Mode Stance Indicator Banner -->
+      <div id="origin-stance-banner" class="origin-stance-banner cyber-cut">
+        <div class="origin-stance-top">
+          <span class="pulse-dot"></span>
+          <span id="origin-stance-mode-tag" class="origin-stance-mode-tag">ACTIVE COMBAT STANCE // MODE I: EVENT HORIZON</span>
+        </div>
+        <div id="origin-stance-desc" class="origin-stance-desc">
+          Close-quarters kinetic duelist focus. Highlighting Phase 01 (Human Core) and Phase 03 (Abyssal Maw Singularity). Kei collapses air resistance to zero, executing 0.94c relativistic iaido strikes.
+        </div>
+        <div class="origin-stance-pills">
+          <span id="origin-pill-speed" class="origin-stance-pill">VELOCITY: 0.94c SLIPSTREAM</span>
+          <span id="origin-pill-envelope" class="origin-stance-pill">ENVELOPE: TERRESTRIAL / METROPOLITAN</span>
+          <span id="origin-pill-weapon" class="origin-stance-pill">ARSENAL: THE COMPRESSED ODACHI</span>
+        </div>
+      </div>
+
+      <!-- Chronological Origin Timeline: The 4 Phases of Confluence -->
+      <div class="origin-showcase-grid">
+        <!-- Phase 01: The Human Core -->
+        <div class="origin-phase-card cyber-cut active-mode-phase" data-phase-mode="mode1">
+          <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
+            <span class="origin-phase-step-badge" style="color: #a0ff90; border-color: rgba(160,255,144,0.3);">PHASE 01 // HUMAN ROOTS</span>
+            <img src="./assets/origin-human-core-BGQYSYCF.jpg" alt="Phase 01: Kaelen Mercer in Neo-Shinjuku" />
+            <div class="origin-media-overlay"></div>
+            <div class="origin-zoom-cue">
+              <span>&#x26F6;</span> <span>INSPECT 4K</span>
+            </div>
+          </div>
+          <div class="origin-phase-body">
+            <div>
+              <h2 class="origin-phase-title">THE HUMAN CORE</h2>
+              <p class="origin-phase-text">
+                Born Kaelen Mercer in the neon-lit alleyways of Neo-Shinjuku. He never asked for cosmic authority or mythical power. Before the sky fractured, he was an urban salvager who knew every backstreet, every rooftop, and every everyday face in his district. When the rifts tore open, he didn't fight for cold gods or distant galaxies—he held the line because Earth is where real people bleed, rebuild, and love.
+              </p>
+            </div>
+            <div class="origin-phase-spec-pill" style="color: #a0ff90; border-color: rgba(160,255,144,0.25);">
+              <span class="pulse-dot" style="background: #a0ff90; box-shadow: 0 0 8px #a0ff90;"></span>
+              <span>CALLSIGN: KEI // HUMAN ANCHOR VERIFIED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 02: The Solar Bastion -->
+        <div class="origin-phase-card cyber-cut dormant-mode-phase" data-phase-mode="mode2">
+          <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
+            <span class="origin-phase-step-badge" style="color: #ffd000; border-color: rgba(255,208,0,0.3);">PHASE 02 // ORDER &amp; ARCHITECTURE</span>
+            <img src="./assets/origin-solar-bastion-SxYub2td.jpg" alt="Phase 02: The Solar Architects and Bastion" />
+            <div class="origin-media-overlay"></div>
+            <div class="origin-zoom-cue">
+              <span>&#x26F6;</span> <span>INSPECT 4K</span>
+            </div>
+          </div>
+          <div class="origin-phase-body">
+            <div>
+              <h2 class="origin-phase-title">THE SOLAR BASTION</h2>
+              <p class="origin-phase-text">
+                A dormant ancestral lineage awakened during the rift collapse. Inherited from the ancient Solar Architects—cosmic builders who once forged geometric bulwarks across dying stars. This legacy grants Kaelen his golden coronal barrier weave, hard-light structural stabilization, and the rare ability to reinforce failing continental crusts.
+              </p>
+            </div>
+            <div class="origin-phase-spec-pill" style="color: #ffd000; border-color: rgba(255,208,0,0.25);">
+              <span class="pulse-dot" style="background: #ffd000; box-shadow: 0 0 8px #ffd000;"></span>
+              <span>STELLAR RESONANCE // CORONAL WEAVE ARMED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 03: The Abyssal Maw -->
+        <div class="origin-phase-card cyber-cut active-mode-phase" data-phase-mode="mode1">
+          <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
+            <span class="origin-phase-step-badge" style="color: #ff5500; border-color: rgba(255,85,0,0.3);">PHASE 03 // SINGULARITY FUSION</span>
+            <img src="./assets/origin-abyssal-maw-Xk6lz5l9.jpg" alt="Phase 03: The Abyssal Maw Singularity" />
+            <div class="origin-media-overlay"></div>
+            <div class="origin-zoom-cue">
+              <span>&#x26F6;</span> <span>INSPECT 4K</span>
+            </div>
+          </div>
+          <div class="origin-phase-body">
+            <div>
+              <h2 class="origin-phase-title">THE ABYSSAL MAW</h2>
+              <p class="origin-phase-text">
+                To save his district from total spatial collapse, Kaelen threw himself directly into an unstable dark-matter fissure, fusing with the singularity at its core. Instead of consuming him, the event horizon bonded to his kinetic frame—granting instantaneous zero-friction acceleration, gravity-folding reflexes, and the dark spatial fire that coats his blade.
+              </p>
+            </div>
+            <div class="origin-phase-spec-pill" style="color: #ff5500; border-color: rgba(255,85,0,0.25);">
+              <span class="pulse-dot" style="background: #ff5500; box-shadow: 0 0 8px #ff5500;"></span>
+              <span>EVENT HORIZON // ZERO-RESISTANCE SLIPSTREAM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 04: The Dual Sovereign / Transcendent Emergence -->
+        <div class="origin-phase-card cyber-cut dormant-mode-phase" data-phase-mode="mode2">
+          <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
+            <span class="origin-phase-step-badge" style="color: #ffd000; border-color: rgba(255,208,0,0.4);">PHASE 04 // EXOSPHERIC ASCENSION</span>
+            <img src="./assets/origin-dual-emergence-BAK1fUEc.jpg" alt="Phase 04: Transcendent Mode Emergence of Kei (京)" />
+            <div class="origin-media-overlay"></div>
+            <div class="origin-zoom-cue">
+              <span>&#x26F6;</span> <span>INSPECT 4K</span>
+            </div>
+          </div>
+          <div class="origin-phase-body">
+            <div>
+              <h2 class="origin-phase-title">THE DUAL SOVEREIGN</h2>
+              <p class="origin-phase-text">
+                When planetary fractures threaten Earth with extinction, Kaelen sheds terrestrial gravity to ascend into the exosphere. Wielding the massive Nihil Veritas greatsword, his presence anchors failing physics. With every sweeping arc, he weaves ribbons of celestial starlight to suture tectonic fissures and stitch torn reality back together.
+              </p>
+            </div>
+            <div class="origin-phase-spec-pill" style="color: #ffd000; border-color: rgba(255,208,0,0.25);">
+              <span class="pulse-dot" style="background: #ffd000; box-shadow: 0 0 8px #ffd000;"></span>
+              <span>REALITY SUTURE MATRIX // ACTIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classified Scientific & Tactical Analysis -->
+      <div class="subpage-header" style="margin-top: 4rem; margin-bottom: 2rem;">
+        <div class="section-tag">[ TACTICAL DOSSIER ]</div>
+        <h2 style="font-family: var(--font-display); font-size: 2rem; color: #fff; margin: 0.5rem 0;">
+          OPERATIVE COMBAT TELEMETRY
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+          Biometric and spatial parameters documented across urban combat deployments and orbital ascents.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem;">
+        <div class="cyber-card cyber-cut active-mode-dossier" data-dossier-mode="mode1" style="padding: 1.75rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--theme-primary); margin-bottom: 0.5rem;">DOSSIER 01 // KINETICS</div>
+          <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">TACTICAL ACCELERATION</h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+            By wrapping his frame in a micro-event horizon, Kaelen cancels out external air friction and momentum inertia. He transitions from a dead standstill into full-speed relativistic iaido strikes in fractions of a millisecond.
+          </p>
+        </div>
+
+        <div class="cyber-card cyber-cut" data-dossier-mode="mode2" style="padding: 1.75rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #ffd000; margin-bottom: 0.5rem;">DOSSIER 02 // HARD-LIGHT</div>
+          <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">CORONAL SHIELD LATTICE</h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+            The golden photonic aura acts as an active tessellation matrix. When deployed, it bonds directly to fractured infrastructure and tectonic plates, dispersing catastrophic kinetic shocks across wide geometric fault lines.
+          </p>
+        </div>
+
+        <div class="cyber-card cyber-cut active-mode-dossier" data-dossier-mode="mode1" style="padding: 1.75rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #ff5500; margin-bottom: 0.5rem;">DOSSIER 03 // ENTROPY</div>
+          <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">SINGULARITY SINK</h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+            Incoming concussive blasts, heavy ordnance, and anomalous energy discharges are swallowed directly into Kaelen's internal gravity well, dissipating destructive shocks before they reach civilian perimeters.
+          </p>
+        </div>
+
+        <div class="cyber-card cyber-cut" data-dossier-mode="mode2" style="padding: 1.75rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #a0ff90; margin-bottom: 0.5rem;">DOSSIER 04 // PSYCHOLOGY</div>
+          <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">GROUNDED HUMAN COMPASS</h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+            Despite wielding extinction-scale cosmological power, Kaelen's psychological evaluations show zero emotional detachment. He refuses titles, cult followings, and divine status—answering citizen radio calls directly from patrol.
+          </p>
+        </div>
+      </div>
+
+      <!-- Direct Hero Link Callout Card -->
+      <div class="cyber-card cyber-cut" style="padding: 2.5rem; background: linear-gradient(135deg, rgba(14,14,24,0.9), rgba(0,229,255,0.06)); border: 1px solid var(--theme-primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+          <span class="section-tag" style="margin-bottom: 0.5rem;">[ FIELD RADIO DISPATCH ]</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.6rem; color: #fff; margin: 0 0 0.5rem;">
+            CONNECT DIRECTLY WITH KAELEN
+          </h3>
+          <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">
+            Operative frequency is open. Connect via encrypted tactical field radio to consult on sector defense, weapon specs, or urban patrol status.
+          </p>
+        </div>
+        <button id="origin-btn-comms" class="btn-cyber-primary cyber-cut" onclick="document.getElementById('holo-comm-fab').click();">
+          <span>OPEN FIELD COMMS</span>
+          <span>&#x1F4E1;</span>
+        </button>
+      </div>
+
+      <!-- Sector Navigation Footer -->
+      <div class="sector-navigator">
+        <a href="./armory.html" class="sector-nav-link cyber-cut">
+          <span class="sector-nav-sub">&larr; PREVIOUS SECTOR</span>
+          <span class="sector-nav-title">ARSENAL &amp; BLUEPRINTS</span>
+        </a>
+        <a href="./simulator.html" class="sector-nav-link cyber-cut" style="text-align: right;">
+          <span class="sector-nav-sub">NEXT SECTOR &rarr;</span>
+          <span class="sector-nav-title">RIFT SIMULATOR</span>
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand-deck">
+          <div class="footer-title-row">
+            <span class="logo-badge">RIFT-ANCHOR</span>
+            <span class="footer-hero-title">KEI (京) // THE DUAL SOVEREIGN</span>
+          </div>
+          <div class="footer-sub-label">
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
+          </div>
+        </div>
+
+        <!-- Sector Quick Nav -->
+        <div class="footer-sector-nav">
+          <a href="./index.html" class="footer-nav-chip">00 OVERVIEW</a>
+          <a href="./armory.html" class="footer-nav-chip">01 ARSENAL</a>
+          <a href="./origin.html" class="footer-nav-chip active">02 DOSSIER</a>
+          <a href="./simulator.html" class="footer-nav-chip">03 SIMULATOR</a>
+          <a href="./vault.html" class="footer-nav-chip">04 ARCHIVE</a>
+          <a href="./comms.html" class="footer-nav-chip">05 COMMS</a>
+        </div>
+
+        <div class="footer-copyright-deck">
+          <div class="footer-copy-line">&copy; 2026 Immuzzz. All Rights Reserved.</div>
+          <div class="footer-status-line">STATUS: REALITY ANCHOR STABLE [100%]</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- High-Resolution Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Visual Archive Lightbox">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content cyber-cut">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-dot"></span>
+          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // KEI</span>
+        </div>
+        <span class="lightbox-subtag" id="lightbox-subtag">HIGH RESOLUTION CANON MASTER</span>
+      </div>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Fullscreen Visual Preview" />
+      </div>
+      <div class="lightbox-footer-bar">
+        <span class="lightbox-caption" id="lightbox-caption">KEI CANON SPEC</span>
+        <span class="lightbox-hint">&#9003; ESC OR CLICK OUTSIDE TO CLOSE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holographic Comms Floating Trigger Button -->
+  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Connect with Kaelen Mercer (Kei)" title="Field Comms // Operative Link">
+    <div class="fab-radar-ring"></div>
+    <div class="fab-glow-backdrop"></div>
+    <div class="fab-core">
+      <div class="fab-icon-box">
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.25-4 9.5-9 9.95V20a1 1 0 0 1-1-1v-2a1 1 0 0 0-1-1h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9a3 3 0 0 0-3 3v.5"></path>
+          <circle cx="12" cy="12" r="2"></circle>
+          <path d="M4.93 19.07A10 10 0 0 1 2 12"></path>
+        </svg>
+        <span class="fab-pulse-pip"></span>
+      </div>
+      <div class="fab-text">
+        <span class="fab-label">FIELD COMMS</span>
+        <span class="fab-sub">LINK KEI // ONLINE</span>
+      </div>
+    </div>
+    <span class="fab-unread-badge" id="comms-unread-badge" style="display:none;">!</span>
+  </button>
+
+  <!-- Holographic Comms Terminal Drawer / Window -->
+  <div id="holo-comm-drawer" class="holo-comm-drawer cyber-cut" role="dialog" aria-modal="true" aria-label="Kaelen Mercer Direct Comms Channel">
+    <!-- Holographic Visual Layers -->
+    <div class="drawer-holo-scanlines" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-left" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-right" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="drawer-avatar cyber-cut">
+          <img src="./assets/mode-event-horizon-focus-dGwraIyC.jpg" alt="Kaelen Mercer / Kei" id="drawer-header-avatar-img" />
+          <span class="avatar-live-beacon"></span>
+          <div class="avatar-radar-sweep" aria-hidden="true"></div>
+        </div>
+        <div class="drawer-title-wrap">
+          <div class="drawer-title-row">
+            <span class="drawer-title">KAELEN MERCER</span>
+            <span class="drawer-hero-badge">CALLSIGN: KEI</span>
+          </div>
+          <div class="drawer-sub" id="comms-mode-pill">
+            <span class="status-pulse-dot"></span> TACTICAL FIELD RADIO &bull; ENCRYPTED
+          </div>
+        </div>
+        <!-- Live Audio Comms Waveform Visualizer -->
+        <div class="voice-freq-visualizer" title="Orbital Transmission Signal" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="drawer-header-actions">
+        <a href="./comms.html" id="comms-expand-btn" class="drawer-action-btn" title="Open Full Dedicated Neural Comms Terminal" aria-label="Open Full Terminal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          <span>EXPAND</span>
+        </a>
+        <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          <span>RESET</span>
+        </button>
+        <button id="comms-close-btn" class="drawer-action-btn drawer-close-x" title="Minimize Comms Terminal" aria-label="Close Comms">&times;</button>
+      </div>
+    </div>
+
+    <!-- Telemetry Status Bar -->
+    <div class="comms-telemetry-bar">
+      <div class="telemetry-item">
+        <span class="telemetry-label">OPERATIVE:</span>
+        <span class="telemetry-value">KAELEN MERCER [ONLINE]</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">STATUS:</span>
+        <span class="telemetry-value">ON PATROL</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">CHANNEL:</span>
+        <span class="telemetry-value highlight">DIRECT FIELD LINK</span>
+      </div>
+    </div>
+
+    <!-- Message Stream -->
+    <div class="comms-messages-wrap" id="comms-messages-wrap"></div>
+
+    <!-- Typing Indicator -->
+    <div class="comms-typing-indicator" id="comms-typing-indicator" style="display: none;">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-label">Kaelen is replying...</span>
+    </div>
+
+    <!-- Quick Replies Bar -->
+    <div class="comms-quick-replies" id="comms-quick-replies"></div>
+
+    <!-- Input Bar -->
+    <div class="comms-input-bar">
+      <textarea id="comms-input" class="comms-textarea" rows="1" placeholder="Talk directly with Kaelen..."></textarea>
+      <button id="comms-send-btn" class="comms-send-btn cyber-cut" aria-label="Send Message to Kaelen">
+        <span>SEND</span>
+        <span class="send-arrow">&rarr;</span>
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>
