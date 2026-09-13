@@ -222,14 +222,31 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                   html: htmlContent
                 });
 
+                // Send confirmation receipt to citizen
+                if (citizen.email && citizen.email.includes('@')) {
+                  try {
+                    await transporter.sendMail({
+                      from: `"Dr. Kaelen Mercer (ECLIPSE)" <${process.env.SMTP_USER}>`,
+                      to: citizen.email,
+                      replyTo: developerEmail,
+                      subject: `[ECLIPSE CONFIRMATION] Incident #${incidentId} Logged — Stand By`,
+                      text: `Greetings ${citizen.name},\n\nYour emergency distress beacon (Incident #${incidentId}) has been successfully received by Dr. Kaelen Mercer (ECLIPSE).\n\nStatus: PRIORITY ALPHA // HERO INBOUND AT 0.94c\nETA: ~4.5 seconds\n\nStay low, take reinforced cover, and await contact.\n\n— ECLIPSE Tactical Dispatch`,
+                      html: htmlContent
+                    });
+                    console.log(`[ECLIPSE DISPATCH] SMTP confirmation dispatched to citizen: ${citizen.email}`);
+                  } catch (citErr) {
+                    console.warn(`[ECLIPSE DISPATCH] Citizen SMTP send note:`, citErr.message);
+                  }
+                }
+
                 console.log(`[ECLIPSE DISPATCH] SMTP Email dispatched successfully: ${info.messageId}`);
-                sendMethod = 'LIVE_SMTP';
+                sendMethod = 'LIVE_SMTP_DUAL_TARGET';
               } catch (smtpErr) {
                 console.error(`[ECLIPSE DISPATCH] SMTP send failed, fell back to local archive:`, smtpErr.message);
                 sendMethod = 'FALLBACK_LOCAL_ARCHIVE';
               }
             } else {
-              // Also relay to developer email via FormSubmit gateway
+              // Also relay to developer email and citizen confirmation via FormSubmit gateway
               try {
                 const fsRes = await fetch(`https://formsubmit.co/ajax/${developerEmail}`, {
                   method: 'POST',
@@ -242,6 +259,9 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                     _subject: `[ECLIPSE ALERT] Priority Incident #${incidentId} — ${citizen.location}`,
                     _template: 'table',
                     _captcha: 'false',
+                    _replyto: citizen.email,
+                    _autoresponse: `Greetings ${citizen.name},\n\nYour distress beacon (Incident #${incidentId}) has been locked onto Dr. Kaelen Mercer's (ECLIPSE) visor. Emergency response protocols have been activated for ${citizen.location}.\n\nSTATUS: HERO INBOUND AT 0.94c\nETA: ~4.5 SECONDS\n\n— Dr. Kaelen Mercer // ECLIPSE Planetary Defense`,
+                    email: citizen.email,
                     'Incident ID': incidentId,
                     'Citizen Name': citizen.name,
                     'Age / Priority': citizen.age || 'Unspecified',
@@ -256,12 +276,42 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                 if (fsRes.ok) {
                   const fsData = await fsRes.json();
                   if (fsData.success === 'true' || fsData.message?.includes('Activation') || fsData.success === true) {
-                    sendMethod = 'FORMSUBMIT_RELAY';
-                    console.log(`[ECLIPSE DISPATCH] FormSubmit relay triggered for: ${developerEmail}`);
+                    sendMethod = 'FORMSUBMIT_RELAY_DUAL';
+                    console.log(`[ECLIPSE DISPATCH] FormSubmit relay triggered for: ${developerEmail} and autoresponse to ${citizen.email}`);
                   }
                 }
               } catch (fsErr) {
                 console.warn('[ECLIPSE DISPATCH] FormSubmit relay attempt:', fsErr.message);
+              }
+
+              // Relay direct citizen confirmation receipt
+              if (citizen.email && citizen.email.includes('@')) {
+                try {
+                  await fetch(`https://formsubmit.co/ajax/${citizen.email}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Accept: 'application/json',
+                      Referer: 'http://localhost:5173/'
+                    },
+                    body: JSON.stringify({
+                      _subject: `[ECLIPSE RECEIPT] Incident #${incidentId} Verified — Hold Your Position`,
+                      _template: 'table',
+                      _captcha: 'false',
+                      _replyto: developerEmail,
+                      'Incident ID': incidentId,
+                      'Citizen Name': citizen.name,
+                      'Sector Coordinates': citizen.location,
+                      'Your Grievance': citizen.grievance,
+                      'Hero Status': 'INBOUND AT 0.94c',
+                      'ETA': '~4.5s',
+                      'Directives': 'Take interior overhead cover. Avoid windows. Maintain comms open.',
+                      'Headquarters': developerEmail
+                    })
+                  });
+                } catch (citFsErr) {
+                  console.warn('[ECLIPSE DISPATCH] Citizen FormSubmit relay note:', citFsErr.message);
+                }
               }
             }
 

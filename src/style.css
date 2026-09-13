@@ -2670,9 +2670,9 @@ nav.main-nav a.nav-comms-highlight::before {
 /* Dossier Automated Email Transmission Relay Banner */
 .dossier-email-relay {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.85rem;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem 0.85rem;
   margin-bottom: 0.85rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -2682,6 +2682,13 @@ nav.main-nav a.nav-comms-highlight::before {
   border: 1px solid rgba(0, 229, 255, 0.35);
   color: #00e5ff;
   transition: all 0.3s;
+}
+
+.dossier-relay-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
 }
 
 .dossier-email-relay.delivered {

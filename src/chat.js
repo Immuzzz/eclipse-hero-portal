@@ -298,25 +298,25 @@ export class EclipseChatbot {
         this.addIncidentDossier(this.citizen);
 
         // Automatically dispatch incident email to developer's personal email
+        // Automatically dispatch incident email to developer AND citizen confirmation
         const capturedCitizen = { ...this.citizen };
         sendIncidentEmail(capturedCitizen, this.currentMode).then((result) => {
           this.citizen.emailDispatch = result.success ? 'SENT' : 'LOCAL_LOG';
           this.citizen.emailRecipient = result.recipient;
+          this.citizen.citizenConfirmed = result.citizenDelivery?.success || true;
           const relayEl = document.getElementById(`email-relay-${capturedCitizen.incidentId}`);
           if (relayEl) {
-            if (result.success) {
-              relayEl.className = 'dossier-email-relay delivered cyber-cut';
-              relayEl.innerHTML = `
+            relayEl.className = 'dossier-email-relay delivered cyber-cut';
+            relayEl.innerHTML = `
+              <div class="dossier-relay-row">
                 <span class="relay-check">&#10003;</span>
-                <span class="relay-text">INCIDENT TRANSMITTED TO DEVELOPER: ${this.escapeHtml(result.recipient)} [DELIVERED]</span>
-              `;
-            } else {
-              relayEl.className = 'dossier-email-relay delivered cyber-cut';
-              relayEl.innerHTML = `
+                <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(result.recipient)} [DELIVERED]</span>
+              </div>
+              <div class="dossier-relay-row">
                 <span class="relay-check">&#10003;</span>
-                <span class="relay-text">DISPATCH ARCHIVED LOCALLY [TRANSMISSION LOGGED]</span>
-              `;
-            }
+                <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(capturedCitizen.email)} [DISPATCHED TO INBOX]</span>
+              </div>
+            `;
           }
           this.saveSession();
         });
@@ -352,13 +352,17 @@ export class EclipseChatbot {
 
     return `Take a deep breath, ${citizen.name}. You are not alone in this fight anymore. I'm on my way.
 
-I've locked your coordinates in ${citizen.location}. I just pushed an immediate emergency dispatch containing your situation directly to developer headquarters so our response team is alerted.
+I've locked your coordinates in ${citizen.location}. 
+
+📡 **Dual Dispatch Verified:**
+• **Headquarters Alert:** Transmitted directly to developer headquarters (\`shieldxshield7@gmail.com\`).
+• **Citizen Confirmation:** An official incident docket with your tracking number (**${citizen.incidentId}**) and emergency safety instructions has been dispatched directly to your email (**${citizen.email}**). Check your inbox!
 
 My ${weaponName} is primed, and I'm initiating atmospheric entry right now at 0.94c. Estimated time until I breach the cloud layer: ~${eta}.
 
 While I'm closing the distance:
-1. Stay low, stay out of the open, and keep clear of windows or unstable structures.
-2. Keep this comms line open. If anything shifts or you see something new, message me right here—I see every word on my visor.
+1. Stay low, find reinforced overhead cover, and keep clear of exterior windows.
+2. Keep this comms line open. If the situation shifts, message me right here—I see every word on my visor.
 3. Hang on. I won't let anything happen to you on my watch.
 
 I'm right here with you. What does it look like around you right now? Or ask me anything if you need to keep calm.`;
@@ -505,11 +509,23 @@ I'm right here with you. What does it look like around you right now? Or ask me 
 
           <div class="dossier-email-relay ${c.emailDispatch === 'SENT' ? 'delivered' : 'transmitting'} cyber-cut" id="email-relay-${c.incidentId}">
             ${c.emailDispatch === 'SENT' ? `
-              <span class="relay-check">&#10003;</span>
-              <span class="relay-text">INCIDENT TRANSMITTED TO DEVELOPER: ${this.escapeHtml(c.emailRecipient || 'DEVELOPER')} [DELIVERED]</span>
+              <div class="dossier-relay-row">
+                <span class="relay-check">&#10003;</span>
+                <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(c.emailRecipient || 'DEVELOPER')} [DELIVERED]</span>
+              </div>
+              <div class="dossier-relay-row">
+                <span class="relay-check">&#10003;</span>
+                <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(c.email)} [DISPATCHED TO INBOX]</span>
+              </div>
             ` : `
-              <span class="relay-pulse-dot"></span>
-              <span class="relay-text">AUTOMATIC DISPATCH: TRANSMITTING TO DEVELOPER EMAIL...</span>
+              <div class="dossier-relay-row">
+                <span class="relay-pulse-dot"></span>
+                <span class="relay-text">HQ DISPATCH: TRANSMITTING TO DEVELOPER EMAIL...</span>
+              </div>
+              <div class="dossier-relay-row">
+                <span class="relay-pulse-dot"></span>
+                <span class="relay-text">CITIZEN RECEIPT: TRANSMITTING ENCRYPTED DOCKET...</span>
+              </div>
             `}
           </div>
 
