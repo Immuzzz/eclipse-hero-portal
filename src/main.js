@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
       openLightbox(v.src, v.tag, v.subtag);
     });
 
-    // 3D Holographic Parallax Tilt & Dynamic HUD Reticle
+    // Magnetic spotlight tracking keeps the artwork stable while the HUD follows the pointer.
     let tiltRaf = null;
 
     heroImageFrame.addEventListener('mousemove', (e) => {
@@ -247,13 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const normX = percentX - 0.5;
       const normY = percentY - 0.5;
 
-      // Realistic 3D tilt angles (up to +/- 16 degrees)
-      const rotY = normX * 22;
-      const rotX = -normY * 22;
+      const imageShiftX = normX * 1.8;
+      const imageShiftY = normY * 1.8;
 
       if (tiltRaf) cancelAnimationFrame(tiltRaf);
       tiltRaf = requestAnimationFrame(() => {
-        heroImageFrame.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.025, 1.025, 1.025)`;
+        heroImageFrame.style.transform = '';
+        heroImageFrame.style.setProperty('--image-shift-x', `${imageShiftX.toFixed(2)}%`);
+        heroImageFrame.style.setProperty('--image-shift-y', `${imageShiftY.toFixed(2)}%`);
         heroImageFrame.style.setProperty('--mx', `${(percentX * 100).toFixed(1)}%`);
         heroImageFrame.style.setProperty('--my', `${(percentY * 100).toFixed(1)}%`);
         heroImageFrame.style.setProperty('--raw-x', `${rawX.toFixed(1)}px`);
@@ -264,7 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
     heroImageFrame.addEventListener('mouseleave', () => {
       if (tiltRaf) cancelAnimationFrame(tiltRaf);
       heroImageFrame.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease';
-      heroImageFrame.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      heroImageFrame.style.transform = '';
+      heroImageFrame.style.setProperty('--image-shift-x', '0%');
+      heroImageFrame.style.setProperty('--image-shift-y', '0%');
       heroImageFrame.style.setProperty('--mx', '50%');
       heroImageFrame.style.setProperty('--my', '50%');
       setTimeout(() => {

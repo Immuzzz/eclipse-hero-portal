@@ -940,7 +940,7 @@ nav.main-nav a.active::after {
 }
 
 .hero-image-frame:hover img {
-  transform: translateZ(28px) scale(1.035);
+  transform: translate3d(var(--image-shift-x, 0%), var(--image-shift-y, 0%), 28px) scale(1.035);
   filter: contrast(1.06) brightness(1.03);
 }
 
@@ -4215,6 +4215,19 @@ nav.main-nav a.nav-comms-highlight::before {
   overflow: hidden;
 }
 
+.portal-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -35%;
+  width: 24%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .portal-card::before {
   content: '';
   position: absolute;
@@ -4229,13 +4242,23 @@ nav.main-nav a.nav-comms-highlight::before {
 
 .portal-card:hover {
   border-color: var(--theme-primary);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--theme-glow);
+  background-image: linear-gradient(115deg, rgba(255, 255, 255, 0.04) 0%, transparent 28%, rgba(255, 85, 0, 0.12) 48%, transparent 68%), linear-gradient(145deg, rgba(25, 25, 36, 0.92), rgba(8, 8, 14, 0.98));
+  background-size: 220% 100%, 100% 100%;
+  background-position: 120% 0, 0 0;
+  outline: 1px solid var(--theme-primary);
+  outline-offset: 5px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 -3px 0 var(--theme-primary);
+  animation: portal-card-lock 0.45s ease-out forwards;
 }
 
 .portal-card:hover::before {
   opacity: 1;
   width: 5px;
+}
+
+.portal-card:hover::after {
+  opacity: 1;
+  animation: portal-card-scan 0.75s ease-out forwards;
 }
 
 .portal-num {
@@ -4255,8 +4278,30 @@ nav.main-nav a.nav-comms-highlight::before {
 }
 
 .portal-card:hover .portal-arrow {
-  transform: translateX(6px);
+  transform: translateX(3px);
   color: var(--theme-primary);
+}
+
+@keyframes portal-card-scan {
+  from { left: -35%; }
+  to { left: 115%; }
+}
+
+@keyframes portal-card-lock {
+  from { background-position: 120% 0, 0 0; }
+  to { background-position: -20% 0, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-card:hover::after {
+    animation: none;
+    left: 76%;
+  }
+
+  .portal-card:hover {
+    animation: none;
+    background-position: 0 0, 0 0;
+  }
 }
 
 .portal-name {
