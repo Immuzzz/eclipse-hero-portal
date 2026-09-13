@@ -58,6 +58,8 @@ export class EclipseChatbot {
   }
 
   init() {
+    this.fullPageTerminal = document.getElementById('full-page-terminal');
+    this.isFullPage = !!this.fullPageTerminal;
     this.fab = document.getElementById('holo-comm-fab');
     this.drawer = document.getElementById('holo-comm-drawer');
     this.messagesContainer = document.getElementById('comms-messages-wrap');
@@ -70,9 +72,13 @@ export class EclipseChatbot {
     this.unreadBadge = document.getElementById('comms-unread-badge');
     this.modeBadge = document.getElementById('comms-mode-pill');
 
-    if (!this.fab || !this.drawer) {
+    if (!this.messagesContainer || !this.inputField) {
       console.warn('[ECLIPSE COMMS] Chat DOM nodes not found.');
       return;
+    }
+
+    if (this.isFullPage) {
+      this.isOpen = true;
     }
 
     this.bindEvents();
@@ -96,11 +102,38 @@ export class EclipseChatbot {
     if (this.fab) {
       this.fab.setAttribute('data-mode', modeKey);
     }
+    if (this.fullPageTerminal) {
+      this.fullPageTerminal.setAttribute('data-mode', modeKey);
+    }
     const headerAvatar = document.getElementById('drawer-header-avatar-img');
     if (headerAvatar) {
       headerAvatar.src = modeKey === 'transcendent'
         ? './assets/mode-transcendent-action.jpg'
         : './assets/mode-event-horizon-focus.jpg';
+    }
+    const codecPortrait = document.getElementById('codec-operative-portrait');
+    if (codecPortrait) {
+      codecPortrait.src = modeKey === 'transcendent'
+        ? './assets/mode-transcendent-action.jpg'
+        : './assets/mode-event-horizon-focus.jpg';
+    }
+    const codecStance = document.getElementById('codec-stance-val');
+    if (codecStance) {
+      codecStance.textContent = modeKey === 'transcendent'
+        ? 'MODE II // EXOSPHERIC ANCHOR (11.2 km/s)'
+        : 'MODE I // RELATIVISTIC IAIDO (0.94c)';
+    }
+    const codecEta = document.getElementById('codec-eta-val');
+    if (codecEta) {
+      codecEta.textContent = modeKey === 'transcendent'
+        ? '11.2 km/s ORBIT // 1.5 SEC'
+        : '0.94c SLIPSTREAM // 4.5 SEC';
+    }
+    const codecWeapon = document.getElementById('codec-weapon-val');
+    if (codecWeapon) {
+      codecWeapon.textContent = modeKey === 'transcendent'
+        ? 'NIHIL VERITAS (COSMIC SUTURE)'
+        : 'THE COMPRESSED ODACHI (0.94c MONOFILAMENT)';
     }
     if (this.modeBadge) {
       if (modeKey === 'transcendent') {
@@ -112,10 +145,12 @@ export class EclipseChatbot {
   }
 
   bindEvents() {
-    // Open/Close Comms Drawer
-    this.fab.addEventListener('click', () => {
-      this.toggleDrawer();
-    });
+    // Open/Close Comms Drawer (when present)
+    if (this.fab) {
+      this.fab.addEventListener('click', () => {
+        this.toggleDrawer();
+      });
+    }
 
     if (this.closeBtn) {
       this.closeBtn.addEventListener('click', () => {
@@ -149,12 +184,31 @@ export class EclipseChatbot {
       });
     }
 
-    // Close on Escape
+    // Close on Escape (only for floating drawer)
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
+      if (e.key === 'Escape' && this.isOpen && !this.isFullPage) {
         this.closeDrawer();
       }
     });
+
+    // Preset frequency buttons (on full-page terminal)
+    document.querySelectorAll('.preset-freq-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const query = btn.getAttribute('data-query');
+        if (query) {
+          this.submitQueryText(query);
+        }
+      });
+    });
+  }
+
+  submitQueryText(text) {
+    if (this.isTyping) return;
+    if (this.inputField) {
+      this.inputField.value = text;
+      sound.playNavClick();
+      this.handleUserSubmit();
+    }
   }
 
   toggleDrawer() {
@@ -220,12 +274,55 @@ export class EclipseChatbot {
   async processConversation(userInput) {
     this.showTyping(true);
 
-    // Natural conversational pause (550ms - 850ms)
+    // Natural conversational pacing (550ms - 800ms)
     await new Promise((res) => setTimeout(res, 620));
 
+    const q = userInput.trim().toLowerCase();
+
+    // 1. Check for Mid-Intake Questions or Inquiries
+    if (this.state !== STATES.COMPLETE && this.state !== STATES.FREE_CHAT) {
+      // Check for Skip commands first for AGE or EMAIL
+      if (this.state === STATES.AGE && this.isSkipCommand(userInput)) {
+        this.citizen.age = 'Undisclosed';
+        this.state = STATES.LOCATION;
+        const reply = `No problem at all, ${this.citizen.name || 'friend'}—I'll calibrate my medical sensors for standard civilian baseline telemetry.\n\nNow, tell me where you are right now. Which city, district, street, or landmark are you at? Give me your exact spot so I can calculate my atmospheric entry vector and drop right to you.`;
+        this.addMessage('eclipse', reply);
+        this.updateQuickReplies();
+        this.updatePlaceholder();
+        this.showTyping(false);
+        this.saveSession();
+        return;
+      }
+
+      if (this.state === STATES.EMAIL && this.isSkipCommand(userInput)) {
+        this.citizen.email = 'civilian-priority@sector-grid.local';
+        this.state = STATES.GRIEVANCE;
+        const reply = `Understood, ${this.citizen.name}—we won't waste time on email. I've routed your connection through an anonymous priority channel (\`civilian-priority@sector-grid.local\`) so our comms remain encrypted.\n\nNow tell me what's happening. What danger or crisis are you facing down in ${this.citizen.location}?\n\nWhether it's a cosmic anomaly, syndicate violence, trapped civilians, or anything threatening your safety—don't hold back. Tell me everything. I'm listening.`;
+        this.addMessage('eclipse', reply);
+        this.updateQuickReplies();
+        this.updatePlaceholder();
+        this.showTyping(false);
+        this.saveSession();
+        return;
+      }
+
+      // Check if this is an in-between inquiry or question
+      if (this.isQuestionOrInquiry(userInput, this.state)) {
+        const heroReply = this.handleFreeChat(userInput);
+        const resumeBridge = this.getIntakeResumePrompt(this.state);
+        this.addMessage('eclipse', `${heroReply}\n\n${resumeBridge}`);
+        this.updateQuickReplies();
+        this.updatePlaceholder();
+        this.showTyping(false);
+        this.saveSession();
+        return;
+      }
+    }
+
+    // 2. Normal State Progression
     switch (this.state) {
       case STATES.GREETING_NAME: {
-        this.citizen.name = userInput;
+        this.citizen.name = this.extractName(userInput);
         this.state = STATES.AGE;
         const reply = `Good to meet you, ${this.citizen.name}. I've got your signal locked onto my visor.\n\nQuick question: how old are you? I ask so I know who I'm looking out for down there and what kind of evacuation or medical support to prep when I touch down.`;
         this.addMessage('eclipse', reply);
@@ -237,7 +334,7 @@ export class EclipseChatbot {
       case STATES.AGE: {
         const parsedAge = parseInt(userInput.replace(/[^0-9]/g, ''), 10);
         if (isNaN(parsedAge) || parsedAge < 3 || parsedAge > 125) {
-          const retry = `Comms crackled for a second, ${this.citizen.name}—could you send me your age in numbers (like 24 or 35)? I want to make sure my gear and response parameters are calibrated for you.`;
+          const retry = `Comms crackled for a second, ${this.citizen.name}—could you send me your age in numbers (like 24 or 35), or just say 'skip'? I want to make sure my gear and response parameters are calibrated for you.`;
           this.addMessage('eclipse', retry);
           this.updateQuickReplies();
           break;
@@ -265,7 +362,7 @@ export class EclipseChatbot {
       case STATES.EMAIL: {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(userInput)) {
-          const retry = `Hey ${this.citizen.name}, that didn't look like a valid email. Could you double-check it for me (like name@example.com)? I want to make sure my shelter updates and tracking packet reach you safely.`;
+          const retry = `Hey ${this.citizen.name}, that didn't look like a valid email. Could you double-check it for me (like name@example.com), or say 'skip' if you don't have one? I want to make sure my shelter updates and tracking packet reach you safely.`;
           this.addMessage('eclipse', retry);
           this.updateQuickReplies();
           break;
@@ -297,7 +394,6 @@ export class EclipseChatbot {
         // Render Incident Dossier Message
         this.addIncidentDossier(this.citizen);
 
-        // Automatically dispatch incident email to developer's personal email
         // Automatically dispatch incident email to developer AND citizen confirmation
         const capturedCitizen = { ...this.citizen };
         sendIncidentEmail(capturedCitizen, this.currentMode).then((result) => {
@@ -345,6 +441,117 @@ export class EclipseChatbot {
     this.saveSession();
   }
 
+  isSkipCommand(input) {
+    if (!input) return false;
+    const q = input.trim().toLowerCase();
+    if (q === 'no' || q === 'none') return true;
+    const skipTerms = [
+      'skip', 'pass', "don't have", "dont have", "don't want", "dont want",
+      'prefer not', 'private', 'secret', 'no email', 'no age', 'leave blank'
+    ];
+    return skipTerms.some((term) => q.includes(term));
+  }
+
+  extractName(input) {
+    if (!input) return 'Citizen';
+    const cleaned = input.trim();
+    const match = cleaned.match(/(?:my name is|i am called|i am|i'm|call me|this is|it's|it is)\s+([A-Za-z0-9_\-\.\s]{1,30})/i);
+    if (match && match[1]) {
+      const extracted = match[1].trim().replace(/[!,;?]+$/, '');
+      if (extracted.length > 0) return extracted;
+    }
+    const simple = cleaned.replace(/[!,;?]+$/, '').trim();
+    return simple.slice(0, 30) || 'Citizen';
+  }
+
+  isQuestionOrInquiry(input, state) {
+    if (!input) return false;
+    const q = input.trim().toLowerCase();
+
+    // 1. Explicit question mark
+    if (input.includes('?')) {
+      // In GRIEVANCE, if citizen describes an uncertain crisis (e.g. "There's a strange creature outside?")
+      if (state === STATES.GRIEVANCE) {
+        const heroTerms = ['you', 'your', 'weapon', 'blade', 'sword', 'speed', 'fast', 'arrive', 'reach', 'who', 'how', 'when', 'real', 'ai', 'bot', 'can you', 'are you'];
+        const isAboutHero = heroTerms.some((k) => q.includes(k));
+        if (!isAboutHero && q.length > 25) {
+          return false; // Treat as crisis description
+        }
+      }
+      return true;
+    }
+
+    // 2. Interrogative or question starters
+    const questionStarters = [
+      'who', 'what', 'where', 'when', 'why', 'how',
+      'can you', 'could you', 'will you', 'would you',
+      'are you', 'is it', 'is that', 'do you', 'did you', 'have you',
+      'tell me', 'explain', "what's", 'whats', "who's", 'whos', "how's", 'hows'
+    ];
+
+    for (const starter of questionStarters) {
+      if (q === starter || q.startsWith(starter + ' ') || q.startsWith(starter + '?')) {
+        // Exclude statements like "where I am is Shibuya" in LOCATION
+        if (state === STATES.LOCATION && (q.startsWith('where i am') || q.startsWith('where we are'))) {
+          return false;
+        }
+        return true;
+      }
+    }
+
+    // 3. Conversational triggers & meta inquiries
+    const conversationalTriggers = [
+      'hello', 'hi', 'hey', 'yo', 'sup', 'wait', 'hold on', 'one sec', 'hang on',
+      'are you real', 'are you ai', 'is this an ai', 'is this a bot', 'who is this',
+      'what is happening', 'what is this', 'what happened', 'whats going on', "what's going on",
+      'why do you need', 'why do you want', 'why ask', 'why email', 'why age', 'why location',
+      "i don't know", 'idk', 'not sure', 'who am i speaking with', 'what can you do',
+      'are you human', 'tell me about yourself'
+    ];
+
+    for (const trigger of conversationalTriggers) {
+      if (q === trigger || q.startsWith(trigger + ' ') || q.startsWith(trigger + ',') || q.startsWith(trigger + '!')) {
+        return true;
+      }
+    }
+
+    // 4. State-specific non-answer heuristics
+    if (state === STATES.AGE) {
+      const hasDigits = /\d+/.test(q);
+      if (!hasDigits) {
+        return true;
+      }
+    }
+
+    if (state === STATES.EMAIL) {
+      if (!q.includes('@')) {
+        const queryTerms = ['why', 'safe', 'privacy', 'spam', 'send', 'happen', 'developer', 'who', 'what', 'no email', "don't have"];
+        if (queryTerms.some((t) => q.includes(t))) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  getIntakeResumePrompt(state) {
+    switch (state) {
+      case STATES.GREETING_NAME:
+        return "By the way, you haven't told me your name yet—who am I speaking with down on the surface?";
+      case STATES.AGE:
+        return `Now back to you, ${this.citizen.name || 'friend'}—roughly how old are you? Send me your age in numbers (or tell me to skip) so my medical telemetry is calibrated when I land.`;
+      case STATES.LOCATION:
+        return `To make sure I drop directly onto your coordinates, ${this.citizen.name || 'friend'}: where are you right now? Give me your city, district, or nearest landmark.`;
+      case STATES.EMAIL:
+        return `Whenever you're ready, ${this.citizen.name || 'friend'}, what email address should I send your encrypted tracking dossier and safe shelter beacons to? (Or say 'skip' if you don't have one).`;
+      case STATES.GRIEVANCE:
+        return `I'm fully armed and locked onto ${this.citizen.location || 'your sector'}. Now tell me: what danger or crisis are you facing down there? Give me the details so I know what we're up against.`;
+      default:
+        return "I'm right here with you. What else is on your mind?";
+    }
+  }
+
   generateReassurance(citizen) {
     const isTranscendent = this.currentMode === 'transcendent';
     const weaponName = isTranscendent ? 'Nihil Veritas' : 'The Compressed Odachi';
@@ -369,64 +576,147 @@ I'm right here with you. What does it look like around you right now? Or ask me 
   }
 
   handleFreeChat(input) {
-    const q = input.toLowerCase();
+    const q = input.toLowerCase().trim();
+    const name = this.citizen.name || 'friend';
+    const loc = this.citizen.location || 'your sector';
+    const isTranscendent = this.currentMode === 'transcendent';
 
-    // Speed / Arrival questions
-    if (q.includes('how fast') || q.includes('speed') || q.includes('eta') || q.includes('when') || q.includes('reach') || q.includes('arrive')) {
-      return `I'm diving down at roughly **0.94c**—that's about 281,000 kilometers per second. Even from high Earth orbit down through the mesosphere, with my gravimetric bubble shielding against friction, I'll be over ${this.citizen.location || 'your sector'} in less than five seconds. Stay down and hold on.`;
+    // 1. Why information is needed (Email / Age / Location / Name)
+    if (q.includes('why') && (q.includes('email') || q.includes('mail') || q.includes('address'))) {
+      return `I ask for your email so my orbital uplink can transmit two critical items directly to your device:\n\n1. **Encrypted Incident Docket**: An official incident record (${this.citizen.incidentId || 'INC-KEI-XXXX'}) with direct dispatch verification.\n2. **Civil Defense Shelter Beacons**: Real-time GPS vectors to hardened subterranean shelters in case ground cellular towers go dark.\n\nYour data stays strictly between us and our emergency response network—no trackers, no spam. And if you prefer not to share it, just say **'skip'** and I'll route you through an anonymous priority channel.`;
     }
 
-    // Weapons / Sword questions
-    if (q.includes('weapon') || q.includes('sword') || q.includes('blade') || q.includes('odachi') || q.includes('nihil')) {
-      return `I carry two sovereign blades forged from the singularity crisis:\n\n1. **The Compressed Odachi (Mode 01)**: My relativistic blade. It folds space right along the edge, letting me slice through physical armor or kinetic energy barriers with zero drag.\n2. **Nihil Veritas (Mode 02)**: The Cosmic World-Stitcher. It doesn't cut flesh—it mends space-time ruptures and halts collapsing anomalies. If what you're dealing with is a void tear, this blade will seal it permanently.`;
+    if (q.includes('why') && (q.includes('age') || q.includes('old') || q.includes('years'))) {
+      return `I ask for your age because human bodies handle gravimetric pressure and sonic shockwaves very differently, ${name}.\n\nWhen I decelerate from 0.94c, my kinetic dampeners need to form a micro-pressure envelope around civilians. Calibrating that field for an 8-year-old child or a 75-year-old elder requires a much softer deceleration curve than a 25-year-old athlete. If you prefer to keep it private, just say **'skip'** and I'll default to standard civilian safety parameters.`;
     }
 
-    // Mode questions
-    if (q.includes('mode') || q.includes('form') || q.includes('state') || q.includes('transcendent') || q.includes('horizon')) {
-      if (this.currentMode === 'transcendent') {
-        return `Right now I'm operating in **MODE 02: TRANSCENDENT**. In this state, my cosmic wings unfurl and my singularity core expands to anchor reality itself against extinction-level hazards. I wield Nihil Veritas to suture spatial ruptures across entire continents.`;
+    if ((q.includes('why') && (q.includes('location') || q.includes('where') || q.includes('coords'))) || q.includes('track me') || q.includes('track my signal') || q.includes('track my phone')) {
+      return `My orbital radar can scan macroscopic thermal blooms and dimensional tears across whole continents, ${name}. But when you're trapped inside a reinforced concrete high-rise, a basement, or a crowded subway station, signal reflection can scatter passive radio pings.\n\nGiving me your exact street, district, or nearest landmark lets me calculate a surgical 0.94c re-entry vector straight to your doorway instead of searching a 20-kilometer radius.`;
+    }
+
+    if (q.includes('why') && (q.includes('name') || q.includes('call you') || q.includes('call me'))) {
+      return `Because you're a living, breathing person in danger—not an anonymous distress blip on a radar screen, ${name}. When I break through the clouds and land, I want to know who I'm pulling out of the rubble. But if you prefer to use a handle or callsign, that works just as well.`;
+    }
+
+    // 2. Hero Station & Drop Location ("Where are you coming from?")
+    if (q.includes('where are you') || q.includes('where you coming') || q.includes('where are you coming') || q.includes('where are you dropping') || q.includes('where are you now') || q.includes('where do you drop')) {
+      return `Right now I'm stationed in high Earth orbit (exosphere altitude ~420 km), locked into a geosynchronous standby anchor. My orbital radar sweeps the surface grid for gravimetric anomalies and void tears.\n\nWhen a distress ping comes in from ${loc}, I disengage orbital stabilizers and initiate a 0.94c atmospheric dive directly down to your sector.`;
+    }
+
+    // 3. Name & Callsign Lore ("Why Eclipse?" / "What does Kei mean?")
+    if (q.includes('why eclipse') || q.includes('name eclipse') || q.includes('why are you called eclipse') || q.includes('called eclipse')) {
+      return `They started calling me Eclipse because of what happens when I re-enter the atmosphere at 0.94c. My suit's compressed gravimetric bubble bends ambient starlight and sunlight around my chassis—casting a momentary shadow, like a total solar eclipse, right before I touch down.\n\nTo the people on the ground, the sky darkens for a single heartbeat, followed by the sonic crack of deceleration. It means the shadow has arrived to push back the dark.`;
+    }
+
+    if (q.includes('what does kei mean') || q.includes('callsign') || q.includes('meaning of kei') || q.includes('why kei')) {
+      return `'Kei' (京) is the Japanese kanji for 10 quadrillion—ten to the sixteenth power. In quantum singularity mechanics, that's the magnitude of gravimetric compression required to stabilize an event horizon without collapsing into total entropy.\n\nBack in Sector 04, the divers in my crew started calling me Kei when I was calibrating deep-submersible salvage rigs. After Ground Zero, it became my official tactical callsign.`;
+    }
+
+    // 4. AI vs Real Human ("Are you an AI?")
+    if (q.includes('are you ai') || q.includes('are you an ai') || q.includes('is this an ai') || q.includes('are you a bot') || q.includes('is this a bot') || q.includes('are you real') || q.includes('are you human') || q.includes('real person') || q.includes('robot')) {
+      return `I'm flesh, blood, and stubborn human will, ${name}. Every word you're reading is coming directly from me—Kaelen Mercer—transmitting through a neural comms transceiver from high orbit.\n\nMy tactical codec uses automated diagnostic ciphers to keep our channel encrypted and alert headquarters, but I am very real. I spent years working salvage in the flooded substructures of Neo-Tokyo before the singularity crisis tore the sky open. You're not talking to a synthetic chat algorithm—you're talking to a guy in an orbital flight chassis who is dropping through the atmosphere to make sure you get home safe.`;
+    }
+
+    // 3. Speed / Velocity / ETA / Arrival
+    if (q.includes('how fast') || q.includes('speed') || q.includes('velocity') || q.includes('eta') || q.includes('when will you') || q.includes('how long') || q.includes('reach me') || q.includes('arrive') || q.includes('drop time') || q.includes('0.94c') || q.includes('light speed')) {
+      const dropTime = loc.toLowerCase().includes('orbit') ? '1.5 seconds' : '4.5 seconds';
+      return `I'm diving down at roughly **0.94c**—that's about 281,000 kilometers per second. Even from high Earth orbit down through the mesosphere, with my gravimetric bubble shielding against friction, I'll be over ${loc} in about **${dropTime}**.\n\nYou'll hear a double sonic crack when my deceleration thrusters pop through the cloud layer. That's your signal that the perimeter is secured. Hold your position until you hear it.`;
+    }
+
+    // 4. Weapons & Armory (Odachi & Nihil Veritas)
+    if (q.includes('weapon') || q.includes('sword') || q.includes('blade') || q.includes('odachi') || q.includes('nihil') || q.includes('veritas') || q.includes('scabbard') || q.includes('monofilament') || q.includes('armory') || q.includes('gear')) {
+      return `I carry two sovereign blades forged from the singularity crisis:\n\n1. **The Compressed Odachi (Mode 01)**: My relativistic iaido blade. Its monofilament edge folds spacetime along a microscopic boundary, slicing through physical armor, armored mechs, or kinetic energy barriers with zero drag.\n2. **Nihil Veritas (Mode 02)**: The Cosmic World-Stitcher. This blade doesn't draw blood—it mends space-time ruptures and halts collapsing singularities. When dimensional tears threaten to consume a city, Nihil Veritas sutures the fabric of reality back together permanently.`;
+    }
+
+    // 5. Modes & Stances (Event Horizon vs Transcendent)
+    if (q.includes('mode') || q.includes('form') || q.includes('transcendent') || q.includes('horizon') || q.includes('state') || q.includes('stance') || q.includes('switch') || q.includes('powers') || q.includes('abilities')) {
+      if (isTranscendent) {
+        return `Right now my systems are locked in **MODE 02: TRANSCENDENT**.\n\nIn this form, my singularity core expands outward, manifesting wings of collapsed starlight. I operate at orbital velocity (11.2 km/s orbital anchoring), wielding **Nihil Veritas** to suture planetary-scale dimensional fractures before they tear the continental crust apart.`;
       } else {
-        return `Right now I'm operating in **MODE 01: EVENT HORIZON**. All my gravimetric pressure is compressed to eliminate atmospheric drag. It gives me pinpoint hyper-velocity speed and razor-sharp Iaido cuts with the Compressed Odachi. Fast, surgical, and lethal against ground threats.`;
+        return `Right now I'm configured in **MODE 01: EVENT HORIZON**.\n\nAll my gravimetric pressure is tightly compressed around my flight chassis, eliminating atmospheric friction and allowing surgical 0.94c relativistic Iaido cuts with the **Compressed Odachi**. It's engineered for rapid-response ground skirmishes, close-quarters combat, and surgical civilian extraction.`;
       }
     }
 
-    // Origin / Who are you / Real name
-    if (q.includes('who are you') || q.includes('origin') || q.includes('real name') || q.includes('kaelen') || q.includes('human') || q.includes('scientist')) {
-      return `Before the sky cracked over Neo-Tokyo, I was Kaelen Mercer—an urban salvage diver who knew every alley and rooftop in Shinjuku. When the dimensional rift tore open, I threw myself into the breach to anchor the failing singularity before it could swallow our city. I came back bonded to the event horizon, but my human oath remains unbroken: Earth is my home, and I will defend every life upon it.`;
+    // 6. Origin / Backstory / Real Name / Human Past
+    if (q.includes('who are you') || q.includes('real name') || q.includes('kaelen') || q.includes('mercer') || q.includes('salvage') || q.includes('diver') || q.includes('backstory') || q.includes('origin') || q.includes('history') || q.includes('human oath') || q.includes('tell me about yourself') || q.includes('past')) {
+      return `Before the sky cracked over Neo-Tokyo, I was Kaelen Mercer—an urban salvage diver who knew every alley, submerged conduit, and rooftop in Sector 04.\n\nWhen the dimensional rift tore open at Ground Zero, I threw myself into the collapsing singularity chamber to manually anchor the failing containment seals before the core swallowed the city. I survived, bonded to the event horizon itself. But my human oath remains unbroken: Earth is my home, and I will defend every life upon it with everything I have.`;
     }
 
-    // What to do / Safety / Survival instructions
-    if (q.includes('what should i do') || q.includes('instructions') || q.includes('safe') || q.includes('advice') || q.includes('survive')) {
-      return `Here's what I need you to do right now, ${this.citizen.name || 'friend'}:\n\n1. **Find reinforced overhead cover**: Get under a concrete beam, heavy doorframe, or sturdy subterranean room away from exterior glass.\n2. **Stay low**: Avoid standing near open streets, rooftops, or windows.\n3. **Huddle together**: If you have family, neighbors, or colleagues with you, keep them quiet and calm.\n4. **Listen for the sonic crack**: You'll hear my atmospheric deceleration crack a second before I touch down. That's when you know the area is secure.`;
+    // 7. Rifts / Void / Dimensional Anomalies / Ground Zero
+    if (q.includes('rift') || q.includes('void') || q.includes('ground zero') || q.includes('anomaly') || q.includes('anomalies') || q.includes('singularity') || q.includes('monster') || q.includes('creature') || q.includes('tear') || q.includes('portal') || q.includes('what happened')) {
+      return `The rifts started when high-energy experiments at Ground Zero ruptured the quantum membrane between dimensions. What's spilling through are entropic void entities and gravimetric tears that consume surrounding matter.\n\nIf you see violet, magenta, or cyan gravitational distortions in the air, **do NOT approach them**. Stay at least 50 meters back and get behind dense concrete or subterranean walls. I can suture those fractures closed with Nihil Veritas once I'm on the scene.`;
     }
 
-    // Fear / Panic / Emotional reassurance
-    if (q.includes('scared') || q.includes('afraid') || q.includes('panic') || q.includes('help me') || q.includes('terrified') || q.includes('save me')) {
-      return `I know you're terrified, ${this.citizen.name || 'friend'}. Look—fear is an honest human reflex when crisis strikes. It just means you want to live, and that's what makes you strong. But panic takes your legs away. Take three slow, deep breaths. I am almost through the upper clouds. You reached out, I answered, and I am not letting you face this alone.`;
+    // 8. Suit Technology / Visor / Armor
+    if (q.includes('suit') || q.includes('armor') || q.includes('visor') || q.includes('helm') || q.includes('cybernetic') || q.includes('tech') || q.includes('nanotech') || q.includes('wings') || q.includes('gravimetric')) {
+      return `My armor is a composite of singularity-crystallized carbon weave and relativistic inertia-dampening mesh.\n\nThe neural visor gives me full-spectrum quantum telemetry—I can see gravitational stress fractures, thermal body heat through six feet of reinforced concrete, and encrypted radio frequencies in real time. The internal gravimetric field ensures that accelerating to 0.94c doesn't crush my human organs into paste.`;
     }
 
-    // Gratitude
-    if (q.includes('thank') || q.includes('appreciate') || q.includes('grateful')) {
-      return `You don't need to thank me, ${this.citizen.name || 'friend'}. Protecting this world and standing between innocent people and annihilation is why I took this mantle. Stay safe, stay low, and save your thanks for when we're standing in the clear together.`;
+    // 9. Humanity / Pain / Sleep / Food / Daily Life
+    if (q.includes('pain') || q.includes('hurt') || q.includes('bleed') || q.includes('die') || q.includes('invincible') || q.includes('immortal')) {
+      return `I'm definitely not invincible, ${name}. I feel every kinetic impact, every gravimetric recoil, and every burn from atmospheric entry.\n\nThat pain is essential—it's what reminds me that I'm still human, and it keeps me grounded so I never lose sight of why I'm fighting. I bleed, I bruise, and I push forward anyway.`;
     }
 
-    // Status / Incident file update
-    if (q.includes('status') || q.includes('incident') || q.includes('dossier') || q.includes('update') || q.includes('report')) {
+    if (q.includes('sleep') || q.includes('eat') || q.includes('food') || q.includes('ramen') || q.includes('coffee') || q.includes('tired') || q.includes('rest')) {
+      return `When you're tearing through the upper atmosphere at 0.94c, you burn through an obscene amount of calories. Nothing hits better after an orbital drop than a steaming bowl of black garlic tonkotsu ramen from a back-alley shop in Neo-Tokyo.\n\nAnd yeah, I sleep—though usually in short 90-minute REM cycles with my comms link locked onto the planetary seismic alarm.`;
+    }
+
+    // 10. Survival Instructions & Civilian Advice ("What should I do?")
+    if (q.includes('what should i do') || q.includes('what do i do') || q.includes('instruction') || q.includes('advice') || q.includes('survive') || q.includes('safe') || q.includes('shelter') || q.includes('hide') || q.includes('evacuate') || q.includes('escape')) {
+      return `Here's what I need you to do right now, ${name}:\n\n1. **Find Reinforced Overhead Cover**: Get beneath an interior concrete beam, a heavy structural doorframe, or a subterranean basement away from exterior glass.\n2. **Stay Low & Stay Silent**: Avoid standing near open streets, rooftops, or windows where gravitational shear or void shrapnel can strike.\n3. **Huddle Together**: If you have family, friends, or coworkers with you, keep them calm and close. Conserve your mobile device battery.\n4. **Listen for the Sonic Pop**: You'll hear my atmospheric deceleration crack right before I hit the ground. When you hear that, know help is already there.`;
+    }
+
+    // 11. Fear / Panic / Emotional Reassurance
+    if (q.includes('scared') || q.includes('afraid') || q.includes('panic') || q.includes('terrified') || q.includes('help me') || q.includes('save me') || q.includes('please hurry') || q.includes('going to die') || q.includes('crying') || q.includes('shaking')) {
+      return `I hear you, ${name}. Take a slow, deep breath with me. In through your nose, hold for two seconds, and breathe out.\n\nFear is an honest human reflex when catastrophe strikes. It means you love life, and that love is what keeps you fighting. But panic clouds your judgment. You reached out, I locked onto your signal, and I am not leaving you to face this alone. I am already descending through the clouds. Hold on just a little longer.`;
+    }
+
+    // 12. Allies, Team & Headquarters
+    if (q.includes('alone') || q.includes('team') || q.includes('allies') || q.includes('friends') || q.includes('who helps') || q.includes('headquarters') || q.includes('hq') || q.includes('developer') || q.includes('shield')) {
+      return `I'm the one who drops into the fire, but I'm never truly alone. Developer headquarters monitors our encrypted relay channel (\`shieldxshield7@gmail.com\`), logging every distress beacon, civil defense alert, and emergency dossier so local emergency medical and shelter teams can mobilize immediately behind me.`;
+    }
+
+    // 13. Combat & Enemies ("Can you beat them?")
+    if (q.includes('can you beat') || q.includes('can you win') || q.includes('fight') || q.includes('strong enough') || q.includes('enemy') || q.includes('enemies') || q.includes('villain') || q.includes('kill')) {
+      return `Whatever is crawling out of that breach obeys the laws of physics—and where conventional physics breaks down, that's where I operate best.\n\nI survived falling into a collapsing black hole and pulled myself out. I have the relativistic speed to outflank them and the blade to cut clean through their defenses. Stay low and stay behind cover, ${name}. I will handle the rest.`;
+    }
+
+    // 14. Jokes & Humor
+    if (q.includes('joke') || q.includes('funny') || q.includes('laugh') || q.includes('humor')) {
+      return `A joke? Alright, here's one from the orbital salvage docks:\n\n*Why did the singularity anomaly refuse to play hide-and-seek?*\n*Because whenever it hid, it took the whole hiding spot with it into the event horizon.*\n\n...Look, I'm an orbital defender, not a stand-up comedian! But if it took your mind off the sirens for three seconds, that's a tactical win in my book.`;
+    }
+
+    // 15. Incident Status / Dossier Update
+    if (q.includes('status') || q.includes('incident') || q.includes('dossier') || q.includes('update') || q.includes('report') || q.includes('tracking')) {
       if (this.citizen.incidentId) {
-        return `I've got your incident **${this.citizen.incidentId}** pinned right to my visor:\n• Name: ${this.citizen.name} (Age: ${this.citizen.age})\n• Coordinates: ${this.citizen.location}\n• Status: PRIORITY ALPHA // HERO INBOUND\n• Dispatch: Logged to Developer Response Grid\n\nIf you see any changes or the threat moves, message me right here.`;
+        return `I have your incident docket **${this.citizen.incidentId}** pinned right to my visor:\n\n• **Protected Citizen**: ${this.citizen.name} (Age: ${this.citizen.age || 'Logged'})\n• **Target Grid**: ${this.citizen.location}\n• **Status**: PRIORITY ALPHA // HERO INBOUND (0.94c)\n• **Headquarters Alert**: Dispatched to \`shieldxshield7@gmail.com\`\n• **Citizen Confirmation**: Sent to ${this.citizen.email}\n\nComms line is secure. Keep me updated on any changes around you.`;
       } else {
-        return `We haven't logged an emergency incident yet on this frequency. If you're in danger, tell me what's happening and I'll scramble a response immediately.`;
+        return `We haven't logged an emergency incident docket yet on this channel, ${name}. If you're in danger, send me your situation and I'll scramble response vectors immediately.`;
       }
     }
 
-    // Reset / New report
-    if (q.includes('new report') || q.includes('another incident') || q.includes('reset') || q.includes('new emergency')) {
-      this.state = STATES.GREETING_NAME;
-      return `Understood. Opening a fresh distress link. Who am I speaking with for this new dispatch? Tell me your name or codename.`;
+    // 16. Reset / New Report
+    if (q.includes('new report') || q.includes('another incident') || q.includes('reset') || q.includes('start over') || q.includes('new emergency') || q.includes('clear')) {
+      this.resetSession();
+      return `Distress channel reset. Opening a fresh emergency link. Who am I speaking with for this new dispatch? Tell me your name.`;
     }
 
-    // General conversation fallback
-    return `I hear you, ${this.citizen.name || 'friend'}. I'm keeping my comms open with you while tracking ${this.citizen.location || 'your coordinates'}.\n\nTell me more about what you're seeing down there, ask me about my gear or tactics, or just talk to me to keep your nerves steady until I touch down.`;
+    // 17. Gratitude & Goodbyes
+    if (q.includes('thank') || q.includes('appreciate') || q.includes('grateful')) {
+      return `You don't need to thank me, ${name}. Protecting this city and standing between innocent people and annihilation is why I took this mantle.\n\nStay alert, stay safe, and save your thanks for when we're standing together in the clear.`;
+    }
+
+    if (q.includes('bye') || q.includes('goodbye') || q.includes('see ya') || q.includes('signing off')) {
+      return `Keep this frequency bookmarked, ${name}. My telemetry will keep scanning your sector. If you hear anything shift or see anomaly spikes, ping me immediately. Stay safe down there.`;
+    }
+
+    // 18. Casual Greetings & Check-ins
+    if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('sup') || q.includes('yo') || q.includes('how are you') || q.includes('good morning') || q.includes('good evening') || q.includes('whats up') || q.includes("what's up")) {
+      return `Hey ${name}! Reading your signal loud and clear over the orbital link. Telemetry on ${loc} is active.\n\nHow are things holding up where you are? Let me know if you see any anomalies, or ask me whatever you need to know while I monitor the grid.`;
+    }
+
+    // 19. Contextual Smart Fallback (No canned AI error!)
+    return `I hear you loud and clear, ${name}. Reading your signal cleanly from ${loc}.\n\nTell me more about what you're seeing down there, ask me about my drop vector, gear, or tactics, or just talk to me to keep steady while I monitor your sector. I'm right here.`;
   }
 
   addMessage(sender, text) {
@@ -578,6 +868,10 @@ I'm right here with you. What does it look like around you right now? Or ask me 
         this.scrollToBottom();
       }
     }
+    const visualizers = document.querySelectorAll('.voice-freq-visualizer, .codec-waveform');
+    visualizers.forEach((v) => {
+      v.classList.toggle('is-transmitting', isTyping);
+    });
   }
 
   scrollToBottom() {
@@ -623,38 +917,51 @@ I'm right here with you. What does it look like around you right now? Or ask me 
 
     switch (this.state) {
       case STATES.GREETING_NAME:
-        // No pre-filled names - citizen enters their own name
-        suggestions = [];
+        suggestions = [
+          'Who are you, Kei?',
+          'Are you real or an AI?',
+          'How fast can you get here?'
+        ];
         break;
       case STATES.AGE:
-        // No pre-filled age - citizen enters their own age
-        suggestions = [];
+        suggestions = [
+          'Why do you need my age?',
+          'I prefer to skip',
+          '24',
+          '35'
+        ];
         break;
       case STATES.LOCATION:
-        // Location suggestions to help citizen quickly tag their sector
         suggestions = [
-          'Downtown near the subway station',
+          'Downtown near Central Station',
           'Neo-Shinjuku Sector 04',
-          'Pacific Coast highline district',
-          'Geneva Research Complex'
+          'Why do you need my location?',
+          'Can you track my signal?'
         ];
         break;
       case STATES.EMAIL:
-        // No suggested emails - citizen enters their own valid email
-        suggestions = [];
+        suggestions = [
+          'Why do you need my email?',
+          'Is my email secure?',
+          'Skip email for now'
+        ];
         break;
       case STATES.GRIEVANCE:
-        // No canned grievances - citizen describes their real situation
-        suggestions = [];
+        suggestions = [
+          'What weapons do you fight with?',
+          'Dimensional rift opened in our sector',
+          'Monsters attacking civilian shelter',
+          'Can you really stop them?'
+        ];
         break;
       case STATES.COMPLETE:
       case STATES.FREE_CHAT:
         suggestions = [
           'How fast can you reach me?',
-          'What should I do right now?',
           'Tell me about your blades',
           'Are you human like us?',
-          "I'm really scared",
+          'What should I do right now?',
+          'Do you feel pain?',
           'Report another emergency'
         ];
         break;

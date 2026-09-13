@@ -8,6 +8,57 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
 </head>
 <body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 00 // COMMAND OVERVIEW
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            ESTABLISHING RELATIVISTIC SLIPSTREAM...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
   <!-- Dynamic Canvas Background -->
   <canvas id="bg-canvas"></canvas>
   <div class="cyber-grid"></div>
@@ -36,7 +87,7 @@
           <a href="./origin.html">ORIGIN</a>
           <a href="./simulator.html">SIMULATOR</a>
           <a href="./vault.html">VAULT</a>
-          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">FIELD COMMS</a>
+          <a href="./comms.html" id="nav-comms-link" class="nav-comms-highlight">COMMS</a>
         </nav>
 
         <div class="nav-controls">
@@ -91,11 +142,11 @@
             <span class="nav-link-label">CANON ARCHIVE</span>
             <span class="nav-link-pill">[VAULT]</span>
           </a>
-          <button class="mobile-nav-link mobile-nav-comms-btn btn-comms-call" id="mobile-nav-comms-link">
+          <a href="./comms.html" class="mobile-nav-link" data-page="comms">
             <span class="nav-link-num">06</span>
-            <span class="nav-link-label">FIELD COMMS</span>
-            <span class="nav-link-pill comms-pill">[RADIO]</span>
-          </button>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
         </div>
         <div class="mobile-nav-hud-bottom">
           <span class="hud-status-line">CALLSIGN: KEI // OPERATIONAL STATUS: ONLINE</span>
@@ -146,10 +197,10 @@
             <span>INSPECT ARSENAL</span>
             <span>&rarr;</span>
           </a>
-          <button id="hero-btn-comms" class="btn-cyber-ghost cyber-cut btn-comms-call">
-            <span>FIELD COMMS</span>
+          <a href="./comms.html" id="hero-btn-comms" class="btn-cyber-ghost cyber-cut">
+            <span>NEURAL COMMS</span>
             <span>&#x1F4E1;</span>
-          </button>
+          </a>
           <a href="./simulator.html" class="btn-cyber-ghost cyber-cut">
             <span>SIMULATE BATTLE</span>
             <span>&#9889;</span>
@@ -379,6 +430,10 @@
       </div>
 
       <div class="drawer-header-actions">
+        <a href="./comms.html" id="comms-expand-btn" class="drawer-action-btn" title="Open Full Dedicated Neural Comms Terminal" aria-label="Open Full Terminal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          <span>EXPAND</span>
+        </a>
         <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
           <span>RESET</span>

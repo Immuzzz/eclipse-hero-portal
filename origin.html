@@ -8,6 +8,57 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
 </head>
 <body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 02 // OPERATIVE DOSSIER
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            ESTABLISHING RELATIVISTIC SLIPSTREAM...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
   <!-- Dynamic Canvas Background -->
   <canvas id="bg-canvas"></canvas>
   <div class="cyber-grid"></div>
@@ -36,7 +87,7 @@
           <a href="./origin.html" class="active">ORIGIN</a>
           <a href="./simulator.html">SIMULATOR</a>
           <a href="./vault.html">VAULT</a>
-          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">FIELD COMMS</a>
+          <a href="./comms.html" id="nav-comms-link" class="nav-comms-highlight">COMMS</a>
         </nav>
 
         <div class="nav-controls">
@@ -101,11 +152,11 @@
             <span class="nav-link-label">CANON ARCHIVE</span>
             <span class="nav-link-pill">[VAULT]</span>
           </a>
-          <button class="mobile-nav-link mobile-nav-comms-btn btn-comms-call" id="mobile-nav-comms-link">
+          <a href="./comms.html" class="mobile-nav-link" data-page="comms">
             <span class="nav-link-num">06</span>
-            <span class="nav-link-label">FIELD COMMS</span>
-            <span class="nav-link-pill comms-pill">[RADIO]</span>
-          </button>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
         </div>
         <div class="mobile-nav-hud-bottom">
           <span class="hud-status-line">CALLSIGN: KEI // OPERATIONAL STATUS: ONLINE</span>
@@ -130,10 +181,26 @@
         </p>
       </div>
 
+      <!-- Dynamic Mode Stance Indicator Banner -->
+      <div id="origin-stance-banner" class="origin-stance-banner cyber-cut">
+        <div class="origin-stance-top">
+          <span class="pulse-dot"></span>
+          <span id="origin-stance-mode-tag" class="origin-stance-mode-tag">ACTIVE COMBAT STANCE // MODE I: EVENT HORIZON</span>
+        </div>
+        <div id="origin-stance-desc" class="origin-stance-desc">
+          Close-quarters kinetic duelist focus. Highlighting Phase 01 (Human Core) and Phase 03 (Abyssal Maw Singularity). Kei collapses air resistance to zero, executing 0.94c relativistic iaido strikes.
+        </div>
+        <div class="origin-stance-pills">
+          <span id="origin-pill-speed" class="origin-stance-pill">VELOCITY: 0.94c SLIPSTREAM</span>
+          <span id="origin-pill-envelope" class="origin-stance-pill">ENVELOPE: TERRESTRIAL / METROPOLITAN</span>
+          <span id="origin-pill-weapon" class="origin-stance-pill">ARSENAL: THE COMPRESSED ODACHI</span>
+        </div>
+      </div>
+
       <!-- Chronological Origin Timeline: The 4 Phases of Confluence -->
       <div class="origin-showcase-grid">
         <!-- Phase 01: The Human Core -->
-        <div class="origin-phase-card cyber-cut">
+        <div class="origin-phase-card cyber-cut active-mode-phase" data-phase-mode="mode1">
           <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
             <span class="origin-phase-step-badge" style="color: #a0ff90; border-color: rgba(160,255,144,0.3);">PHASE 01 // HUMAN ROOTS</span>
             <img src="./assets/origin-human-core.jpg" alt="Phase 01: Kaelen Mercer in Neo-Shinjuku" />
@@ -157,7 +224,7 @@
         </div>
 
         <!-- Phase 02: The Solar Bastion -->
-        <div class="origin-phase-card cyber-cut">
+        <div class="origin-phase-card cyber-cut dormant-mode-phase" data-phase-mode="mode2">
           <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
             <span class="origin-phase-step-badge" style="color: #ffd000; border-color: rgba(255,208,0,0.3);">PHASE 02 // ORDER &amp; ARCHITECTURE</span>
             <img src="./assets/origin-solar-bastion.jpg" alt="Phase 02: The Solar Architects and Bastion" />
@@ -181,7 +248,7 @@
         </div>
 
         <!-- Phase 03: The Abyssal Maw -->
-        <div class="origin-phase-card cyber-cut">
+        <div class="origin-phase-card cyber-cut active-mode-phase" data-phase-mode="mode1">
           <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
             <span class="origin-phase-step-badge" style="color: #ff5500; border-color: rgba(255,85,0,0.3);">PHASE 03 // SINGULARITY FUSION</span>
             <img src="./assets/origin-abyssal-maw.jpg" alt="Phase 03: The Abyssal Maw Singularity" />
@@ -205,7 +272,7 @@
         </div>
 
         <!-- Phase 04: The Dual Sovereign / Transcendent Emergence -->
-        <div class="origin-phase-card cyber-cut">
+        <div class="origin-phase-card cyber-cut dormant-mode-phase" data-phase-mode="mode2">
           <div class="origin-phase-media" title="Click to view full uncropped 4K illustration">
             <span class="origin-phase-step-badge" style="color: #ffd000; border-color: rgba(255,208,0,0.4);">PHASE 04 // EXOSPHERIC ASCENSION</span>
             <img src="./assets/origin-dual-emergence.jpg" alt="Phase 04: Transcendent Mode Emergence of Kei (京)" />
@@ -241,7 +308,7 @@
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem;">
-        <div class="cyber-card cyber-cut" style="padding: 1.75rem;">
+        <div class="cyber-card cyber-cut active-mode-dossier" data-dossier-mode="mode1" style="padding: 1.75rem;">
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--theme-primary); margin-bottom: 0.5rem;">DOSSIER 01 // KINETICS</div>
           <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">TACTICAL ACCELERATION</h4>
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
@@ -249,7 +316,7 @@
           </p>
         </div>
 
-        <div class="cyber-card cyber-cut" style="padding: 1.75rem;">
+        <div class="cyber-card cyber-cut" data-dossier-mode="mode2" style="padding: 1.75rem;">
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #ffd000; margin-bottom: 0.5rem;">DOSSIER 02 // HARD-LIGHT</div>
           <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">CORONAL SHIELD LATTICE</h4>
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
@@ -257,7 +324,7 @@
           </p>
         </div>
 
-        <div class="cyber-card cyber-cut" style="padding: 1.75rem;">
+        <div class="cyber-card cyber-cut active-mode-dossier" data-dossier-mode="mode1" style="padding: 1.75rem;">
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #ff5500; margin-bottom: 0.5rem;">DOSSIER 03 // ENTROPY</div>
           <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">SINGULARITY SINK</h4>
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
@@ -265,7 +332,7 @@
           </p>
         </div>
 
-        <div class="cyber-card cyber-cut" style="padding: 1.75rem;">
+        <div class="cyber-card cyber-cut" data-dossier-mode="mode2" style="padding: 1.75rem;">
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #a0ff90; margin-bottom: 0.5rem;">DOSSIER 04 // PSYCHOLOGY</div>
           <h4 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin: 0 0 0.75rem;">GROUNDED HUMAN COMPASS</h4>
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
@@ -398,6 +465,10 @@
       </div>
 
       <div class="drawer-header-actions">
+        <a href="./comms.html" id="comms-expand-btn" class="drawer-action-btn" title="Open Full Dedicated Neural Comms Terminal" aria-label="Open Full Terminal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          <span>EXPAND</span>
+        </a>
         <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
           <span>RESET</span>

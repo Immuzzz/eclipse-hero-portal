@@ -1,8 +1,16 @@
 import { sound } from './audio.js';
 import { ParticleCanvas } from './canvas.js';
 import { chat } from './chat.js';
+import { loader } from './loader.js';
+import { simulator } from './simulator.js';
+
+// Immediate Preloader & Transition Controller Handshake
+loader.init();
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure preloader DOM bindings and mode are refreshed on DOM load
+  loader.init();
+
   // 1. Initialize Canvas Particle System
   const canvas = new ParticleCanvas('bg-canvas');
 
@@ -28,8 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('click', () => sound.playNavClick());
   });
 
-  // 4. Dual-Mode Master Switcher Data (STRICTLY THE 2 MODES - 100% FAITHFUL DESIGN)
-  let currentMode = 'event-horizon';
+  // 4. Dual-Mode Master Switcher Data & Cross-Page Persistence
+  const STORAGE_KEY = 'kei_active_combat_mode';
+
+  function getSavedMode() {
+    try {
+      const m = localStorage.getItem(STORAGE_KEY);
+      return (m === 'transcendent' || m === 'event-horizon') ? m : 'event-horizon';
+    } catch {
+      return 'event-horizon';
+    }
+  }
+
+  function saveMode(mode) {
+    try {
+      localStorage.setItem(STORAGE_KEY, mode);
+    } catch {
+      // silent fallback
+    }
+  }
+
+  let currentMode = getSavedMode();
   let currentView = 'action';
   let isImageFitContain = true;
 
@@ -343,8 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modeFxOverlay = document.getElementById('mode-fx-overlay');
 
-  function setMode(modeKey) {
+  function setMode(modeKey, playFx = true) {
     currentMode = modeKey;
+    saveMode(modeKey);
 
     // Reset previous animation classes
     document.body.classList.remove('fx-mode1-shake', 'fx-mode2-warp');
@@ -358,8 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Force browser reflow so re-triggering the same animation executes reliably
     void document.body.offsetWidth;
 
-    // Determine transformation epicenter from the hero frame
-    let originX = window.innerWidth * 0.65;
+    // Determine transformation epicenter from the hero frame or center of viewport
+    let originX = window.innerWidth * 0.5;
     let originY = window.innerHeight * 0.45;
     if (heroImageFrame) {
       const rect = heroImageFrame.getBoundingClientRect();
@@ -368,103 +396,245 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (modeKey === 'event-horizon') {
-      // 1. Dragon Ball Super Saiyan 2 / Kaio-Ken Audio
-      sound.playModeEventHorizon();
+      if (playFx) {
+        // 1. Dragon Ball Super Saiyan 2 / Kaio-Ken Audio
+        sound.playModeEventHorizon();
 
-      // 2. Canvas Relativistic Warp Streaks & Branching Spatial Lightning
-      canvas.setMode('event-horizon');
-      canvas.triggerEventHorizonBlitz(originX, originY);
+        // 2. Canvas Relativistic Warp Streaks & Branching Spatial Lightning
+        canvas.setMode('event-horizon');
+        canvas.triggerEventHorizonBlitz(originX, originY);
 
-      // 3. Screen Recoil & High-Velocity Iaido Shake
-      document.body.classList.add('fx-mode1-shake');
-      setTimeout(() => {
-        document.body.classList.remove('fx-mode1-shake');
-      }, 500);
-
-      // 4. Fullscreen Diagonal Spatial Slash Flash
-      if (modeFxOverlay) {
-        modeFxOverlay.classList.add('flash-mode1');
+        // 3. Screen Recoil & High-Velocity Iaido Shake
+        document.body.classList.add('fx-mode1-shake');
         setTimeout(() => {
-          modeFxOverlay.className = '';
-        }, 520);
-      }
+          document.body.classList.remove('fx-mode1-shake');
+        }, 500);
 
-      // 5. Hero Frame: Spatial Cut Blade Sweep & Snap Recoil
-      if (heroImageFrame) {
-        heroImageFrame.classList.add('fx-mode1-hero');
-        setTimeout(() => {
-          heroImageFrame.classList.remove('fx-mode1-hero');
-        }, 600);
+        // 4. Fullscreen Diagonal Spatial Slash Flash
+        if (modeFxOverlay) {
+          modeFxOverlay.classList.add('flash-mode1');
+          setTimeout(() => {
+            modeFxOverlay.className = '';
+          }, 520);
+        }
+
+        // 5. Hero Frame: Spatial Cut Blade Sweep & Snap Recoil
+        if (heroImageFrame) {
+          heroImageFrame.classList.add('fx-mode1-hero');
+          setTimeout(() => {
+            heroImageFrame.classList.remove('fx-mode1-hero');
+          }, 600);
+        }
+      } else {
+        canvas.setMode('event-horizon');
       }
 
       document.body.classList.remove('mode-transcendent');
     } else {
-      // 1. Dragon Ball Super Saiyan 3 / Ultra Instinct God Audio
-      sound.playModeTranscendent();
+      if (playFx) {
+        // 1. Dragon Ball Super Saiyan 3 / Ultra Instinct God Audio
+        sound.playModeTranscendent();
 
-      // 2. Canvas Concentric Supernova Shockwave & 360-Degree Starlight Burst
-      canvas.setMode('transcendent');
-      canvas.triggerCosmicSupernova(originX, originY);
+        // 2. Canvas Concentric Supernova Shockwave & 360-Degree Starlight Burst
+        canvas.setMode('transcendent');
+        canvas.triggerCosmicSupernova(originX, originY);
 
-      // 3. Screen Cosmic Gravitational Lens Warp & Expansion
-      document.body.classList.add('fx-mode2-warp');
-      setTimeout(() => {
-        document.body.classList.remove('fx-mode2-warp');
-      }, 1000);
-
-      // 4. Fullscreen Supernova Radial Flash
-      if (modeFxOverlay) {
-        modeFxOverlay.classList.add('flash-mode2');
+        // 3. Screen Cosmic Gravitational Lens Warp & Expansion
+        document.body.classList.add('fx-mode2-warp');
         setTimeout(() => {
-          modeFxOverlay.className = '';
-        }, 950);
-      }
+          document.body.classList.remove('fx-mode2-warp');
+        }, 1000);
 
-      // 5. Hero Frame: Celestial Levitation Ascension & Golden God Corona Bloom
-      if (heroImageFrame) {
-        heroImageFrame.classList.add('fx-mode2-hero');
-        setTimeout(() => {
-          heroImageFrame.classList.remove('fx-mode2-hero');
-        }, 1100);
+        // 4. Fullscreen Supernova Radial Flash
+        if (modeFxOverlay) {
+          modeFxOverlay.classList.add('flash-mode2');
+          setTimeout(() => {
+            modeFxOverlay.className = '';
+          }, 950);
+        }
+
+        // 5. Hero Frame: Celestial Levitation Ascension & Golden God Corona Bloom
+        if (heroImageFrame) {
+          heroImageFrame.classList.add('fx-mode2-hero');
+          setTimeout(() => {
+            heroImageFrame.classList.remove('fx-mode2-hero');
+          }, 1100);
+        }
+      } else {
+        canvas.setMode('transcendent');
       }
 
       document.body.classList.add('mode-transcendent');
     }
 
-    modeButtons.forEach((btn) => {
+    // A. Master Mode Buttons (Header HUD & Overview hero cards)
+    document.querySelectorAll('.mode-btn').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.mode === modeKey);
     });
 
+    const preloaderBadge = document.getElementById('preloader-mode-badge');
+    if (preloaderBadge) {
+      preloaderBadge.textContent = modeKey === 'transcendent' ? 'MODE II: TRANSCENDENT' : 'MODE I: EVENT HORIZON';
+    }
+
+    // B. Page 1: Command Overview (index.html)
     const d = modeData[modeKey];
-    if (heroTitle) heroTitle.textContent = d.title;
-    if (heroBadge) heroBadge.textContent = d.titleBadge;
-    if (heroSubtitle) heroSubtitle.textContent = d.desc;
-    if (heroTelemetry) heroTelemetry.textContent = d.telemetry;
-    if (stat1Val) stat1Val.textContent = d.stat1Val;
-    if (stat1Label) stat1Label.textContent = d.stat1Label;
-    if (stat2Val) stat2Val.textContent = d.stat2Val;
-    if (stat2Label) stat2Label.textContent = d.stat2Label;
-    if (stat3Val) stat3Val.textContent = d.stat3Val;
-    if (stat3Label) stat3Label.textContent = d.stat3Label;
+    if (d) {
+      if (heroTitle) heroTitle.textContent = d.title;
+      if (heroBadge) heroBadge.textContent = d.titleBadge;
+      if (heroSubtitle) heroSubtitle.textContent = d.desc;
+      if (heroTelemetry) heroTelemetry.textContent = d.telemetry;
+      if (stat1Val) stat1Val.textContent = d.stat1Val;
+      if (stat1Label) stat1Label.textContent = d.stat1Label;
+      if (stat2Val) stat2Val.textContent = d.stat2Val;
+      if (stat2Label) stat2Label.textContent = d.stat2Label;
+      if (stat3Val) stat3Val.textContent = d.stat3Val;
+      if (stat3Label) stat3Label.textContent = d.stat3Label;
+    }
     if (reticleTelemetryText) {
       reticleTelemetryText.textContent = modeKey === 'event-horizon' ? 'TGT: LOCK // 0.94c' : 'ORBIT: SUTURE // EXOSPHERE';
     }
-
     renderViewPills();
     updateHeroView();
+
+    // C. Page 2: Arsenal & Blueprint Lab (armory.html)
+    const armoryStanceLabel = document.getElementById('armory-stance-label');
+    const armoryStanceSub = document.getElementById('armory-stance-sub');
+    if (armoryStanceLabel) {
+      armoryStanceLabel.textContent = modeKey === 'event-horizon'
+        ? 'ARSENAL SYNCHRONIZED: MODE I // EVENT HORIZON ARMED'
+        : 'ARSENAL SYNCHRONIZED: MODE II // TRANSCENDENT ARMED';
+    }
+    if (armoryStanceSub) {
+      armoryStanceSub.textContent = modeKey === 'event-horizon'
+        ? 'ACTIVE WEAPON: THE COMPRESSED ODACHI (160CM SPATIAL MONOFILAMENT)'
+        : 'ACTIVE WEAPON: NIHIL VERITAS (SOLIDIFIED EVENT HORIZON & SINGULARITY CORE)';
+    }
+    if (typeof renderWeapon === 'function') {
+      renderWeapon(modeKey === 'transcendent' ? 'nihil' : 'odachi', false);
+    }
+
+    // D. Page 3: Operative Dossier (origin.html)
+    const originStanceTag = document.getElementById('origin-stance-mode-tag');
+    const originStanceDesc = document.getElementById('origin-stance-desc');
+    const originPillSpeed = document.getElementById('origin-pill-speed');
+    const originPillEnvelope = document.getElementById('origin-pill-envelope');
+    const originPillWeapon = document.getElementById('origin-pill-weapon');
+
+    if (originStanceTag) {
+      originStanceTag.textContent = modeKey === 'event-horizon'
+        ? 'ACTIVE COMBAT STANCE // MODE I: EVENT HORIZON'
+        : 'ACTIVE COMBAT STANCE // MODE II: TRANSCENDENT';
+    }
+    if (originStanceDesc) {
+      originStanceDesc.textContent = modeKey === 'event-horizon'
+        ? 'Close-quarters kinetic duelist focus. Highlighting Phase 01 (Human Core) and Phase 03 (Abyssal Maw Singularity). Kei collapses air resistance to zero, executing 0.94c relativistic iaido strikes.'
+        : 'Exospheric planetary anchor focus. Highlighting Phase 02 (Solar Bastion) and Phase 04 (Dual Sovereign Ascension). Wielding Nihil Veritas, Kei sutures continental rifts and repairs spacetime.';
+    }
+    if (originPillSpeed) {
+      originPillSpeed.textContent = modeKey === 'event-horizon'
+        ? 'VELOCITY: 0.94c SLIPSTREAM'
+        : 'VELOCITY: EXOSPHERIC ORBITAL // 11.2 km/s';
+    }
+    if (originPillEnvelope) {
+      originPillEnvelope.textContent = modeKey === 'event-horizon'
+        ? 'ENVELOPE: TERRESTRIAL / METROPOLITAN'
+        : 'ENVELOPE: EXOSPHERE / PLANETARY SUTURE';
+    }
+    if (originPillWeapon) {
+      originPillWeapon.textContent = modeKey === 'event-horizon'
+        ? 'ARSENAL: THE COMPRESSED ODACHI'
+        : 'ARSENAL: NIHIL VERITAS (COSMIC SPACE BLADE)';
+    }
+
+    const targetPhaseMode = modeKey === 'transcendent' ? 'mode2' : 'mode1';
+    document.querySelectorAll('.origin-phase-card').forEach((card) => {
+      const isCardActive = card.dataset.phaseMode === targetPhaseMode;
+      card.classList.toggle('active-mode-phase', isCardActive);
+      card.classList.toggle('dormant-mode-phase', !isCardActive);
+    });
+
+    document.querySelectorAll('[data-dossier-mode]').forEach((dossier) => {
+      const isDossierActive = dossier.dataset.dossierMode === targetPhaseMode;
+      dossier.classList.toggle('active-mode-dossier', isDossierActive);
+    });
+
+    // E. Page 4: Planetary Defense Console (simulator.html)
+    const simStanceTag = document.getElementById('sim-banner-stance-tag');
+    const simStatusText = document.getElementById('sim-banner-status-text');
+    const simRadarText = document.getElementById('sim-radar-status-text');
+    const btnDeployText = document.getElementById('btn-sim-deploy-text');
+    const radarNorthTag = document.getElementById('radar-north-tag');
+    const radarSouthTag = document.getElementById('radar-south-tag');
+    const simLogContent = document.getElementById('sim-log-content');
+    const threatSelect = document.getElementById('threat-scenario-select');
+
+    if (simStanceTag) {
+      simStanceTag.textContent = modeKey === 'event-horizon'
+        ? 'ACTIVE SIMULATION PROFILE: MODE I // EVENT HORIZON'
+        : 'ACTIVE SIMULATION PROFILE: MODE II // TRANSCENDENT';
+    }
+    if (simStatusText) {
+      simStatusText.textContent = modeKey === 'event-horizon'
+        ? 'COMBAT PROTOCOL: RELATIVISTIC IAIDO • TERRESTRIAL VECTOR • 0.94c'
+        : 'COMBAT PROTOCOL: EXOSPHERIC SUTURE • CONTINENTAL STABILIZATION • 11.2 km/s';
+    }
+    if (simRadarText) {
+      simRadarText.textContent = modeKey === 'event-horizon'
+        ? '[ RADAR ONLINE // MONITORING CLOSE-RANGE BREACH VECTORS ]'
+        : '[ RADAR ONLINE // MONITORING EXOSPHERIC GRAVITATIONAL TENSION ]';
+    }
+    if (radarNorthTag) {
+      radarNorthTag.textContent = modeKey === 'event-horizon'
+        ? 'TERRESTRIAL GRID // 0.94c'
+        : 'NORTH ORBIT // 11.2 KM/S';
+    }
+    if (radarSouthTag) {
+      radarSouthTag.textContent = modeKey === 'event-horizon'
+        ? 'MONOFILAMENT DRAW // ARMED'
+        : 'SOUTH ORBIT // RECEPTOR ARMED';
+    }
+    if (btnDeployText) {
+      btnDeployText.textContent = modeKey === 'event-horizon'
+        ? 'DEPLOY KEI // ENGAGE RELATIVISTIC IAIDO CLEAVE'
+        : 'DEPLOY KEI // ENGAGE ORBITAL GENESIS CLEAVE';
+    }
+    if (threatSelect) {
+      threatSelect.value = modeKey === 'event-horizon'
+        ? 'TOKYO SUBTERRANEAN VOID TEAR'
+        : 'PACIFIC TECTONIC FISSURE';
+    }
+    if (simLogContent) {
+      simLogContent.innerHTML = modeKey === 'event-horizon'
+        ? `<div>&gt; [STATUS] RADAR ONLINE. TERRESTRIAL VECTOR LOCKED.</div>
+           <div>&gt; [DIAGNOSTIC] COMPRESSED ODACHI RESONANCE: 942.8 THz SYNC.</div>
+           <div>&gt; [SYSTEM] EVENT HORIZON MODE LINK READY FOR SLIPSTREAM DEPLOYMENT.</div>`
+        : `<div>&gt; [STATUS] RADAR ONLINE. EXOSPHERE TELEMETRY LOCKED.</div>
+           <div>&gt; [DIAGNOSTIC] NIHIL VERITAS GRAV-CONDUIT: 1.240 λ ACTIVE.</div>
+           <div>&gt; [SYSTEM] TRANSCENDENT MODE LINK READY FOR ORBITAL TRIGGER.</div>`;
+    }
+    simulator.setMode(modeKey);
+
+    // F. Page 5: Canon Visual Archive (vault.html)
+    const vaultIndicatorText = document.getElementById('vault-mode-indicator-text');
+    if (vaultIndicatorText) {
+      vaultIndicatorText.textContent = modeKey === 'event-horizon'
+        ? 'CANON ARCHIVE FILTER: MODE 01 // EVENT HORIZON (5 CLASSIFIED RECORDS ACTIVE)'
+        : 'CANON ARCHIVE FILTER: MODE 02 // TRANSCENDENT (5 CLASSIFIED RECORDS ACTIVE)';
+    }
+    if (typeof applyVaultFilter === 'function') {
+      applyVaultFilter(modeKey === 'transcendent' ? 'mode2' : 'mode1');
+    }
+
+    // G. Field Comms Radio Persona
     chat.setMode(modeKey);
   }
 
   modeButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      setMode(btn.dataset.mode);
+      setMode(btn.dataset.mode, true);
     });
   });
-
-  // Initial Holo-Display Setup
-  applyFitToggle();
-  renderViewPills();
-  updateHeroView();
 
   // 5. Dedicated Armory Specs & Blueprint Lightbox
   const weaponData = {
@@ -797,12 +967,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   weaponBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      renderWeapon(btn.dataset.weapon, true);
+      const weaponKey = btn.dataset.weapon;
+      const targetMode = weaponKey === 'nihil' ? 'transcendent' : 'event-horizon';
+      if (currentMode !== targetMode) {
+        setMode(targetMode, true);
+      } else {
+        renderWeapon(weaponKey, true);
+      }
     });
   });
-
-  // Initial weapon render without loud audio
-  renderWeapon('odachi', false);
 
   // 6. Blueprint Viewport Fullscreen Zoom Click
   const bpViewport = document.getElementById('blueprint-clickable-viewport');
@@ -861,49 +1034,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Threat Simulator Module (Emergency Klaxon + Power Surge)
-  const simTriggerBtn = document.getElementById('btn-sim-deploy');
-  const simLogBox = document.getElementById('sim-log-content');
-  const threatSelect = document.getElementById('threat-scenario-select');
-
-  if (simTriggerBtn && simLogBox) {
-    simTriggerBtn.addEventListener('click', () => {
-      const scenario = threatSelect ? threatSelect.value : 'PACIFIC FISSURE';
-      sound.playRiftDeploy(); // Tactical siren + power surge
-      simLogBox.innerHTML = '';
-
-      const logLines = [
-        `> [ALERT] DETECTED DIMENSIONAL BREACH: ${scenario}`,
-        `> [LOC] COORDINATES LOCKED. INITIATING RECON VECTORS...`,
-        `> [TELEMETRY] EXOSPHERE ORBITAL VELOCITY ENGAGED: 11.2 km/s`,
-        `> [WEAPON] NIHIL VERITAS MANIFESTED: SOLIDIFIED EVENT HORIZON 100%`,
-        `> [TACTICAL] EXECUTING GENESIS CLEAVE // THE WORLD STITCH...`,
-        `> [SUCCESS] CONTINENTAL SEAM SEALED. ANOMALY NEUTRALIZED.`,
-        `> [STATUS] EARTH STABILITY INDEX: 99.98% OPTIMAL.`
-      ];
-
-      logLines.forEach((line, i) => {
-        setTimeout(() => {
-          const div = document.createElement('div');
-          div.textContent = line;
-          div.style.color = i === logLines.length - 1 ? '#00e5ff' : '#a0ff90';
-          simLogBox.appendChild(div);
-          simLogBox.scrollTop = simLogBox.scrollHeight;
-          if (i === 4) {
-            sound.playNihilSlash(); // Nihil Veritas Genesis Cleave
-            canvas.triggerCosmicSupernova(window.innerWidth / 2, window.innerHeight / 2);
-            if (slashOverlay) {
-              slashOverlay.classList.remove('active', 'active-odachi', 'active-nihil');
-              void slashOverlay.offsetWidth;
-              slashOverlay.classList.add('active-nihil');
-            }
-          } else {
-            sound.playHudChirp();
-          }
-        }, i * 350);
-      });
-    });
-  }
+  // 8. Threat Simulator Module (Random Rift Generation & Interactive Suture Engine)
+  simulator.init(canvas);
+  simulator.setMode(currentMode);
 
   // 9. Lightbox Gallery Functionality for Vault Items & Armory Blueprint Cards
   document.querySelectorAll('.vault-item').forEach((item) => {
@@ -942,31 +1075,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // Vault Category Filtering (Supports both Curated Sections and Items)
   const vaultFilterBtns = document.querySelectorAll('.vault-filter-btn');
   const vaultSections = document.querySelectorAll('.vault-section');
+
+  function applyVaultFilter(filter) {
+    if (vaultFilterBtns.length === 0) return;
+    vaultFilterBtns.forEach((b) => b.classList.toggle('active', b.dataset.filter === filter));
+
+    if (vaultSections.length > 0) {
+      vaultSections.forEach((sec) => {
+        if (filter === 'all' || sec.dataset.section === filter) {
+          sec.style.display = '';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    document.querySelectorAll('.vault-item').forEach((item) => {
+      if (filter === 'all' || item.dataset.category === filter) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
   if (vaultFilterBtns.length > 0) {
     vaultFilterBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         sound.playNavClick();
-        vaultFilterBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
         const filter = btn.dataset.filter;
-
-        if (vaultSections.length > 0) {
-          vaultSections.forEach((sec) => {
-            if (filter === 'all' || sec.dataset.section === filter) {
-              sec.style.display = '';
-            } else {
-              sec.style.display = 'none';
-            }
-          });
+        if (filter === 'mode1') {
+          setMode('event-horizon', true);
+        } else if (filter === 'mode2') {
+          setMode('transcendent', true);
+        } else {
+          applyVaultFilter(filter);
         }
-
-        document.querySelectorAll('.vault-item').forEach((item) => {
-          if (filter === 'all' || item.dataset.category === filter) {
-            item.style.display = '';
-          } else {
-            item.style.display = 'none';
-          }
-        });
       });
       btn.addEventListener('mouseenter', () => sound.playNavHover());
     });
@@ -1035,40 +1179,37 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    link.addEventListener('click', (e) => {
-      if (link.id === 'mobile-nav-comms-link' || link.classList.contains('btn-comms-call')) {
-        e.preventDefault();
-        closeMobileNav();
-        sound.playNavClick();
-        setTimeout(() => {
-          chat.openDrawer();
-        }, 120);
-      } else {
-        sound.playNavClick();
-        closeMobileNav();
-      }
+    link.addEventListener('click', () => {
+      sound.playNavClick();
+      closeMobileNav();
     });
     link.addEventListener('mouseenter', () => sound.playNavHover());
   });
 
-  // 11. Initialize Eclipse In-Character Holographic Comms Chatbot
+  // 11. Cold Load Dual-Mode Synchronization Across Active Page
+  setMode(currentMode, false);
+  applyFitToggle();
+
+  // Storage listener for real-time synchronization across browser tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY && e.newValue && (e.newValue === 'event-horizon' || e.newValue === 'transcendent')) {
+      if (e.newValue !== currentMode) {
+        setMode(e.newValue, false);
+      }
+    }
+  });
+
+  // 12. Initialize Eclipse In-Character Holographic Comms Chatbot
   chat.init();
   chat.setMode(currentMode);
 
   const heroCommsBtn = document.getElementById('hero-btn-comms');
   if (heroCommsBtn) {
-    heroCommsBtn.addEventListener('click', () => {
-      chat.openDrawer();
-    });
     heroCommsBtn.addEventListener('mouseenter', () => sound.playNavHover());
   }
 
   const navCommsLink = document.getElementById('nav-comms-link');
   if (navCommsLink) {
-    navCommsLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      chat.openDrawer();
-    });
     navCommsLink.addEventListener('mouseenter', () => sound.playNavHover());
   }
 });

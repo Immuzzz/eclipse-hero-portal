@@ -360,6 +360,7 @@ export default defineConfig({
         origin: path.resolve(__dirname, 'origin.html'),
         simulator: path.resolve(__dirname, 'simulator.html'),
         vault: path.resolve(__dirname, 'vault.html'),
+        comms: path.resolve(__dirname, 'comms.html'),
       }
     }
   },

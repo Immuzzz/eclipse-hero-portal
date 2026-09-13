@@ -8,6 +8,57 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
 </head>
 <body>
+  <!-- High-Tech Cyberpunk Sector Preloader & Network Lag Shield -->
+  <div id="sector-preloader" class="sector-preloader active" aria-hidden="true">
+    <div class="preloader-progress-track">
+      <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-backdrop"></div>
+    <div class="preloader-grid"></div>
+
+    <div class="preloader-core cyber-cut">
+      <div class="preloader-spinner-wrap">
+        <div class="spinner-ring ring-outer"></div>
+        <div class="spinner-ring ring-mid"></div>
+        <div class="spinner-ring ring-inner"></div>
+        <div class="spinner-core-emblem">
+          <span class="preloader-kanji">京</span>
+        </div>
+      </div>
+
+      <div class="preloader-info">
+        <div class="preloader-badge-row">
+          <span class="preloader-callsign-badge">KEI // CALLSIGN: 京</span>
+          <span class="preloader-mode-badge" id="preloader-mode-badge">MODE I: EVENT HORIZON</span>
+        </div>
+
+        <h3 class="preloader-sector-title" id="preloader-sector-title">
+          SECTOR 03 // RIFT SIMULATOR
+        </h3>
+
+        <div class="preloader-progress-readout">
+          <div class="preloader-status-text" id="preloader-status-text">
+            ESTABLISHING RELATIVISTIC SLIPSTREAM...
+          </div>
+          <div class="preloader-percent-text" id="preloader-percent-text">
+            0%
+          </div>
+        </div>
+
+        <div class="preloader-lag-banner" id="preloader-lag-banner" style="display: none;">
+          <span class="pulse-dot" style="background: #ffd000;"></span>
+          <span id="preloader-lag-text">NETWORK LATENCY DETECTED // STREAMING ASSETS @ 0.94c SLIPSTREAM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preloader-hud-bottom">
+      <span class="hud-mono-item">ENCRYPTION: QUANTUM AES-512</span>
+      <span class="hud-mono-item">PACKETS: <span id="preloader-packets-ticker">1,024 KB</span></span>
+      <span class="hud-mono-item">STATUS: TRANSIT ACTIVE</span>
+    </div>
+  </div>
+
   <!-- Dynamic Canvas Background -->
   <canvas id="bg-canvas"></canvas>
   <div class="cyber-grid"></div>
@@ -36,7 +87,7 @@
           <a href="./origin.html">ORIGIN</a>
           <a href="./simulator.html" class="active">SIMULATOR</a>
           <a href="./vault.html">VAULT</a>
-          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">FIELD COMMS</a>
+          <a href="./comms.html" id="nav-comms-link" class="nav-comms-highlight">COMMS</a>
         </nav>
 
         <div class="nav-controls">
@@ -101,11 +152,11 @@
             <span class="nav-link-label">CANON ARCHIVE</span>
             <span class="nav-link-pill">[VAULT]</span>
           </a>
-          <button class="mobile-nav-link mobile-nav-comms-btn btn-comms-call" id="mobile-nav-comms-link">
+          <a href="./comms.html" class="mobile-nav-link" data-page="comms">
             <span class="nav-link-num">06</span>
-            <span class="nav-link-label">FIELD COMMS</span>
-            <span class="nav-link-pill comms-pill">[RADIO]</span>
-          </button>
+            <span class="nav-link-label">NEURAL COMMS</span>
+            <span class="nav-link-pill comms-pill">[TERMINAL]</span>
+          </a>
         </div>
         <div class="mobile-nav-hud-bottom">
           <span class="hud-status-line">CALLSIGN: KEI // OPERATIONAL STATUS: ONLINE</span>
@@ -131,45 +182,94 @@
       </div>
 
       <!-- Simulator Console Deck -->
+      <!-- Simulator Console Deck -->
       <div class="simulator-console cyber-cut" style="margin-bottom: 3.5rem;">
-        <!-- Interactive Radar Display -->
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
-          <div class="radar-screen">
-            <div class="radar-sweep"></div>
-            <div class="radar-center-blip"></div>
-            <div style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; top: 10px;">NORTH ORBIT // 11.2 KM/S</div>
-            <div style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; bottom: 10px;">SOUTH ORBIT // RECEPTOR ARMED</div>
-          </div>
-          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--theme-primary); letter-spacing: 0.1em; display: flex; align-items: center; gap: 0.5rem;">
+        <!-- Dynamic Combat Profile Header -->
+        <div id="sim-mode-banner" class="sim-mode-banner cyber-cut" style="grid-column: 1 / -1; margin-bottom: 0;">
+          <div class="sim-mode-banner-left">
             <span class="pulse-dot"></span>
-            <span>[ RADAR ONLINE // MONITORING FAULT TENSION ]</span>
+            <span id="sim-banner-stance-tag">ACTIVE SIMULATION PROFILE: MODE I // EVENT HORIZON</span>
+          </div>
+          <div id="sim-banner-status-text" class="sim-banner-status-text">
+            COMBAT PROTOCOL: RELATIVISTIC IAIDO &bull; TERRESTRIAL VECTOR &bull; 0.94c
+          </div>
+        </div>
+
+        <!-- Real-Time Anomaly Alert Banner -->
+        <div id="sim-rift-alert-banner" class="sim-rift-alert-banner cyber-cut" style="grid-column: 1 / -1; display: none;">
+          <div class="alert-banner-left">
+            <span class="pulse-dot-red"></span>
+            <span id="sim-rift-alert-title" class="alert-title">CRITICAL SPATIAL BREACH DETECTED</span>
+          </div>
+          <div id="sim-rift-alert-meta" class="alert-meta">
+            SECTOR: <span id="sim-rift-location-text" class="highlight-val">SHINJUKU SUB-LEVEL 7</span> &bull; 
+            FLUX: <span id="sim-rift-flux-text" class="highlight-val">14.8 TERA-TESLA</span> &bull; 
+            THREAT: <span id="sim-rift-threat-text" class="highlight-val">CLASS-IV VOID TEAR</span>
+          </div>
+        </div>
+
+        <!-- Interactive Radar Display -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%;">
+          <div class="radar-screen" id="sim-radar-screen">
+            <div class="radar-sweep"></div>
+            <!-- Radar Concentric Grid -->
+            <div class="radar-grid-layer" aria-hidden="true">
+              <div class="radar-circle rc-1"></div>
+              <div class="radar-circle rc-2"></div>
+              <div class="radar-circle rc-3"></div>
+              <div class="radar-crosshair-x"></div>
+              <div class="radar-crosshair-y"></div>
+            </div>
+            <!-- Center Kei Blip -->
+            <div class="radar-center-blip" title="Kei Stance Anchor (Center Coordinate)"></div>
+            <!-- Dynamic Random Rift Layer -->
+            <div id="radar-rift-layer" class="radar-rift-layer"></div>
+            <!-- Vector Canvas for Intercept & Cut Laser -->
+            <svg id="radar-vector-canvas" class="radar-vector-canvas" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div id="radar-north-tag" style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; top: 10px; z-index: 10;">TERRESTRIAL GRID // 0.94c</div>
+            <div id="radar-south-tag" style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; bottom: 10px; z-index: 10;">MONOFILAMENT DRAW // ARMED</div>
+          </div>
+          <div id="sim-radar-status" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--theme-primary); letter-spacing: 0.1em; display: flex; align-items: center; gap: 0.5rem; text-align: center;">
+            <span class="pulse-dot"></span>
+            <span id="sim-radar-status-text">[ RADAR ONLINE // MONITORING CLOSE-RANGE BREACH VECTORS ]</span>
           </div>
         </div>
 
         <!-- Simulation Controls & Diagnostic Log -->
         <div>
-          <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.05em;">
-              SELECT CRITICAL ANOMALY SECTOR:
+          <div style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.4rem; letter-spacing: 0.05em;">
+              TARGET ANOMALY SCENARIO / CRITICAL ZONE:
             </label>
-            <select id="threat-scenario-select" style="width: 100%; background: rgba(0, 0, 0, 0.85); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.85rem 1rem; font-family: var(--font-mono); font-size: 0.95rem;">
-              <option value="PACIFIC TECTONIC FISSURE">SECTOR 01: PACIFIC TECTONIC FISSURE [CLASS-S]</option>
-              <option value="EXOSPHERE SINGULARITY BREAK">SECTOR 02: EXOSPHERE SINGULARITY TEAR [EXTINCTION]</option>
-              <option value="TOKYO SUBTERRANEAN VOID TEAR">SECTOR 03: METROPOLITAN VOID BREACH [URBAN CRISIS]</option>
+            <select id="threat-scenario-select" style="width: 100%; background: rgba(0, 0, 0, 0.85); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.9rem;">
+              <option value="TOKYO SUBTERRANEAN VOID TEAR">SECTOR 01: METROPOLITAN VOID BREACH [URBAN CRISIS]</option>
+              <option value="PACIFIC TECTONIC FISSURE">SECTOR 02: PACIFIC TECTONIC FISSURE [CLASS-S]</option>
+              <option value="EXOSPHERE SINGULARITY BREAK">SECTOR 03: EXOSPHERE SINGULARITY TEAR [EXTINCTION]</option>
               <option value="LUNAR LAGRANGE DISRUPTION">SECTOR 04: LUNAR LAGRANGE INSTABILITY [ORBITAL]</option>
             </select>
           </div>
 
           <div class="sim-telemetry-log cyber-cut" id="sim-log-content">
-            <div>&gt; [STATUS] RADAR ONLINE. READY FOR DIRECT DEPLOYMENT.</div>
-            <div>&gt; [DIAGNOSTIC] AWAITING COMMAND AUTHORIZATION...</div>
-            <div>&gt; [SYSTEM] TRANSCENDENT MODE LINK READY FOR ORBITAL TRIGGER.</div>
+            <div>&gt; [STATUS] RADAR ONLINE. TERRESTRIAL VECTOR LOCKED.</div>
+            <div>&gt; [DIAGNOSTIC] COMPRESSED ODACHI RESONANCE: 942.8 THz SYNC.</div>
+            <div>&gt; [SYSTEM] READY TO DETECT RANDOM SPATIAL ANOMALIES.</div>
           </div>
 
-          <button id="btn-sim-deploy" class="btn-cyber-primary cyber-cut" style="width: 100%; justify-content: center; font-size: 1rem; padding: 1rem;">
-            <span>DEPLOY KEI // ENGAGE GENESIS CLEAVE</span>
-            <span>&rarr;</span>
-          </button>
+          <!-- Dual Control Actions: Spawn Random Rift & Deploy Fix -->
+          <div class="sim-action-deck" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button id="btn-sim-spawn-rift" class="btn-cyber-ghost cyber-cut" style="flex: 1; min-width: 170px; justify-content: center; font-size: 0.85rem; padding: 0.9rem 0.75rem;" title="Simulate a new unpredictable dimensional rupture">
+                <span>⚡ DETECT RANDOM RIFT</span>
+              </button>
+              <button id="btn-sim-deploy" class="btn-cyber-primary cyber-cut" style="flex: 2; min-width: 240px; justify-content: center; font-size: 0.95rem; padding: 0.9rem 1rem;">
+                <span id="btn-sim-deploy-text">DEPLOY KEI // ENGAGE RELATIVISTIC IAIDO CLEAVE</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+            <div class="sim-hint-text" style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.06em;">
+              CLICK "DETECT RANDOM RIFT" TO SPAWN BREACH &bull; CLICK "DEPLOY KEI" TO FIX &amp; SUTURE
+            </div>
+          </div>
         </div>
       </div>
 
@@ -183,20 +283,20 @@
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
         <div class="stat-box cyber-cut">
-          <div class="stat-val" style="color: #a0ff90;">99.98%</div>
+          <div class="stat-val" id="sim-stat-stability" style="color: #a0ff90;">100.00%</div>
           <div class="stat-label">Continental Crust Stability</div>
         </div>
         <div class="stat-box cyber-cut">
-          <div class="stat-val" style="color: var(--theme-primary);">0.94c</div>
+          <div class="stat-val" id="sim-stat-speed" style="color: var(--theme-primary);">0.94c</div>
           <div class="stat-label">Kinetic Slipstream Velocity</div>
         </div>
         <div class="stat-box cyber-cut">
-          <div class="stat-val" style="color: #ffd000;">100%</div>
-          <div class="stat-label">Coronal Shield Integrity</div>
+          <div class="stat-val" id="sim-stat-flux" style="color: #ffd000;">0.00 TT</div>
+          <div class="stat-label">Anomalous Spatial Flux</div>
         </div>
         <div class="stat-box cyber-cut">
-          <div class="stat-val" style="color: #00e5ff;">0.00 ms</div>
-          <div class="stat-label">Direct Comms Link</div>
+          <div class="stat-val" id="sim-stat-status" style="color: #00e5ff;">REALITY STABILIZED</div>
+          <div class="stat-label">Tactical Defense Status</div>
         </div>
       </div>
 
@@ -307,6 +407,10 @@
       </div>
 
       <div class="drawer-header-actions">
+        <a href="./comms.html" id="comms-expand-btn" class="drawer-action-btn" title="Open Full Dedicated Neural Comms Terminal" aria-label="Open Full Terminal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          <span>EXPAND</span>
+        </a>
         <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
           <span>RESET</span>

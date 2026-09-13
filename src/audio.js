@@ -783,6 +783,64 @@ class SoundController {
       osc.stop(t + 0.7);
     });
   }
+
+  // 7. Tactical Rift Anomaly Detected Klaxon
+  playRiftSpawn() {
+    if (!this.enabled) return;
+    this.init();
+    const t = this.ctx.currentTime;
+
+    // Deep sub-bass tear
+    const sub = this.ctx.createOscillator();
+    const subGain = this.ctx.createGain();
+    sub.type = 'sawtooth';
+    sub.frequency.setValueAtTime(120, t);
+    sub.frequency.exponentialRampToValueAtTime(32, t + 0.5);
+    subGain.gain.setValueAtTime(0.2, t);
+    subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    sub.connect(subGain);
+    subGain.connect(this.ctx.destination);
+    sub.start(t);
+    sub.stop(t + 0.6);
+
+    // Urgent tactical warning pulse
+    [0, 0.14, 0.28].forEach((delay) => {
+      const ping = this.ctx.createOscillator();
+      const pingGain = this.ctx.createGain();
+      ping.type = 'triangle';
+      ping.frequency.setValueAtTime(880, t + delay);
+      ping.frequency.exponentialRampToValueAtTime(540, t + delay + 0.09);
+      pingGain.gain.setValueAtTime(0.12, t + delay);
+      pingGain.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.1);
+      ping.connect(pingGain);
+      pingGain.connect(this.ctx.destination);
+      ping.start(t + delay);
+      ping.stop(t + delay + 0.1);
+    });
+  }
+
+  // 8. Reality Anchor Restored / Rift Suture Sealed Harmonic Chime
+  playRiftSealed() {
+    if (!this.enabled) return;
+    this.init();
+    const t = this.ctx.currentTime;
+
+    // Ascending harmonic celestial chime (D maj9 arpeggio: D4, F#4, A4, C#5, E5)
+    const chord = [293.66, 369.99, 440.00, 554.37, 659.25];
+    chord.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const start = t + idx * 0.06;
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.12, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.9);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.9);
+    });
+  }
 }
 
 export const sound = new SoundController();
