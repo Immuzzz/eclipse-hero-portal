@@ -135,19 +135,6 @@ The optimized production bundle will be generated in `dist/`.
 
 ---
 
-## 📋 Evaluation Checklist (TechAscent Machine Test)
-
-| Requirement | Implementation Details | Status |
-| :--- | :--- | :---: |
-| **Original Superhero** | Complete original hero (**ECLIPSE // Kei // 京**), Ground Zero singularity salvage origin, signature blades (Compressed Odachi & Nihil Veritas), and dual combat stances. | ✅ **Pass** |
-| **Modern & Responsive UI/UX** | High-tech cyber aesthetic, multi-page sector transitions, procedural Web Audio, fully responsive across mobile, tablet, and widescreen desktop monitors. | ✅ **Pass** |
-| **Conversational Chatbot** | Interactive in-character hero terminal with in-between question responsiveness, natural resume bridges, clean name extraction, and open-ended lore knowledge base. | ✅ **Pass** |
-| **Automated Email Dispatch** | Real-time dual dispatch sending emergency alerts to developer inbox (`shieldxshield7@gmail.com`) AND citizen receipts with tracking dockets (`INC-KEI-XXXX`). | ✅ **Pass** |
-| **Interactive Anomaly Simulator** | Live planetary defense console with random rift generation, alert klaxons, and 4-phase deploy-and-fix spatial suture mechanics. | ✅ **Pass** |
-| **Public Hosting** | Publicly accessible 24/7 on GitHub Pages at [https://immuzzz.github.io/eclipse-hero-portal/](https://immuzzz.github.io/eclipse-hero-portal/). | ✅ **Pass** |
-
----
-
 ## 🔧 Development Journey & Challenges
 
 ### The Rift Simulator Was Harder Than Expected
@@ -209,4 +196,3 @@ The optimized production bundle will be generated in `dist/`.
 * **Copyright Notice:** `© 2026 Immuzzz. All Rights Reserved.`
 
 ---
-*Built with passion, precision, and relativistic physics for the WHITEMATRIX TechAscent Machine Test.*
