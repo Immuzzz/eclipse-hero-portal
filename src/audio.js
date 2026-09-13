@@ -12,6 +12,8 @@ class SoundController {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       this.ctx = new AudioContext();
     }
+    // HACK: iOS Safari unconditionally starts AudioContext in 'suspended' state
+    // until a direct user touch/click gesture occurs. Checking and resuming here on first interaction.
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
     }

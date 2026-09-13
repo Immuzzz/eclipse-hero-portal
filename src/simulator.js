@@ -150,9 +150,15 @@ export class RiftSimulatorController {
     const xPercent = (50 + Math.cos(angle) * (distRatio * 50)).toFixed(2);
     const yPercent = (50 + Math.sin(angle) * (distRatio * 50)).toFixed(2);
 
+    // TODO: Could calculate bearing more accurately using proper spherical geometry
+    // For now, simple angle conversion works fine because this is a 2D radar, not 3D
     const bearing = Math.floor(((angle * 180 / Math.PI) + 450) % 360);
     const range = Math.floor(18 + Math.random() * 78);
     const fluxVal = (template.flux + (Math.random() * 4 - 2)).toFixed(1);
+
+    // HACK: Stability generation is slightly random to feel more "real"
+    // In a real system, we'd base this on actual seismic data
+    // For UX purposes, randomness = unpredictability = tension
     const stabilityVal = (template.defaultStability + (Math.random() * 6 - 3)).toFixed(2);
 
     this.activeRift = {
