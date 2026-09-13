@@ -972,7 +972,86 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. Initialize Eclipse In-Character Holographic Comms Chatbot
+  // 10. Mobile Cyber Navigation Drawer Controller
+  const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+  const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+  const mobileNavClose = document.getElementById('mobile-nav-close');
+  const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function openMobileNav() {
+    if (mobileNavDrawer && mobileNavToggle) {
+      mobileNavDrawer.classList.add('is-open');
+      mobileNavToggle.classList.add('is-active');
+      mobileNavToggle.setAttribute('aria-expanded', 'true');
+      mobileNavDrawer.setAttribute('aria-hidden', 'false');
+      sound.playNavClick();
+    }
+  }
+
+  function closeMobileNav() {
+    if (mobileNavDrawer && mobileNavToggle) {
+      mobileNavDrawer.classList.remove('is-open');
+      mobileNavToggle.classList.remove('is-active');
+      mobileNavToggle.setAttribute('aria-expanded', 'false');
+      mobileNavDrawer.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  if (mobileNavToggle) {
+    mobileNavToggle.addEventListener('click', () => {
+      if (mobileNavDrawer && mobileNavDrawer.classList.contains('is-open')) {
+        closeMobileNav();
+        sound.playNavClick();
+      } else {
+        openMobileNav();
+      }
+    });
+  }
+
+  if (mobileNavClose) {
+    mobileNavClose.addEventListener('click', () => {
+      closeMobileNav();
+      sound.playNavClick();
+    });
+  }
+
+  if (mobileNavBackdrop) {
+    mobileNavBackdrop.addEventListener('click', () => {
+      closeMobileNav();
+      sound.playNavClick();
+    });
+  }
+
+  // Highlight active page link in mobile navigation
+  const currentPath = window.location.pathname.toLowerCase();
+  mobileNavLinks.forEach((link) => {
+    const page = link.dataset.page;
+    if (page) {
+      const isHome = page === 'index' && (currentPath === '' || currentPath.endsWith('/') || currentPath.endsWith('index.html'));
+      const isSub = currentPath.includes(page);
+      if (isHome || isSub) {
+        link.classList.add('active');
+      }
+    }
+
+    link.addEventListener('click', (e) => {
+      if (link.id === 'mobile-nav-comms-link' || link.classList.contains('btn-comms-call')) {
+        e.preventDefault();
+        closeMobileNav();
+        sound.playNavClick();
+        setTimeout(() => {
+          chat.openDrawer();
+        }, 120);
+      } else {
+        sound.playNavClick();
+        closeMobileNav();
+      }
+    });
+    link.addEventListener('mouseenter', () => sound.playNavHover());
+  });
+
+  // 11. Initialize Eclipse In-Character Holographic Comms Chatbot
   chat.init();
   chat.setMode(currentMode);
 

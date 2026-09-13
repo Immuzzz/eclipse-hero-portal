@@ -45,9 +45,69 @@
           <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
             <span id="sfx-label">SFX: ON</span>
           </button>
+
+          <!-- Mobile Cyber Menu Toggle -->
+          <button class="btn-icon cyber-cut mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+            <span class="mobile-nav-icon">
+              <span class="nav-bar bar-1"></span>
+              <span class="nav-bar bar-2"></span>
+              <span class="nav-bar bar-3"></span>
+            </span>
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Cyber Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-hidden="true">
+      <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+      <div class="mobile-nav-panel cyber-cut">
+        <div class="mobile-nav-hud-top">
+          <span class="hud-glitch-text">// DIRECTORY HUD &bull; SECTORS</span>
+          <button class="mobile-nav-close-btn" id="mobile-nav-close" aria-label="Close Navigation">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+          <a href="./index.html" class="mobile-nav-link" data-page="index">
+            <span class="nav-link-num">01</span>
+            <span class="nav-link-label">COMMAND PORTAL</span>
+            <span class="nav-link-pill">[HOME]</span>
+          </a>
+          <a href="./modes.html" class="mobile-nav-link" data-page="modes">
+            <span class="nav-link-num">02</span>
+            <span class="nav-link-label">THE 2 MODES</span>
+            <span class="nav-link-pill">[TRANSFORM]</span>
+          </a>
+          <a href="./armory.html" class="mobile-nav-link" data-page="armory">
+            <span class="nav-link-num">03</span>
+            <span class="nav-link-label">WEAPONS &amp; ARMORY</span>
+            <span class="nav-link-pill">[BLUEPRINTS]</span>
+          </a>
+          <a href="./origin.html" class="mobile-nav-link" data-page="origin">
+            <span class="nav-link-num">04</span>
+            <span class="nav-link-label">ORIGIN &amp; LORE</span>
+            <span class="nav-link-pill">[KAELEN]</span>
+          </a>
+          <a href="./simulator.html" class="mobile-nav-link" data-page="simulator">
+            <span class="nav-link-num">05</span>
+            <span class="nav-link-label">RIFT SIMULATOR</span>
+            <span class="nav-link-pill">[BATTLE]</span>
+          </a>
+          <a href="./vault.html" class="mobile-nav-link" data-page="vault">
+            <span class="nav-link-num">06</span>
+            <span class="nav-link-label">CLASSIFIED VAULT</span>
+            <span class="nav-link-pill">[CANON]</span>
+          </a>
+          <button class="mobile-nav-link mobile-nav-comms-btn btn-comms-call" id="mobile-nav-comms-link">
+            <span class="nav-link-num">07</span>
+            <span class="nav-link-label">TALK TO KEI</span>
+            <span class="nav-link-pill comms-pill">[COMMS]</span>
+          </button>
+        </div>
+        <div class="mobile-nav-hud-bottom">
+          <span class="hud-status-line">SYSTEM: COMPRESSED // 0.94c READY</span>
+        </div>
+      </div>
+    </div>
 
     <!-- Hero Section -->
     <main id="hero" class="hero-section">

@@ -276,6 +276,231 @@ nav.main-nav a.active::after {
   box-shadow: 0 0 12px var(--theme-glow);
 }
 
+/* --- Mobile Navigation Toggle Button & Drawer --- */
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--theme-primary);
+  box-shadow: 0 0 10px var(--theme-glow);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.mobile-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 16px var(--theme-glow-strong);
+}
+
+.mobile-nav-icon {
+  width: 18px;
+  height: 13px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mobile-nav-icon .nav-bar {
+  width: 100%;
+  height: 2px;
+  background: var(--theme-primary);
+  border-radius: 1px;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  transform-origin: center;
+  box-shadow: 0 0 6px var(--theme-glow);
+}
+
+.mobile-nav-toggle.is-active .bar-1 {
+  transform: translateY(5.5px) rotate(45deg);
+}
+
+.mobile-nav-toggle.is-active .bar-2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.mobile-nav-toggle.is-active .bar-3 {
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+/* Mobile Nav Drawer Container */
+.mobile-nav-drawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-nav-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.mobile-nav-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(8, 8, 14, 0.98);
+  border-bottom: 2px solid var(--theme-primary);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 30px var(--theme-glow);
+  padding: 1.5rem 1.25rem 2rem;
+  transform: translateY(-100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.mobile-nav-drawer.is-open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.mobile-nav-drawer.is-open .mobile-nav-panel {
+  transform: translateY(0);
+}
+
+.mobile-nav-hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--theme-primary);
+  letter-spacing: 0.1em;
+}
+
+.mobile-nav-close-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.4rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.mobile-nav-close-btn:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  box-shadow: 0 0 10px var(--theme-glow);
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition: all 0.22s ease;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 2px;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 15px var(--theme-glow), inset 0 0 10px rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.mobile-nav-link.active {
+  border-left: 3px solid var(--theme-primary);
+}
+
+.nav-link-num {
+  font-size: 0.72rem;
+  color: var(--theme-primary);
+  font-weight: 900;
+  opacity: 0.85;
+  width: 22px;
+}
+
+.nav-link-label {
+  flex-grow: 1;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav-link-pill {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.mobile-nav-comms-btn {
+  background: rgba(0, 229, 255, 0.06);
+  border-color: rgba(0, 229, 255, 0.25);
+}
+
+.mobile-nav-comms-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--theme-primary);
+}
+
+.mobile-nav-comms-btn .comms-pill {
+  color: var(--theme-primary);
+  font-weight: 800;
+}
+
+.mobile-nav-hud-bottom {
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+
 /* Master Mode Switcher Bar (REDMAGIC style) */
 .mode-switch-wrapper {
   display: flex;
@@ -402,9 +627,22 @@ nav.main-nav a.active::after {
 
 @media (max-width: 640px) {
   .hero-mode-switch {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 4px;
+  }
+  .hero-mode-switch .mode-btn {
+    padding: 0.6rem 0.65rem;
+    gap: 0.45rem;
+  }
+  .hero-mode-switch .mode-btn-tag {
+    font-size: 0.62rem;
+  }
+  .hero-mode-switch .mode-btn-name {
+    font-size: 0.85rem;
   }
 }
+
 
 /* Hero Section */
 .hero-section {
@@ -1943,17 +2181,139 @@ footer {
 /* Responsive adjustments */
 @media (max-width: 968px) {
   .hero-section {
-    grid-template-columns: 1fr;
-    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5.5rem 1.25rem 7.5rem;
     text-align: center;
-    gap: 3rem;
+    gap: 1rem;
+    min-height: unset;
   }
-  .hero-subtitle {
-    margin: 0 auto 2.5rem;
+
+  /* Flatten .hero-content so its children and .hero-visual-container can be reordered */
+  .hero-content {
+    display: contents;
   }
-  .hero-actions {
+
+  .hero-telemetry {
+    order: 1;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-title {
+    order: 2;
+    font-size: clamp(2.4rem, 7.5vw, 3.6rem);
+    margin-bottom: 0.25rem;
+    line-height: 1;
+  }
+
+  .hero-section > .section-tag,
+  .hero-content > .section-tag {
+    order: 3;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Kei's Holo-Display Portrait front-and-center directly below title */
+  .hero-visual-container {
+    order: 4;
+    width: 100%;
+    max-width: 380px;
+    margin: 0.25rem auto 0.75rem;
+  }
+
+  .hero-image-frame {
+    aspect-ratio: 4/5;
+    max-height: 400px;
+  }
+
+  .holo-footer {
+    padding: 0.55rem 0.85rem;
+  }
+
+  .holo-tag-main {
+    font-size: 0.8rem;
+  }
+
+  .holo-tag-sub {
+    font-size: 0.68rem;
+  }
+
+  .holo-status-pill {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* 2-Column Mode Switcher Deck directly beneath the portrait */
+  .hero-mode-switch-container {
+    order: 5;
+    width: 100%;
+    max-width: 440px;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-mode-switch {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px;
+    padding: 4px;
+  }
+
+  .hero-mode-switch .mode-btn {
+    padding: 0.6rem 0.65rem;
+    gap: 0.45rem;
     justify-content: center;
   }
+
+  .hero-mode-switch .mode-btn-tag {
+    font-size: 0.62rem;
+  }
+
+  .hero-mode-switch .mode-btn-name {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  /* Hero Subtitle Description */
+  .hero-subtitle {
+    order: 6;
+    margin: 0 auto 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    max-width: 500px;
+    padding: 0 0.5rem;
+  }
+
+  /* Action Buttons */
+  .hero-actions {
+    order: 7;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  /* Hide redundant static talk button on mobile since floating FAB is active */
+  #hero-btn-comms {
+    display: none !important;
+  }
+
+  .hero-actions .btn-cyber-primary,
+  .hero-actions .btn-cyber-ghost {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.75rem 0.6rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
   .armory-grid, .simulator-console {
     grid-template-columns: 1fr;
   }
@@ -3436,21 +3796,33 @@ nav.main-nav a.nav-comms-highlight::before {
 
   /* --- HERO SECTION --- */
   .hero-section {
-    padding: 5.5rem 1.2rem 3rem;
-    gap: 2.5rem;
+    padding: 5.25rem 1rem 7.5rem;
+    gap: 1rem;
   }
   .hero-stat-grid {
     grid-template-columns: 1fr 1fr;
   }
   .hero-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  .btn-cyber-primary,
-  .btn-cyber-ghost {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.65rem;
     width: 100%;
-    max-width: 320px;
+    max-width: 440px;
+    margin: 0 auto;
     justify-content: center;
+  }
+  #hero-btn-comms {
+    display: none !important;
+  }
+  .hero-actions .btn-cyber-primary,
+  .hero-actions .btn-cyber-ghost {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    justify-content: center;
+    white-space: nowrap;
   }
 
   /* --- SECTION PADDING --- */
@@ -3557,7 +3929,29 @@ nav.main-nav a.nav-comms-highlight::before {
     font-size: 1.4rem;
   }
   .hero-section {
-    padding: 5rem 1rem 2.5rem;
+    padding: 5rem 0.85rem 7.5rem;
+    gap: 0.85rem;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 9vw, 2.7rem);
+  }
+  .hero-visual-container {
+    max-width: 320px;
+  }
+  .hero-image-frame {
+    aspect-ratio: 4/5;
+    max-height: 350px;
+  }
+  .hero-mode-switch .mode-btn-name {
+    font-size: 0.78rem;
+  }
+  .hero-actions {
+    gap: 0.5rem;
+  }
+  .hero-actions .btn-cyber-primary,
+  .hero-actions .btn-cyber-ghost {
+    font-size: 0.76rem;
+    padding: 0.7rem 0.35rem;
   }
   #armory {
     padding: 2.5rem 0.9rem 3rem;
