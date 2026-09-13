@@ -2164,20 +2164,129 @@ section {
 }
 
 /* Footer */
-footer {
+footer,
+.site-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: #020204;
-  padding: 4rem 2rem;
+  background: #030308;
+  padding: 3rem 2rem 2.25rem;
+  position: relative;
+  z-index: 10;
 }
 
-.footer-inner {
+.footer-inner,
+.footer-content {
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1.75rem;
+}
+
+.footer-brand-deck,
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.footer-hero-title,
+.footer-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+
+.footer-sub-label,
+.footer-desc {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  max-width: 500px;
+}
+
+.footer-sector-nav,
+.footer-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.footer-nav-chip,
+.footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.38rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-nav-chip:hover,
+.footer-nav a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.footer-nav-chip.active,
+.footer-nav a.active {
+  color: var(--theme-primary);
+  background: rgba(255, 85, 0, 0.12);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 12px rgba(255, 85, 0, 0.25);
+}
+
+body.mode-transcendent .footer-nav-chip.active,
+body.mode-transcendent .footer-nav a.active {
+  color: #ffd000;
+  background: rgba(255, 208, 0, 0.12);
+  border-color: #ffd000;
+  box-shadow: 0 0 12px rgba(255, 208, 0, 0.25);
+}
+
+.footer-copyright-deck,
+.footer-bottom {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footer-copy-line {
+  letter-spacing: 0.04em;
+}
+
+.footer-status-line {
+  color: var(--theme-primary);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+body.mode-transcendent .footer-status-line {
+  color: #ffd000;
 }
 
 /* Responsive adjustments */
@@ -3642,7 +3751,8 @@ nav.main-nav a.nav-comms-highlight::before {
 }
 
 .comms-textarea {
-  flex: 1;
+  flex: 1 1 0%;
+  min-width: 0;
   background: rgba(20, 16, 36, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: #ffffff;
@@ -3674,6 +3784,7 @@ nav.main-nav a.nav-comms-highlight::before {
 }
 
 .comms-send-btn {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -3904,10 +4015,30 @@ nav.main-nav a.nav-comms-highlight::before {
   }
 
   /* --- FOOTER --- */
-  .footer-inner {
+  footer,
+  .site-footer {
+    padding: 2.25rem 1.25rem 1.75rem;
+  }
+  .footer-inner,
+  .footer-content {
     flex-direction: column;
     text-align: center;
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+  .footer-brand-deck,
+  .footer-brand {
+    align-items: center;
+  }
+  .footer-title-row {
+    justify-content: center;
+  }
+  .footer-sector-nav,
+  .footer-nav {
+    justify-content: center;
+  }
+  .footer-copyright-deck,
+  .footer-bottom {
+    text-align: center;
   }
 }
 
@@ -5464,7 +5595,7 @@ body.mode-transcendent .comms-chat-panel .comms-messages-wrap::-webkit-scrollbar
 
 @media (max-width: 860px) {
   .comms-page-container {
-    padding: 1.25rem 1rem 4rem;
+    padding: 1.25rem 1rem 2rem;
   }
   .comms-terminal-grid {
     grid-template-columns: 1fr;
@@ -5477,15 +5608,32 @@ body.mode-transcendent .comms-chat-panel .comms-messages-wrap::-webkit-scrollbar
     display: none;
   }
   .comms-chat-panel {
-    height: 650px;
+    height: 600px;
   }
 }
 
 @media (max-width: 600px) {
+  .comms-page-container {
+    padding: 0.85rem 0.65rem 1.5rem;
+  }
   .comms-chat-panel {
-    height: calc(100dvh - 160px);
-    min-height: 520px;
+    height: calc(100dvh - 165px);
+    min-height: 480px;
     border-radius: 8px;
+  }
+  .comms-input-bar {
+    padding: 0.55rem 0.75rem;
+    gap: 0.45rem;
+  }
+  .comms-textarea {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.82rem;
+  }
+  .comms-send-btn {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.74rem;
+    gap: 0.25rem;
+    letter-spacing: 0.05em;
   }
   .comms-chat-panel .comms-messages-wrap {
     padding: 1rem 0.85rem;
