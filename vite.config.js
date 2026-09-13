@@ -356,7 +356,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
-        modes: path.resolve(__dirname, 'modes.html'),
         armory: path.resolve(__dirname, 'armory.html'),
         origin: path.resolve(__dirname, 'origin.html'),
         simulator: path.resolve(__dirname, 'simulator.html'),
