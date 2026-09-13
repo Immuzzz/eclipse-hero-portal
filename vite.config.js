@@ -3,11 +3,17 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 // Load environment variables from .env
 dotenv.config();
 
 function incidentEmailDispatcherPlugin() {
+  const requestLog = new Map();
+  const maxRequests = 5;
+  const rateWindowMs = 10 * 60 * 1000;
+  const maxBodyBytes = 1024 * 1024;
+
   return {
     name: 'incident-email-dispatcher',
     configureServer(server) {
@@ -16,17 +22,68 @@ function incidentEmailDispatcherPlugin() {
           return next();
         }
 
+        const origin = req.headers.origin;
+        let isLocalOrigin = false;
+        try {
+          const parsedOrigin = origin ? new URL(origin) : null;
+          isLocalOrigin = parsedOrigin
+            && parsedOrigin.protocol === 'http:'
+            && (parsedOrigin.hostname === 'localhost' || parsedOrigin.hostname === '127.0.0.1');
+        } catch {
+          isLocalOrigin = false;
+        }
+        if (origin && !isLocalOrigin) {
+          res.statusCode = 403;
+          res.setHeader('Content-Type', 'application/json');
+          return res.end(JSON.stringify({ error: 'Cross-origin dispatch is not allowed' }));
+        }
+
+        const clientKey = req.socket.remoteAddress || 'local-client';
+        const now = Date.now();
+        const recentRequests = (requestLog.get(clientKey) || [])
+          .filter((requestTime) => now - requestTime < rateWindowMs);
+        if (recentRequests.length >= maxRequests) {
+          res.statusCode = 429;
+          res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Retry-After', String(Math.ceil(rateWindowMs / 1000)));
+          return res.end(JSON.stringify({ error: 'Dispatch rate limit exceeded. Try again later.' }));
+        }
+        recentRequests.push(now);
+        requestLog.set(clientKey, recentRequests);
+
         let body = '';
+        let bodyBytes = 0;
+        let bodyTooLarge = false;
         req.on('data', (chunk) => {
+          bodyBytes += chunk.length;
+          if (bodyBytes > maxBodyBytes) {
+            bodyTooLarge = true;
+            return;
+          }
           body += chunk;
         });
 
         req.on('end', async () => {
           try {
+            if (bodyTooLarge) {
+              res.statusCode = 413;
+              res.setHeader('Content-Type', 'application/json');
+              return res.end(JSON.stringify({ error: 'Request payload is too large' }));
+            }
             const payload = JSON.parse(body || '{}');
             const { citizen, activeMode, userAgent } = payload;
 
-            if (!citizen || !citizen.name || !citizen.grievance) {
+            const emailPattern = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (
+              !citizen
+              || typeof citizen.name !== 'string'
+              || typeof citizen.location !== 'string'
+              || typeof citizen.grievance !== 'string'
+              || !citizen.name.trim()
+              || !citizen.location.trim()
+              || !citizen.grievance.trim()
+              || (citizen.email && !emailPattern.test(citizen.email))
+            ) {
               res.statusCode = 400;
               res.setHeader('Content-Type', 'application/json');
               return res.end(JSON.stringify({ error: 'Missing required citizen intake details' }));
@@ -34,7 +91,8 @@ function incidentEmailDispatcherPlugin() {
 
             dotenv.config({ override: true });
             const developerEmail = process.env.DEVELOPER_EMAIL || 'shieldxshield7@gmail.com';
-            const incidentId = citizen.incidentId || `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
+            const enableCitizenReceipts = process.env.ENABLE_CITIZEN_RECEIPTS === 'true';
+            const incidentId = `INC-KEI-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
             const timestamp = citizen.timestamp || new Date().toLocaleString();
             const modeLabel = (activeMode === 'transcendent')
               ? 'MODE 02: TRANSCENDENT (COSMIC SAVIOR)'
@@ -223,7 +281,7 @@ Automatic dispatch triggered by KEI (京) Tactical Comms Subsystem.
                 });
 
                 // Send confirmation receipt to citizen
-                if (citizen.email && citizen.email.includes('@')) {
+                if (enableCitizenReceipts && citizen.email) {
                   try {
                     await transporter.sendMail({
                       from: `"Dr. Kaelen Mercer (KEI // 京)" <${process.env.SMTP_USER}>`,
@@ -285,7 +343,7 @@ Automatic dispatch triggered by KEI (京) Tactical Comms Subsystem.
               }
 
               // Relay direct citizen confirmation receipt
-              if (citizen.email && citizen.email.includes('@')) {
+              if (enableCitizenReceipts && citizen.email) {
                 try {
                   await fetch(`https://formsubmit.co/ajax/${citizen.email}`, {
                     method: 'POST',
@@ -366,9 +424,9 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    host: true,
-    allowedHosts: true,
-    cors: true,
+    host: 'localhost',
+    allowedHosts: false,
+    cors: false,
     watch: {
       ignored: ['**/dispatches/**', '**/.env*']
     }

@@ -177,6 +177,7 @@ export async function sendIncidentEmail(citizen, activeMode) {
       deliveryReport.success = true;
       deliveryReport.developerDelivery.success = true;
       deliveryReport.citizenDelivery.success = true;
+      deliveryReport.incidentId = data.incidentId || deliveryReport.incidentId;
       deliveryReport.archiveFile = data.archiveFile;
     }
   } catch (err) {
