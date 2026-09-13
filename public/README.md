@@ -174,6 +174,29 @@ The optimized production bundle will be generated in `dist/`.
 
 ---
 
+## ⚠️ Known Limitations & Future Improvements
+
+### Current Limitations
+- Audio context suspension on iOS requires user tap (Web Audio API restriction, not a bug)
+- Rift simulator is single-threaded (60fps on desktop, can dip on mobile)
+- FSM doesn't support complex parsing yet ("I can't tell you my age because..." → parsed as skip)
+- Email dispatch has a 2-3 second latency spike (FormSubmit API, not local)
+
+### Why I Chose Not To Fix (Yet)
+- **Service Worker caching:** Would add ~2KB gzip; overkill for a demo
+- **WebGL particle system:** Diminishing returns after 100 particles
+- **NLP library:** Overkill when simple regex + keyword matching works for incident intake
+- **Local email fallback:** Not needed for this project scope
+
+### What I'd Do With More Time
+1. Add IndexedDB fallback for offline chat history
+2. Implement voice input using Web Speech API
+3. Build a backend for persistent incident database
+4. Add multiplayer rift simulator (co-op hero mode)
+5. Create character progression system based on rift fixes
+
+---
+
 ## 👤 Author & Candidate Information
 
 * **Candidate Name:** Immanuel John Sajan
