@@ -183,14 +183,7 @@ export async function sendIncidentEmail(citizen, activeMode) {
     console.warn('[ECLIPSE DISPATCH] Local server dispatch unavailable:', err.message);
   }
 
-  // Fallback: Ensure overall success if any channel committed
-  if (!deliveryReport.success) {
-    deliveryReport.success = true;
-    deliveryReport.developerDelivery.success = true;
-    deliveryReport.citizenDelivery.success = true;
-    deliveryReport.developerDelivery.method = 'CLIENT_DISPATCH_COMMITTED';
-    deliveryReport.citizenDelivery.method = 'CLIENT_RECEIPT_COMMITTED';
-  } else {
+  if (deliveryReport.success) {
     // If developer delivered, mark citizen delivery as committed via autoresponse
     deliveryReport.citizenDelivery.success = true;
     if (deliveryReport.citizenDelivery.method === 'PENDING') {

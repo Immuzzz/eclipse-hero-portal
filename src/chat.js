@@ -42,6 +42,7 @@ export class EclipseChatbot {
     };
     this.messages = [];
     this.lastSubmittedGrievance = null; // Prevent duplicate submissions
+    this.submissionInFlight = false;
 
     // DOM Elements
     this.fab = null;
@@ -258,18 +259,32 @@ export class EclipseChatbot {
 
   async handleUserSubmit() {
     const rawText = this.inputField.value.trim();
-    if (!rawText || this.isTyping) return;
+    if (!rawText || this.isTyping || this.submissionInFlight) return;
 
-    // Clear input
-    this.inputField.value = '';
-    sound.playCommsSend();
+    this.submissionInFlight = true;
+    if (this.sendBtn) {
+      this.sendBtn.disabled = true;
+      this.sendBtn.setAttribute('aria-busy', 'true');
+    }
 
-    // Add user message
-    this.addMessage('user', rawText);
-    this.saveSession();
+    try {
+      // Clear input
+      this.inputField.value = '';
+      sound.playCommsSend();
 
-    // Process intake or Q&A
-    await this.processConversation(rawText);
+      // Add user message
+      this.addMessage('user', rawText);
+      this.saveSession();
+
+      // Process intake or Q&A
+      await this.processConversation(rawText);
+    } finally {
+      this.submissionInFlight = false;
+      if (this.sendBtn) {
+        this.sendBtn.disabled = false;
+        this.sendBtn.removeAttribute('aria-busy');
+      }
+    }
   }
 
   /**
@@ -427,21 +442,29 @@ export class EclipseChatbot {
         sendIncidentEmail(capturedCitizen, this.currentMode).then((result) => {
           this.citizen.emailDispatch = result.success ? 'SENT' : 'LOCAL_LOG';
           this.citizen.emailRecipient = result.recipient;
-          this.citizen.citizenConfirmed = result.citizenDelivery?.success || true;
+          this.citizen.citizenConfirmed = result.citizenDelivery?.success === true;
           const relayEl = document.getElementById(`email-relay-${capturedCitizen.incidentId}`);
           if (relayEl) {
-            relayEl.className = 'dossier-email-relay delivered cyber-cut';
+            relayEl.className = `dossier-email-relay ${result.success ? 'delivered' : 'failed'} cyber-cut`;
             relayEl.innerHTML = `
               <div class="dossier-relay-row">
-                <span class="relay-check">&#10003;</span>
-                <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(result.recipient)} [DELIVERED]</span>
+                <span class="relay-check">${result.success ? '&#10003;' : '&#9888;'}</span>
+                <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(result.recipient || 'UNAVAILABLE')} [${result.success ? 'DELIVERED' : 'FAILED'}]</span>
               </div>
               <div class="dossier-relay-row">
-                <span class="relay-check">&#10003;</span>
-                <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(capturedCitizen.email)} [DISPATCHED TO INBOX]</span>
+                <span class="relay-check">${result.citizenDelivery?.success ? '&#10003;' : '&#9888;'}</span>
+                <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(capturedCitizen.email || 'NOT PROVIDED')} [${result.citizenDelivery?.success ? 'DISPATCHED TO INBOX' : 'NOT SENT'}]</span>
               </div>
             `;
           }
+          if (!result.success) {
+            this.showErrorBanner('Dispatch failed. Your incident is saved locally; please retry when communications recover.');
+          }
+          this.saveSession();
+        }).catch((error) => {
+          this.citizen.emailDispatch = 'FAILED';
+          this.showErrorBanner('Dispatch failed. Your incident is saved locally; please retry when communications recover.');
+          console.error('[ECLIPSE COMMS] Incident dispatch failed:', error);
           this.saveSession();
         });
 
@@ -1150,6 +1173,8 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       status: 'AWAITING_INPUT'
     };
     this.messages = [];
+    this.lastSubmittedGrievance = null;
+    this.submissionInFlight = false;
     if (this.messagesContainer) {
       this.messagesContainer.innerHTML = '';
     }
