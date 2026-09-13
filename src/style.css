@@ -2820,6 +2820,12 @@ nav.main-nav a.nav-comms-highlight::before {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.comms-quick-replies:empty {
+  display: none !important;
+  padding: 0 !important;
+  border-top: none !important;
+}
+
 .comms-quick-replies::-webkit-scrollbar {
   display: none;
 }

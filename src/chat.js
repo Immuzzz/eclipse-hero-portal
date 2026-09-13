@@ -623,12 +623,15 @@ I'm right here with you. What does it look like around you right now? Or ask me 
 
     switch (this.state) {
       case STATES.GREETING_NAME:
-        suggestions = ['Marcus Vance', 'Dr. Sarah Lin', 'Alex Chen', 'Just someone who needs help'];
+        // No pre-filled names - citizen enters their own name
+        suggestions = [];
         break;
       case STATES.AGE:
-        suggestions = ['19', '26', '34', '45'];
+        // No pre-filled age - citizen enters their own age
+        suggestions = [];
         break;
       case STATES.LOCATION:
+        // Location suggestions to help citizen quickly tag their sector
         suggestions = [
           'Downtown near the subway station',
           'Neo-Shinjuku Sector 04',
@@ -637,19 +640,12 @@ I'm right here with you. What does it look like around you right now? Or ask me 
         ];
         break;
       case STATES.EMAIL:
-        suggestions = [
-          'alex.survivor@gmail.com',
-          'marcus.v@domain.com',
-          'emergency.relay@netmail.com'
-        ];
+        // No suggested emails - citizen enters their own valid email
+        suggestions = [];
         break;
       case STATES.GRIEVANCE:
-        suggestions = [
-          'A violent spatial rift just ripped open near our street!',
-          'Rogue syndicate drones are surrounding our building!',
-          'A power plant explosion caused a catastrophic magnetic pulse trap!',
-          "I'm trapped in a collapsed structure and need evacuation!"
-        ];
+        // No canned grievances - citizen describes their real situation
+        suggestions = [];
         break;
       case STATES.COMPLETE:
       case STATES.FREE_CHAT:
@@ -664,6 +660,12 @@ I'm right here with you. What does it look like around you right now? Or ask me 
         break;
     }
 
+    if (suggestions.length === 0) {
+      this.quickRepliesContainer.style.display = 'none';
+      return;
+    }
+
+    this.quickRepliesContainer.style.display = 'flex';
     suggestions.forEach((text) => {
       const chip = document.createElement('button');
       chip.className = 'comms-quick-chip cyber-cut';
