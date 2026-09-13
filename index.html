@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECLIPSE // THE DUAL SOVEREIGN - World Savior Superhero Showcase</title>
+  <title>KEI (京) // THE DUAL SOVEREIGN - World Savior Superhero Showcase</title>
   <link rel="stylesheet" href="./src/style.css" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
 </head>
@@ -25,33 +25,22 @@
     <!-- Top HUD Navigation -->
     <header>
       <div class="nav-container">
-        <a href="#hero" class="logo-tag">
+        <a href="./index.html" class="logo-tag">
           <span class="logo-badge">RIFT-ANCHOR</span>
-          ECLIPSE
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
         </a>
 
         <nav class="main-nav">
-          <a href="#modes">// THE 2 MODES</a>
-          <a href="#armory">// WEAPONS</a>
-          <a href="#origin">// ORIGIN</a>
-          <a href="#simulator">// RIFT SIMULATOR</a>
-          <a href="#vault">// VAULT</a>
-          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">// TALK TO ECLIPSE</a>
+          <a href="./index.html" class="active">// COMMAND</a>
+          <a href="./modes.html">// THE 2 MODES</a>
+          <a href="./armory.html">// WEAPONS</a>
+          <a href="./origin.html">// ORIGIN</a>
+          <a href="./simulator.html">// RIFT SIMULATOR</a>
+          <a href="./vault.html">// VAULT</a>
+          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">// TALK TO KEI</a>
         </nav>
 
         <div class="nav-controls">
-          <!-- Master Mode Switch (REDMAGIC Style) -->
-          <div class="mode-switch-wrapper cyber-cut">
-            <button class="mode-btn active" data-mode="event-horizon">
-              <span class="pulse-dot"></span>
-              MODE I
-            </button>
-            <button class="mode-btn" data-mode="transcendent">
-              <span class="pulse-dot"></span>
-              MODE II
-            </button>
-          </div>
-
           <!-- SFX Audio Toggle -->
           <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
             <span id="sfx-label">SFX: ON</span>
@@ -69,7 +58,7 @@
         </div>
 
         <h1 class="hero-title">
-          ECLIPSE<br />
+          KEI <span style="font-size:0.5em; opacity:0.85; font-family:sans-serif;">京</span><br />
           <span id="hero-mode-title" class="glow-primary">EVENT HORIZON</span>
         </h1>
 
@@ -78,35 +67,39 @@
         </div>
 
         <p class="hero-subtitle" id="hero-mode-desc">
-          Condensing all internal gravimetric pressure into zero air resistance, Eclipse achieves instantaneous spatial folding. Slices through dreadnought armor and energy barriers with micro-molecular precision.
+          Condensing all internal gravimetric pressure into zero air resistance, Kei achieves instantaneous spatial folding. Slices through dreadnought armor and energy barriers with micro-molecular precision.
         </p>
 
-        <!-- Stat Grid (ROG Telemetry Readout) -->
-        <div class="hero-stat-grid">
-          <div class="stat-box cyber-cut">
-            <div class="stat-val" id="stat-1-val">0.94c</div>
-            <div class="stat-label" id="stat-1-label">Slipstream Velocity</div>
-          </div>
-          <div class="stat-box cyber-cut">
-            <div class="stat-val" id="stat-2-val">50k T</div>
-            <div class="stat-label" id="stat-2-label">Kinetic Cleave Mass</div>
-          </div>
-          <div class="stat-box cyber-cut">
-            <div class="stat-val" id="stat-3-val">100%</div>
-            <div class="stat-label" id="stat-3-label">Barrier Bypass</div>
+        <!-- Master Hero Mode Switcher Deck (REDMAGIC Style) -->
+        <div class="hero-mode-switch-container">
+          <div class="mode-switch-wrapper hero-mode-switch cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              <span class="pulse-dot"></span>
+              <div class="mode-btn-content">
+                <span class="mode-btn-tag">MODE 01</span>
+                <span class="mode-btn-name">EVENT HORIZON</span>
+              </div>
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              <span class="pulse-dot"></span>
+              <div class="mode-btn-content">
+                <span class="mode-btn-tag">MODE 02</span>
+                <span class="mode-btn-name">TRANSCENDENT</span>
+              </div>
+            </button>
           </div>
         </div>
 
         <div class="hero-actions">
-          <a href="#armory" class="btn-cyber-primary cyber-cut">
+          <a href="./armory.html" class="btn-cyber-primary cyber-cut">
             <span>INSPECT WEAPONS</span>
             <span>&rarr;</span>
           </a>
           <button id="hero-btn-comms" class="btn-cyber-ghost cyber-cut btn-comms-call">
-            <span>TALK TO ECLIPSE</span>
+            <span>TALK TO KEI</span>
             <span>&#x1F4E1;</span>
           </button>
-          <a href="#simulator" class="btn-cyber-ghost cyber-cut">
+          <a href="./simulator.html" class="btn-cyber-ghost cyber-cut">
             <span>SEAL THE RIFT</span>
             <span>&#9889;</span>
           </a>
@@ -114,25 +107,10 @@
       </div>
 
       <!-- Hero Visual Showcase (High-Viewability Holo-Display) -->
-      <div class="hero-visual-container">
-        <!-- Integrated Holo Header (Above Artwork, 100% Unobstructed) -->
-        <div class="holo-header">
-          <div class="holo-meta">
-            <span class="holo-pulse"></span>
-            <span class="holo-pilot-id">KAELEN MERCER // <span class="holo-code">ECLIPSE</span></span>
-          </div>
-          <div class="holo-actions">
-            <button class="btn-holo-tool" id="btn-toggle-fit" title="Toggle 100% Full Uncropped Art (FIT) vs Borderless Fill (COVER)">
-              <span class="holo-icon">&#x2922;</span> <span class="btn-text">FIT (100%)</span>
-            </button>
-            <button class="btn-holo-tool" id="btn-hero-lightbox" title="Open Fullscreen Lightbox (Inspect Full Artwork in Ultra-HD)">
-              <span class="holo-icon">&#x26F6;</span> <span class="btn-text">EXPAND</span>
-            </button>
-          </div>
-        </div>
+      <div class="hero-visual-container is-portrait">
 
         <!-- Main Artwork Frame with Ambient Glow & Cyber Accents -->
-        <div class="hero-image-frame cyber-cut-hero fit-contain" id="hero-image-frame" title="Click to view full uncropped artwork">
+        <div class="hero-image-frame is-portrait cyber-cut-hero fit-contain" id="hero-image-frame" title="Click to view full uncropped artwork">
           <div class="hero-frame-corner top-l"></div>
           <div class="hero-frame-corner top-r"></div>
           <div class="hero-frame-corner bot-l"></div>
@@ -141,15 +119,18 @@
           <!-- Ambient blur backdrop behind image -->
           <div class="hero-backdrop" id="hero-backdrop" style="background-image: url('./assets/mode-event-horizon-action.jpg');"></div>
 
-          <img id="hero-main-img" src="./assets/mode-event-horizon-action.jpg" alt="Eclipse Hero Art" />
+          <img id="hero-main-img" src="./assets/mode-event-horizon-action.jpg" alt="Kei Hero Art" />
 
-          <!-- Click to inspect prompt on hover -->
-          <div class="hero-zoom-prompt">
-            <span>&#x1F50D; CLICK TO VIEW FULLSCREEN</span>
+          <!-- Dynamic Holographic Cyber HUD Overlays -->
+          <div class="hero-holo-scanlines"></div>
+          <div class="hero-holo-glare"></div>
+          <div class="hero-holo-reticle" id="hero-holo-reticle">
+            <span class="reticle-target-cross"></span>
+            <span class="reticle-telemetry" id="reticle-telemetry-text">TGT: LOCK // 0.94c</span>
           </div>
         </div>
 
-        <!-- Integrated Holo Footer (Below Artwork, 100% Unobstructed) -->
+        <!-- Integrated Holo Footer -->
         <div class="holo-footer">
           <div class="holo-tag-group">
             <div class="holo-tag-main" id="frame-hero-tag">TACTICAL DUEL FORM</div>
@@ -168,289 +149,106 @@
       </div>
     </main>
 
-    <!-- The Two Modes Deep Dive -->
-    <section id="modes">
-      <div class="section-header">
-        <div class="section-tag">[ THE 2 OFFICIAL TRANSFORMATIONS ]</div>
-        <h2 class="section-title">DUAL SOVEREIGN MODES</h2>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem;">
-        <!-- Card 1: Event Horizon Mode -->
-        <div class="cyber-card cyber-cut" style="padding: 2.5rem;">
-          <div class="section-tag" style="color: #ff5500;">MODE 01 // TERRESTRIAL DEFENSE</div>
-          <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin: 0.5rem 0 1rem; color: #fff;">EVENT HORIZON MODE</h3>
-          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">
-            A sleek, high-velocity duelist state designed to protect human cities and engage relativistic vanguard threats without collateral destruction.
-          </p>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.9rem; color: #d0d5e0; margin-bottom: 2rem;">
-            <li>&#9656; <strong>WEAPON:</strong> The Compressed Odachi</li>
-            <li>&#9656; <strong>SPEED:</strong> Mach 20+ to 0.94c Spatial Slipstream</li>
-            <li>&#9656; <strong>ARENA:</strong> Urban, subterranean, aerial interception</li>
-            <li>&#9656; <strong>SIGNATURE:</strong> Dark Crescent Cleave</li>
-          </ul>
-          <button class="btn-cyber-primary cyber-cut mode-btn" data-mode="event-horizon" style="width: 100%; justify-content: center;">
-            ACTIVATE MODE I
-          </button>
-        </div>
-
-        <!-- Card 2: Transcendent World-Saving Mode -->
-        <div class="cyber-card cyber-cut" style="padding: 2.5rem;">
-          <div class="section-tag" style="color: #ffd000;">MODE 02 // EXISTENTIAL SAVIOR</div>
-          <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin: 0.5rem 0 1rem; color: #fff;">TRANSCENDENT MODE</h3>
-          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">
-            The ultimate cosmic state awakened exclusively when Earth faces planetary extinction, asteroid collision, or dimensional space collapse.
-          </p>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.9rem; color: #d0d5e0; margin-bottom: 2rem;">
-            <li>&#9656; <strong>WEAPON:</strong> Nihil Veritas (The Cosmic Space Blade)</li>
-            <li>&#9656; <strong>ALTITUDE:</strong> Upper Exosphere / Planetary Orbit</li>
-            <li>&#9656; <strong>ROLE:</strong> Dimensional Anchor & Reality Stitcher</li>
-            <li>&#9656; <strong>SIGNATURE:</strong> Genesis Cleave (The World Stitch)</li>
-          </ul>
-          <button class="btn-cyber-primary cyber-cut mode-btn" data-mode="transcendent" style="width: 100%; justify-content: center; background: #ffd000; color: #000;">
-            ACTIVATE MODE II
-          </button>
-        </div>
-      </div>
-    </section>
-
-        <!-- The Armory & Weapon Inspector (Widescreen 16:9 Blueprint Stage) -->
-    <section id="armory">
+    <!-- Command Access Sector Portal Deck -->
+    <section class="portal-section">
       <div class="section-header" style="text-align: center;">
-        <div class="section-tag" style="justify-content: center;">[ TACTICAL & PLANETARY WEAPON SYSTEMS ]</div>
-        <h2 class="section-title">THE WEAPON SPECIFICATIONS</h2>
+        <div class="section-tag" style="justify-content: center;">[ TACTICAL COMMAND HUBS ]</div>
+        <h2 class="section-title">FIVE DEFENSE SECTORS</h2>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 680px; margin: 0.75rem auto 0; line-height: 1.6;">
+          Navigate directly into specialized command sectors, engineering blueprints, origin dossiers, and defense simulators.
+        </p>
       </div>
 
-      <!-- Top Weapon Switcher Tabs -->
-      <div style="max-width: 900px; margin: 0 auto 2rem; display: flex; gap: 1rem;">
-        <button class="weapon-tab-btn active cyber-cut" data-weapon="odachi">
-          01. COMPRESSED ODACHI (MODE I)
-        </button>
-        <button class="weapon-tab-btn cyber-cut" data-weapon="nihil">
-          02. NIHIL VERITAS (MODE II)
-        </button>
-      </div>
-
-      <!-- Integrated Side-by-Side Weapon Showcase Deck (Blueprint on Left, Tactical Test Slash on Right) -->
-      <div class="weapon-showcase-stage" id="weapon-showcase-stage">
-        <!-- Left: High-Tech Widescreen Blueprint Stage -->
-        <div class="weapon-blueprint-stage cyber-cut">
-          <div class="stage-hud-top">
-            <span id="armory-frame-tag">WEAPON DOSSIER // CLASSIFIED</span>
-            <span id="armory-frame-mode" style="color: var(--theme-primary); font-weight: 700;">EVENT HORIZON ARSENAL</span>
-            <button class="btn-icon cyber-cut" id="btn-expand-blueprint" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">
-              ⛶ CLICK TO ZOOM
-            </button>
-          </div>
-
-          <!-- Blueprint Image Viewport (Contain fit, interactive zoom) -->
-          <div class="blueprint-img-wrapper" id="blueprint-clickable-viewport" title="Click to view full resolution">
-            <img id="armory-weapon-img" src="./assets/weapon-compressed-odachi.jpg" alt="Weapon Blueprint" />
-          </div>
-
-          <div class="stage-hud-bottom">
-            <div>
-              <span style="font-weight: 700; color: #fff; font-size: 1.05rem;" id="armory-frame-title">THE COMPRESSED ODACHI</span>
-              <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 0.75rem;" id="armory-frame-desc">SLENDER OBSIDIAN SPATIAL BLADE</span>
+      <div class="portal-grid">
+        <!-- Sector 01: Modes -->
+        <a href="./modes.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 01 // TRANSFORMATIONS</span>
+              <span class="portal-arrow">&rarr;</span>
             </div>
-            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #a0ff90;">
-              ● SPECIFICATION SHEET VERIFIED
+            <div class="portal-name">THE 2 MODES</div>
+            <div class="portal-desc">
+              Explore Kei's two canon combat forms: Mode 01 Event Horizon (Terrestrial Defense) and Mode 02 Transcendent (Planetary Savior).
             </div>
           </div>
-        </div>
-
-        <!-- Right: Dedicated Tactical Cleave & Slash Simulator Console (Always in View!) -->
-        <div class="tactical-slash-sidebar cyber-card cyber-cut">
-          <div class="slash-sidebar-hud-top">
-            <div class="slash-status-line">
-              <span class="slash-pulse-pip"></span>
-              <span class="slash-status-badge" id="slash-status-badge">TACTICAL COMBAT CALIBRATION // ARMED</span>
-            </div>
-            <span class="slash-sys-id" id="slash-sys-id">TACTICAL CLEAVE MATRIX</span>
+          <div class="portal-footer">
+            <span style="color: #ff5500;">0.94c DUELIST</span>
+            <span style="color: #ffd000;">ORBITAL SAVIOR</span>
           </div>
+        </a>
 
-          <div class="slash-sidebar-content">
-            <div class="slash-title-line" id="slash-heading-text">SIMULATE SPATIAL KINETIC CLEAVE</div>
-            <div class="slash-sub-line" id="slash-sub-text">Deploy relativistic molecular cut at 0.94c with vacuum wake and ringing folded steel overtone</div>
-
-            <!-- Primary Test Slash Action Trigger -->
-            <button id="btn-test-slash" class="btn-slash-primary cyber-cut btn-slash-side">
-              <span class="btn-slash-icon">⚡</span>
-              <span class="btn-slash-text">ENGAGE TEST SLASH</span>
-            </button>
-
-            <!-- Quick Calibration Telemetry Stack -->
-            <div class="slash-telemetry-stack">
-              <div class="slash-telemetry-row">
-                <span class="t-label">COMBAT HARMONICS</span>
-                <span class="t-val highlight" id="telemetry-harmonics">942.8 THz // SYNCHRONIZED</span>
-              </div>
-              <div class="slash-telemetry-row">
-                <span class="t-label">VELOCITY PROFILE</span>
-                <span class="t-val" id="telemetry-velocity">0.94c // RELATIVISTIC</span>
-              </div>
-              <div class="slash-telemetry-row">
-                <span class="t-label">SEVERANCE RATING</span>
-                <span class="t-val highlight" id="telemetry-cleave">0.1nm SUB-ATOMIC CUT</span>
-              </div>
+        <!-- Sector 02: Armory -->
+        <a href="./armory.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 02 // ARSENAL</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">WEAPON SPECS</div>
+            <div class="portal-desc">
+              16:9 widescreen blueprint deck, interactive tactical cleave simulator, sub-molecular component breakdown, and quantum harmonics.
             </div>
           </div>
-
-          <div class="slash-sidebar-hud-bottom">
-            <span class="slash-ready-dot">● SIMULATOR ARMED</span>
-            <span class="slash-trigger-hint">[ AUDIO & PARTICLES SYNCED ]</span>
+          <div class="portal-footer">
+            <span style="color: var(--theme-primary);">COMPRESSED ODACHI</span>
+            <span style="color: var(--theme-secondary);">NIHIL VERITAS</span>
           </div>
-        </div>
-      </div>
+        </a>
 
-      <!-- Bottom Telemetry & Component Architecture Grid -->
-      <div class="weapon-data-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 2rem auto 0;">
-        <!-- Left: Structural Component Breakdown -->
-        <div class="weapon-schematic-card cyber-cut">
-          <div class="card-tech-header">
-            <span class="tech-header-tag">// STRUCTURAL COMPONENT BREAKDOWN</span>
-            <span class="tech-header-meta">SUB-MOLECULAR ARCHITECTURE</span>
+        <!-- Sector 03: Origin -->
+        <a href="./origin.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 03 // DOSSIER</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">ORIGIN DOSSIER</div>
+            <div class="portal-desc">
+              The Triple Confluence: Grounding human mortality, Solar Architect hard-light barriers, and the sealed Abyssal dark-matter parasite.
+            </div>
           </div>
-          
-          <!-- Interactive Anatomy Pipeline Track -->
-          <div class="component-pipeline" id="component-pipeline"></div>
-
-          <!-- Component Specification Cards -->
-          <div class="component-cards-list" id="component-cards-list"></div>
-        </div>
-
-        <!-- Right: Performance Metrics & Diagnostics -->
-        <div class="weapon-schematic-card cyber-cut">
-          <div class="card-tech-header">
-            <span class="tech-header-tag">// COMBAT TELEMETRY & PERFORMANCE METRICS</span>
-            <span class="tech-header-meta">QUANTUM HARMONICS</span>
+          <div class="portal-footer">
+            <span>CLASSIFIED LEVEL 5</span>
+            <span style="color: #a0ff90;">KAELEN MERCER</span>
           </div>
+        </a>
 
-          <div id="weapon-metrics-container">
-            <!-- Dynamically populated via JS -->
+        <!-- Sector 04: Simulator -->
+        <a href="./simulator.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 04 // DEFENSE</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">RIFT SIMULATOR</div>
+            <div class="portal-desc">
+              Real-time planetary radar, extinction anomaly deployment console, and orbital Genesis Cleave reality suture simulator.
+            </div>
           </div>
-
-          <!-- Auxiliary Diagnostic Matrix -->
-          <div class="aux-diagnostics-container" id="aux-diagnostics-container">
-            <!-- Dynamically populated via JS -->
+          <div class="portal-footer">
+            <span style="color: var(--theme-primary);">ACTIVE RADAR SWEEP</span>
+            <span style="color: #a0ff90;">INDEX 99.98%</span>
           </div>
-        </div>
-      </div>
-    </section>
+        </a>
 
-    <!-- Origin & The Triple Confluence -->
-    <section id="origin">
-      <div class="section-header">
-        <div class="section-tag">[ CLASSIFIED DOSSIER ]</div>
-        <h2 class="section-title">THE TRIPLE CONFLUENCE</h2>
-      </div>
-
-      <div class="origin-timeline">
-        <div class="timeline-card cyber-cut">
-          <div class="timeline-step">PHASE 01 // GROUNDING</div>
-          <h3 class="timeline-heading">THE HUMAN CORE</h3>
-          <p class="timeline-body">
-            Born Kaelen Mercer on Earth. Grounded by everyday human empathy, family loyalty, and mortality. He does not fight for universal glory—he fights because Earth is where his loved ones live.
-          </p>
-        </div>
-
-        <div class="timeline-card cyber-cut">
-          <div class="timeline-step">PHASE 02 // ORDER & LIGHT</div>
-          <h3 class="timeline-heading">THE SOLAR BASTION</h3>
-          <p class="timeline-body">
-            Inherited from his mother, an emissary of the Solar Architects who construct multidimensional geometric shields. Bestows hard-light barriers and the power to weave and suture reality.
-          </p>
-        </div>
-
-        <div class="timeline-card cyber-cut">
-          <div class="timeline-step">PHASE 03 // PRIMORDIAL ENTROPY</div>
-          <h3 class="timeline-heading">THE ABYSSAL MAW</h3>
-          <p class="timeline-body">
-            A catastrophic dark matter parasite from the outer void sealed into his nascent soul before birth. Grants bottomless gravimetric pull, black spatial fire, and instinctual combat reflex.
-          </p>
-        </div>
-
-        <div class="timeline-card cyber-cut">
-          <div class="timeline-step">PHASE 04 // THE EMERGENCE</div>
-          <h3 class="timeline-heading">THE DUAL SOVEREIGN</h3>
-          <p class="timeline-body">
-            The confluence of absolute creation and absolute destruction. Kaelen stands as the only living organism capable of handling both cosmic extremes without disintegrating.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Planetary Threat & Rift Sealing Simulator -->
-    <section id="simulator">
-      <div class="section-header">
-        <div class="section-tag">[ PLANETARY DEFENSE TELEMETRY ]</div>
-        <h2 class="section-title">RIFT-SEALING SIMULATOR</h2>
-      </div>
-
-      <div class="simulator-console cyber-cut">
-        <!-- Interactive Radar Display -->
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
-          <div class="radar-screen">
-            <div class="radar-sweep"></div>
-            <div class="radar-center-blip"></div>
-            <div style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; top: 10px;">NORTH ORBIT</div>
-            <div style="position: absolute; color: rgba(255, 255, 255, 0.4); font-family: var(--font-mono); font-size: 0.7rem; bottom: 10px;">SOUTH ORBIT</div>
+        <!-- Sector 05: Vault -->
+        <a href="./vault.html" class="portal-card cyber-cut">
+          <div>
+            <div class="portal-num">
+              <span>SECTOR 05 // ARCHIVE</span>
+              <span class="portal-arrow">&rarr;</span>
+            </div>
+            <div class="portal-name">4K VISUAL VAULT</div>
+            <div class="portal-desc">
+              Comprehensive high-resolution archive of 11 canon concept illustrations, combat stills, and weapon schematics with lightbox zoom.
+            </div>
           </div>
-          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--theme-primary); letter-spacing: 0.1em;">
-            [ RADAR ACTIVE // SCANNING PLANETARY CRUST ]
+          <div class="portal-footer">
+            <span>11 4K ASSETS</span>
+            <span style="color: #ffd000;">UNCROPPED CANON</span>
           </div>
-        </div>
-
-        <!-- Simulation Controls & Diagnostic Log -->
-        <div>
-          <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.05em;">
-              SELECT CRITICAL EXTINCTION ANOMALY:
-            </label>
-            <select id="threat-scenario-select" style="width: 100%; background: rgba(0, 0, 0, 0.8); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.95rem;">
-              <option value="PACIFIC TECTONIC FISSURE">SECTOR 01: PACIFIC TECTONIC FISSURE [CLASS-S]</option>
-              <option value="EXOSPHERE SINGULARITY BREAK">SECTOR 02: EXOSPHERE SINGULARITY BREAK [EXTINCTION]</option>
-              <option value="TOKYO SUBTERRANEAN VOID TEAR">SECTOR 03: METROPOLITAN VOID TEAR [URBAN CATACLYSM]</option>
-            </select>
-          </div>
-
-          <div class="sim-telemetry-log cyber-cut" id="sim-log-content">
-            <div>&gt; [STATUS] RADAR ONLINE. READY FOR DIRECT DEPLOYMENT.</div>
-            <div>&gt; [DIAGNOSTIC] AWAITING COMMAND AUTHORIZATION...</div>
-          </div>
-
-          <button id="btn-sim-deploy" class="btn-cyber-primary cyber-cut" style="width: 100%; justify-content: center;">
-            DEPLOY ECLIPSE // INITIATE GENESIS CLEAVE &rarr;
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Concept Vault & Gallery: STRICTLY THE 2 OFFICIAL MODES -->
-    <section id="vault">
-      <div class="section-header" style="text-align: center;">
-        <div class="section-tag" style="justify-content: center;">[ OFFICIAL MODE ARCHIVE ]</div>
-        <h2 class="section-title">THE TWO SOVEREIGN STATES</h2>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); max-width: 960px; margin: 0 auto; gap: 2.5rem;">
-        <!-- Mode 01 Vault Item -->
-        <div class="vault-item cyber-cut">
-          <img src="./assets/mode-event-horizon-action.jpg" alt="Event Horizon Action Visual" />
-          <div class="vault-caption">
-            <div style="color: #ff5500;">MODE 01</div>
-            <div>EVENT HORIZON // RELATIVISTIC DUELIST</div>
-          </div>
-        </div>
-
-        <!-- Mode 02 Vault Item -->
-        <div class="vault-item cyber-cut">
-          <img src="./assets/mode-transcendent-action.jpg" alt="Transcendent Action Visual" />
-          <div class="vault-caption">
-            <div style="color: #ffd000;">MODE 02</div>
-            <div>TRANSCENDENT // PLANETARY SAVIOR</div>
-          </div>
-        </div>
+        </a>
       </div>
     </section>
 
@@ -459,15 +257,15 @@
       <div class="footer-inner">
         <div>
           <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 0.3rem;">
-            ECLIPSE // THE DUAL SOVEREIGN
+            KEI (京) // THE DUAL SOVEREIGN
           </div>
           <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em;">
-            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON & TRANSCENDENT
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
           </div>
         </div>
 
         <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-align: right;">
-          <div>DESIGN ARCHITECTURE: ROG STRIX & REDMAGIC INSPIRED</div>
+          <div>DESIGN ARCHITECTURE: ROG STRIX &amp; REDMAGIC INSPIRED</div>
           <div style="color: var(--theme-primary); margin-top: 0.25rem;">STATUS: REALITY ANCHOR STABLE [100%]</div>
         </div>
       </div>
@@ -482,7 +280,7 @@
       <div class="lightbox-header-bar">
         <div class="lightbox-title-wrap">
           <span class="lightbox-dot"></span>
-          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // ECLIPSE</span>
+          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // KEI</span>
         </div>
         <span class="lightbox-subtag" id="lightbox-subtag">HIGH RESOLUTION CANON MASTER</span>
       </div>
@@ -490,14 +288,14 @@
         <img id="lightbox-img" src="" alt="Fullscreen Visual Preview" />
       </div>
       <div class="lightbox-footer-bar">
-        <span class="lightbox-caption" id="lightbox-caption">ECLIPSE CANON SPEC</span>
+        <span class="lightbox-caption" id="lightbox-caption">KEI CANON SPEC</span>
         <span class="lightbox-hint">&#9003; ESC OR CLICK OUTSIDE TO CLOSE</span>
       </div>
     </div>
   </div>
 
   <!-- Holographic Comms Floating Trigger Button -->
-  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Talk directly with Kaelen Mercer (Eclipse)" title="Talk to Kaelen // Direct Hero Link">
+  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Talk directly with Kaelen Mercer (Kei)" title="Talk to Kaelen // Direct Hero Link">
     <div class="fab-radar-ring"></div>
     <div class="fab-glow-backdrop"></div>
     <div class="fab-core">
@@ -528,14 +326,14 @@
     <div class="drawer-header">
       <div class="drawer-header-left">
         <div class="drawer-avatar cyber-cut">
-          <img src="./assets/mode-event-horizon-focus.jpg" alt="Kaelen Mercer / Eclipse" id="drawer-header-avatar-img" />
+          <img src="./assets/mode-event-horizon-focus.jpg" alt="Kaelen Mercer / Kei" id="drawer-header-avatar-img" />
           <span class="avatar-live-beacon"></span>
           <div class="avatar-radar-sweep" aria-hidden="true"></div>
         </div>
         <div class="drawer-title-wrap">
           <div class="drawer-title-row">
             <span class="drawer-title">KAELEN MERCER</span>
-            <span class="drawer-hero-badge">ECLIPSE</span>
+            <span class="drawer-hero-badge">KEI [京]</span>
           </div>
           <div class="drawer-sub" id="comms-mode-pill">
             <span class="status-pulse-dot"></span> DIRECT HERO COMMS &bull; MODE 01

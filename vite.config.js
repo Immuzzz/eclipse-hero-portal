@@ -34,7 +34,7 @@ function incidentEmailDispatcherPlugin() {
 
             dotenv.config({ override: true });
             const developerEmail = process.env.DEVELOPER_EMAIL || 'shieldxshield7@gmail.com';
-            const incidentId = citizen.incidentId || `INC-ECLIPSE-${Math.floor(1000 + Math.random() * 9000)}`;
+            const incidentId = citizen.incidentId || `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
             const timestamp = citizen.timestamp || new Date().toLocaleString();
             const modeLabel = (activeMode === 'transcendent')
               ? 'MODE 02: TRANSCENDENT (COSMIC SAVIOR)'
@@ -43,7 +43,7 @@ function incidentEmailDispatcherPlugin() {
             // 1. Compose Plaintext Email
             const textContent = `
 ================================================================================
-ECLIPSE TACTICAL ALERT // CITIZEN INCIDENT DOSSIER
+KEI (京) TACTICAL ALERT // CITIZEN INCIDENT DOSSIER
 ================================================================================
 
 INCIDENT ID: ${incidentId}
@@ -72,7 +72,7 @@ Client Agent:     ${userAgent || req.headers['user-agent'] || 'Unknown Terminal'
 Target Recipient: ${developerEmail}
 
 ================================================================================
-Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
+Automatic dispatch triggered by KEI (京) Tactical Comms Subsystem.
 ================================================================================
             `.trim();
 
@@ -82,7 +82,7 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
 <html>
 <head>
   <meta charset="utf-8">
-  <title>[ECLIPSE ALERT] Incident ${incidentId}</title>
+  <title>[KEI (京) ALERT] Incident ${incidentId}</title>
   <style>
     body { margin: 0; padding: 0; background-color: #06050b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #eceff4; }
     .wrapper { max-width: 640px; margin: 24px auto; background-color: #0d0b18; border: 2px solid #00e5ff; box-shadow: 0 0 30px rgba(0, 229, 255, 0.25); border-radius: 4px; overflow: hidden; }
@@ -108,7 +108,7 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
     <div class="header">
       <div class="header-inner">
         <span class="badge">PRIORITY ALPHA DISPATCH</span>
-        <h1 class="title">ECLIPSE TACTICAL ALERT // CITIZEN GRIEVANCE</h1>
+        <h1 class="title">KEI (京) TACTICAL ALERT // CITIZEN GRIEVANCE</h1>
         <p class="subtitle">INCIDENT ID: ${incidentId} &bull; ${modeLabel}</p>
       </div>
     </div>
@@ -214,10 +214,10 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                 });
 
                 const info = await transporter.sendMail({
-                  from: `"ECLIPSE Tactical Dispatch" <${process.env.SMTP_USER}>`,
+                  from: `"KEI (京) Tactical Dispatch" <${process.env.SMTP_USER}>`,
                   to: developerEmail,
                   replyTo: citizen.email,
-                  subject: `[ECLIPSE ALERT] Priority Incident #${incidentId} Logged — ${citizen.location}`,
+                  subject: `[KEI (京) ALERT] Priority Incident #${incidentId} Logged — ${citizen.location}`,
                   text: textContent,
                   html: htmlContent
                 });
@@ -226,23 +226,23 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                 if (citizen.email && citizen.email.includes('@')) {
                   try {
                     await transporter.sendMail({
-                      from: `"Dr. Kaelen Mercer (ECLIPSE)" <${process.env.SMTP_USER}>`,
+                      from: `"Dr. Kaelen Mercer (KEI // 京)" <${process.env.SMTP_USER}>`,
                       to: citizen.email,
                       replyTo: developerEmail,
-                      subject: `[ECLIPSE CONFIRMATION] Incident #${incidentId} Logged — Stand By`,
-                      text: `Greetings ${citizen.name},\n\nYour emergency distress beacon (Incident #${incidentId}) has been successfully received by Dr. Kaelen Mercer (ECLIPSE).\n\nStatus: PRIORITY ALPHA // HERO INBOUND AT 0.94c\nETA: ~4.5 seconds\n\nStay low, take reinforced cover, and await contact.\n\n— ECLIPSE Tactical Dispatch`,
+                      subject: `[KEI (京) CONFIRMATION] Incident #${incidentId} Logged — Stand By`,
+                      text: `Greetings ${citizen.name},\n\nYour emergency distress beacon (Incident #${incidentId}) has been successfully received by Dr. Kaelen Mercer (KEI // 京).\n\nStatus: PRIORITY ALPHA // HERO INBOUND AT 0.94c\nETA: ~4.5 seconds\n\nStay low, take reinforced cover, and await contact.\n\n— KEI (京) Tactical Dispatch`,
                       html: htmlContent
                     });
-                    console.log(`[ECLIPSE DISPATCH] SMTP confirmation dispatched to citizen: ${citizen.email}`);
+                    console.log(`[KEI DISPATCH] SMTP confirmation dispatched to citizen: ${citizen.email}`);
                   } catch (citErr) {
-                    console.warn(`[ECLIPSE DISPATCH] Citizen SMTP send note:`, citErr.message);
+                    console.warn(`[KEI DISPATCH] Citizen SMTP send note:`, citErr.message);
                   }
                 }
 
-                console.log(`[ECLIPSE DISPATCH] SMTP Email dispatched successfully: ${info.messageId}`);
+                console.log(`[KEI DISPATCH] SMTP Email dispatched successfully: ${info.messageId}`);
                 sendMethod = 'LIVE_SMTP_DUAL_TARGET';
               } catch (smtpErr) {
-                console.error(`[ECLIPSE DISPATCH] SMTP send failed, fell back to local archive:`, smtpErr.message);
+                console.error(`[KEI DISPATCH] SMTP send failed, fell back to local archive:`, smtpErr.message);
                 sendMethod = 'FALLBACK_LOCAL_ARCHIVE';
               }
             } else {
@@ -256,11 +256,11 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                     Referer: 'http://localhost:5173/'
                   },
                   body: JSON.stringify({
-                    _subject: `[ECLIPSE ALERT] Priority Incident #${incidentId} — ${citizen.location}`,
+                    _subject: `[KEI (京) ALERT] Priority Incident #${incidentId} — ${citizen.location}`,
                     _template: 'table',
                     _captcha: 'false',
                     _replyto: citizen.email,
-                    _autoresponse: `Greetings ${citizen.name},\n\nYour distress beacon (Incident #${incidentId}) has been locked onto Dr. Kaelen Mercer's (ECLIPSE) visor. Emergency response protocols have been activated for ${citizen.location}.\n\nSTATUS: HERO INBOUND AT 0.94c\nETA: ~4.5 SECONDS\n\n— Dr. Kaelen Mercer // ECLIPSE Planetary Defense`,
+                    _autoresponse: `Greetings ${citizen.name},\n\nYour distress beacon (Incident #${incidentId}) has been locked onto Dr. Kaelen Mercer's (KEI // 京) visor. Emergency response protocols have been activated for ${citizen.location}.\n\nSTATUS: HERO INBOUND AT 0.94c\nETA: ~4.5 SECONDS\n\n— Dr. Kaelen Mercer // KEI (京) Planetary Defense`,
                     email: citizen.email,
                     'Incident ID': incidentId,
                     'Citizen Name': citizen.name,
@@ -277,11 +277,11 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                   const fsData = await fsRes.json();
                   if (fsData.success === 'true' || fsData.message?.includes('Activation') || fsData.success === true) {
                     sendMethod = 'FORMSUBMIT_RELAY_DUAL';
-                    console.log(`[ECLIPSE DISPATCH] FormSubmit relay triggered for: ${developerEmail} and autoresponse to ${citizen.email}`);
+                    console.log(`[KEI DISPATCH] FormSubmit relay triggered for: ${developerEmail} and autoresponse to ${citizen.email}`);
                   }
                 }
               } catch (fsErr) {
-                console.warn('[ECLIPSE DISPATCH] FormSubmit relay attempt:', fsErr.message);
+                console.warn('[KEI DISPATCH] FormSubmit relay attempt:', fsErr.message);
               }
 
               // Relay direct citizen confirmation receipt
@@ -295,7 +295,7 @@ Automatic dispatch triggered by ECLIPSE Tactical Comms Subsystem.
                       Referer: 'http://localhost:5173/'
                     },
                     body: JSON.stringify({
-                      _subject: `[ECLIPSE RECEIPT] Incident #${incidentId} Verified — Hold Your Position`,
+                      _subject: `[KEI (京) RECEIPT] Incident #${incidentId} Verified — Hold Your Position`,
                       _template: 'table',
                       _captcha: 'false',
                       _replyto: developerEmail,
@@ -352,6 +352,18 @@ function escapeHtml(str) {
 export default defineConfig({
   base: './',
   plugins: [incidentEmailDispatcherPlugin()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        modes: path.resolve(__dirname, 'modes.html'),
+        armory: path.resolve(__dirname, 'armory.html'),
+        origin: path.resolve(__dirname, 'origin.html'),
+        simulator: path.resolve(__dirname, 'simulator.html'),
+        vault: path.resolve(__dirname, 'vault.html'),
+      }
+    }
+  },
   server: {
     port: 5173,
     host: true,

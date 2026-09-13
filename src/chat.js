@@ -192,7 +192,7 @@ export class EclipseChatbot {
   sendInitialGreeting() {
     this.state = STATES.GREETING_NAME;
     const greetingText =
-      "Hey! I hear you loud and clear. It's Kaelen—Eclipse.\n\nI just picked up your signal pinging my orbital link from down on the surface. Are you somewhere safe right now?\n\nTalk to me—who am I speaking with? What's your name?";
+      "Hey! I hear you loud and clear. It's Kaelen—Kei.\n\nI just picked up your signal pinging my orbital link from down on the surface. Are you somewhere safe right now?\n\nTalk to me—who am I speaking with? What's your name?";
 
     setTimeout(() => {
       this.addMessage('eclipse', greetingText);
@@ -282,7 +282,7 @@ export class EclipseChatbot {
 
       case STATES.GRIEVANCE: {
         this.citizen.grievance = userInput;
-        this.citizen.incidentId = `INC-ECLIPSE-${Math.floor(1000 + Math.random() * 9000)}`;
+        this.citizen.incidentId = `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
         this.citizen.timestamp = new Date().toLocaleString('en-US', {
           dateStyle: 'medium',
           timeStyle: 'short'
@@ -539,7 +539,7 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       `;
     } else {
       const isHero = msg.sender === 'eclipse';
-      const senderLabel = isHero ? 'KAELEN MERCER (ECLIPSE)' : (this.citizen.name ? this.citizen.name.toUpperCase() : 'YOU');
+      const senderLabel = isHero ? 'KAELEN MERCER (KEI // 京)' : (this.citizen.name ? this.citizen.name.toUpperCase() : 'YOU');
       const avatarSrc = this.currentMode === 'transcendent'
         ? './assets/mode-transcendent-action.jpg'
         : './assets/mode-event-horizon-focus.jpg';

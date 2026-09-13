@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sfxBtn) {
     sfxBtn.addEventListener('click', () => {
       const isEnabled = sound.toggle();
-      sfxLabel.textContent = isEnabled ? 'SFX: ON' : 'SFX: OFF';
+      if (sfxLabel) sfxLabel.textContent = isEnabled ? 'SFX: ON' : 'SFX: OFF';
     });
   }
 
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'EVENT HORIZON',
       titleBadge: 'RELATIVISTIC DUELIST',
       telemetry: 'SYSTEM: COMPRESSED // ACCELERATION: 0.94c // THREAT: VANGUARD',
-      desc: 'Condensing all internal gravimetric pressure into zero air resistance, Eclipse achieves instantaneous spatial folding. Slices through dreadnought armor and energy barriers with micro-molecular precision.',
+      desc: 'Condensing all internal gravimetric pressure into zero air resistance, Kei achieves instantaneous spatial folding. Slices through dreadnought armor and energy barriers with micro-molecular precision.',
       views: {
         action: {
           src: './assets/mode-event-horizon-action.jpg',
@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
           subtag: 'MID-COMBAT IAIDO CUT // COMPRESSED 99.8%'
         },
         aerial: {
-          src: './assets/mode-event-horizon-aerial.jpg',
-          label: 'AERIAL DESCENT',
-          tag: 'SKYFALL STRIKE',
-          subtag: 'VERTICAL ANOMALY SHEAR // VIOLET ARC'
+          src: './assets/mode-event-horizon-stand.jpg',
+          label: 'GROUND ZERO',
+          tag: 'PROTOTYPE VIGIL STANCE',
+          subtag: 'PLANTED OBSIDIAN MONOFILAMENT // 100% ANCHOR'
         },
         focus: {
           src: './assets/mode-event-horizon-focus.jpg',
@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
           subtag: 'AFTERIMAGE SONIC BOOM // 0.94c SLIPSTREAM'
         },
         stance: {
-          src: './assets/mode-event-horizon.jpg',
-          label: 'CANON ARCHIVE',
-          tag: 'ARCHIVE COMBAT STANCE',
-          subtag: 'HIGH-COLLAR MASK & WHITE X-HARNESS CANON'
+          src: './assets/mode-event-horizon-guardian.jpg',
+          label: 'URBAN SENTINEL',
+          tag: 'ROOFTOP PATROL',
+          subtag: 'NEO-SHINJUKU VIGIL // NIGHTFALL PATROL'
         }
       },
       stat1Val: '0.94c',
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'TRANSCENDENT',
       titleBadge: 'PLANETARY SAVIOR',
       telemetry: 'SYSTEM: TRANSCENDENT // ORBIT: EXOSPHERE // THREAT: EXTINCTION',
-      desc: 'Awakened only when the Earth faces cosmic annihilation. Floating in the upper exosphere, Eclipse becomes a living dimensional anchor, slicing open or stitching shut the fabric of space-time.',
+      desc: 'Awakened only when the Earth faces cosmic annihilation. Floating in the upper exosphere, Kei becomes a living dimensional anchor, slicing open or stitching shut the fabric of space-time.',
       views: {
         action: {
           src: './assets/mode-transcendent-action.jpg',
@@ -108,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
           label: 'CANON ARCHIVE',
           tag: 'ARCHIVE COSMIC FORM',
           subtag: 'WHITE CREST & NIHIL VERITAS VOID CANON'
+        },
+        maelstrom: {
+          src: './assets/mode-transcendent-maelstrom.jpg',
+          label: 'COSMIC MAELSTROM',
+          tag: 'STARFALL CONVERGENCE',
+          subtag: 'CELESTIAL VOID & DUAL RESONANCE'
         }
       },
       stat1Val: 'ORBITAL',
@@ -139,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroImageFrame = document.getElementById('hero-image-frame');
   const btnToggleFit = document.getElementById('btn-toggle-fit');
   const btnHeroLightbox = document.getElementById('btn-hero-lightbox');
+  const reticleTelemetryText = document.getElementById('reticle-telemetry-text');
 
   // Master Fullscreen Lightbox Controller
   const lightboxModal = document.getElementById('lightbox-modal');
@@ -149,13 +156,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxBackdrop = document.getElementById('lightbox-backdrop');
 
-  function openLightbox(src, tag = 'ECLIPSE // CANON ARCHIVE', subtag = 'HIGH-RESOLUTION MASTER') {
+  function openLightbox(src, tag = 'KEI // CANON ARCHIVE', subtag = 'HIGH-RESOLUTION MASTER') {
     if (!lightboxModal || !lightboxImg) return;
     sound.playZoomIn();
     lightboxImg.src = src;
     if (lightboxTag) lightboxTag.textContent = tag;
     if (lightboxSubtag) lightboxSubtag.textContent = subtag;
     if (lightboxCaption) lightboxCaption.textContent = `${tag} // ${subtag}`;
+
+    // Auto-detect Orientation for Optimal Lightbox Viewability
+    const lightboxContent = lightboxModal.querySelector('.lightbox-content');
+    const probe = new Image();
+    function applyOrientation() {
+      if (lightboxContent) {
+        const isLandscape = probe.naturalWidth > probe.naturalHeight;
+        lightboxContent.classList.toggle('is-landscape', isLandscape);
+        lightboxContent.classList.toggle('is-portrait', !isLandscape);
+      }
+    }
+    probe.onload = applyOrientation;
+    probe.src = src;
+    if (probe.complete && probe.naturalWidth > 0) {
+      applyOrientation();
+    }
+
     lightboxModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -182,6 +206,43 @@ document.addEventListener('DOMContentLoaded', () => {
       const d = modeData[currentMode];
       const v = d.views[currentView] || d.views.action;
       openLightbox(v.src, v.tag, v.subtag);
+    });
+
+    // 3D Holographic Parallax Tilt & Dynamic HUD Reticle
+    let tiltRaf = null;
+
+    heroImageFrame.addEventListener('mousemove', (e) => {
+      const rect = heroImageFrame.getBoundingClientRect();
+      const rawX = e.clientX - rect.left;
+      const rawY = e.clientY - rect.top;
+      const percentX = Math.max(0, Math.min(1, rawX / rect.width));
+      const percentY = Math.max(0, Math.min(1, rawY / rect.height));
+      const normX = percentX - 0.5;
+      const normY = percentY - 0.5;
+
+      // Realistic 3D tilt angles (up to +/- 16 degrees)
+      const rotY = normX * 22;
+      const rotX = -normY * 22;
+
+      if (tiltRaf) cancelAnimationFrame(tiltRaf);
+      tiltRaf = requestAnimationFrame(() => {
+        heroImageFrame.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.025, 1.025, 1.025)`;
+        heroImageFrame.style.setProperty('--mx', `${(percentX * 100).toFixed(1)}%`);
+        heroImageFrame.style.setProperty('--my', `${(percentY * 100).toFixed(1)}%`);
+        heroImageFrame.style.setProperty('--raw-x', `${rawX.toFixed(1)}px`);
+        heroImageFrame.style.setProperty('--raw-y', `${rawY.toFixed(1)}px`);
+      });
+    });
+
+    heroImageFrame.addEventListener('mouseleave', () => {
+      if (tiltRaf) cancelAnimationFrame(tiltRaf);
+      heroImageFrame.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease';
+      heroImageFrame.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      heroImageFrame.style.setProperty('--mx', '50%');
+      heroImageFrame.style.setProperty('--my', '50%');
+      setTimeout(() => {
+        heroImageFrame.style.transition = '';
+      }, 650);
     });
   }
   if (btnHeroLightbox) {
@@ -232,6 +293,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (frameHeroTag) frameHeroTag.textContent = v.tag;
     if (frameHeroSubtag) frameHeroSubtag.textContent = v.subtag;
+
+    // Dynamic Orientation Adaptation for Hero Artwork Frame
+    const probe = new Image();
+    function adaptHeroFrame() {
+      const isLandscape = probe.naturalWidth > probe.naturalHeight;
+      if (heroImageFrame) {
+        heroImageFrame.classList.toggle('is-landscape', isLandscape);
+        heroImageFrame.classList.toggle('is-portrait', !isLandscape);
+      }
+      const heroContainer = heroImageFrame ? heroImageFrame.closest('.hero-visual-container') : null;
+      if (heroContainer) {
+        heroContainer.classList.toggle('is-landscape', isLandscape);
+        heroContainer.classList.toggle('is-portrait', !isLandscape);
+      }
+    }
+    probe.onload = adaptHeroFrame;
+    probe.src = v.src;
+    if (probe.complete && probe.naturalWidth > 0) {
+      adaptHeroFrame();
+    }
   }
 
   function renderViewPills() {
@@ -365,6 +446,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stat2Label) stat2Label.textContent = d.stat2Label;
     if (stat3Val) stat3Val.textContent = d.stat3Val;
     if (stat3Label) stat3Label.textContent = d.stat3Label;
+    if (reticleTelemetryText) {
+      reticleTelemetryText.textContent = modeKey === 'event-horizon' ? 'TGT: LOCK // 0.94c' : 'ORBIT: SUTURE // EXOSPHERE';
+    }
 
     renderViewPills();
     updateHeroView();
@@ -383,11 +467,28 @@ document.addEventListener('DOMContentLoaded', () => {
   updateHeroView();
 
   // 5. Dedicated Armory Specs & Blueprint Lightbox
-  // 5. Dedicated Armory Specs & Blueprint Lightbox
   const weaponData = {
     'odachi': {
       title: 'THE COMPRESSED ODACHI',
       mode: 'BOUND TO: EVENT HORIZON MODE',
+      views: {
+        blade: {
+          image: './assets/weapon-compressed-odachi.jpg',
+          tag: 'WEAPON SPECIFICATION SHEET',
+          mode: 'EVENT HORIZON ARSENAL',
+          title: 'THE COMPRESSED ODACHI // RELATIVISTIC SPATIAL BLADE',
+          desc: 'SLENDER OBSIDIAN SPATIAL BLADE // 160CM OVERALL',
+          compLabel: 'SCABBARD MATRIX'
+        },
+        component: {
+          image: './assets/weapon-scabbard-schematic.jpg',
+          tag: 'COMPONENT SPECIFICATION MATRIX',
+          mode: 'EVENT HORIZON CONTAINMENT',
+          title: 'THE SPATIAL SCABBARD // 25T MAGNETIC SHEATH',
+          desc: 'SUPERCONDUCTING VACUUM MATRIX & ACCELERATOR RAIL // 160CM SHEATH',
+          compLabel: 'SCABBARD MATRIX'
+        }
+      },
       image: './assets/weapon-compressed-odachi.jpg',
       frameTag: 'WEAPON SPECIFICATION SHEET',
       frameMode: 'EVENT HORIZON ARSENAL',
@@ -436,6 +537,24 @@ document.addEventListener('DOMContentLoaded', () => {
     'nihil': {
       title: 'NIHIL VERITAS (COSMIC SPACE BLADE)',
       mode: 'BOUND TO: TRANSCENDENT WORLD-SAVING MODE',
+      views: {
+        blade: {
+          image: './assets/weapon-nihil-veritas.jpg',
+          tag: 'PLANETARY RELIC BLUEPRINT',
+          mode: 'TRANSCENDENT ARSENAL',
+          title: 'NIHIL VERITAS // THE COSMIC SPACE BLADE',
+          desc: 'SOLIDIFIED EVENT HORIZON // 165CM EXTINCTION SCALE',
+          compLabel: 'CORE & EMITTER'
+        },
+        component: {
+          image: './assets/weapon-nihil-core-schematic.jpg',
+          tag: 'SINGULARITY EMITTER BLUEPRINT',
+          mode: 'TRANSCENDENT HARMONICS',
+          title: 'COSMIC SINGULARITY CORE & EMITTER // HARD-LIGHT MATRIX',
+          desc: 'DIMENSIONAL SUTURE RINGS & STELLAR CORONA DRIVER',
+          compLabel: 'CORE & EMITTER'
+        }
+      },
       image: './assets/weapon-nihil-veritas.jpg',
       frameTag: 'PLANETARY RELIC BLUEPRINT',
       frameMode: 'TRANSCENDENT ARSENAL',
@@ -495,6 +614,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const auxDiagnosticsContainer = document.getElementById('aux-diagnostics-container');
 
   let currentActiveWeapon = 'odachi';
+  let currentWeaponSubView = 'blade';
+  const bpSubPills = document.querySelectorAll('.bp-sub-pill');
+  const bpCompLabel = document.getElementById('bp-comp-label');
+
+  function updateWeaponStageView() {
+    const w = weaponData[currentActiveWeapon];
+    if (!w) return;
+    const view = (w.views && w.views[currentWeaponSubView]) ? w.views[currentWeaponSubView] : {
+      image: w.image,
+      tag: w.frameTag,
+      mode: w.frameMode,
+      title: w.frameTitle,
+      desc: w.frameDesc,
+      compLabel: 'COMPONENT MATRIX'
+    };
+
+    if (armoryImg) armoryImg.src = view.image;
+    if (armoryTag) armoryTag.textContent = view.tag;
+    if (armoryMode) armoryMode.textContent = view.mode;
+    if (armoryTitle) armoryTitle.textContent = view.title;
+    if (armoryDesc) armoryDesc.textContent = view.desc;
+    if (bpCompLabel && w.views && w.views.component) {
+      bpCompLabel.textContent = w.views.component.compLabel;
+    }
+
+    bpSubPills.forEach(pill => {
+      pill.classList.toggle('active', pill.dataset.subview === currentWeaponSubView);
+    });
+  }
+
+  bpSubPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      sound.playHudChirp();
+      currentWeaponSubView = pill.dataset.subview;
+      updateWeaponStageView();
+    });
+  });
 
   function renderWeapon(key, playSound = true) {
     currentActiveWeapon = key;
@@ -509,11 +665,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const w = weaponData[key];
     if (weaponTitle) weaponTitle.textContent = w.title;
     if (weaponModeTag) weaponModeTag.textContent = w.mode;
-    if (armoryImg) armoryImg.src = w.image;
-    if (armoryTag) armoryTag.textContent = w.frameTag;
-    if (armoryMode) armoryMode.textContent = w.frameMode;
-    if (armoryTitle) armoryTitle.textContent = w.frameTitle;
-    if (armoryDesc) armoryDesc.textContent = w.frameDesc;
+
+    // Refresh stage with current active subview
+    updateWeaponStageView();
 
     // Update Tactical Slash Sidebar & Firing Deck
     if (slashHeadingText) slashHeadingText.textContent = w.slashPromptTitle;
@@ -660,7 +814,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function openBlueprintModal() {
     if (armoryImg) {
       const w = weaponData[currentActiveWeapon];
-      openLightbox(armoryImg.src, w.frameTitle, w.frameDesc);
+      const view = (w.views && w.views[currentWeaponSubView]) ? w.views[currentWeaponSubView] : {
+        title: w.frameTitle,
+        desc: w.frameDesc
+      };
+      openLightbox(armoryImg.src, view.title, view.desc);
     }
   }
 
@@ -747,20 +905,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 9. Lightbox Gallery Functionality for Vault Items
+  // 9. Lightbox Gallery Functionality for Vault Items & Armory Blueprint Cards
   document.querySelectorAll('.vault-item').forEach((item) => {
     item.addEventListener('click', () => {
       const img = item.querySelector('img');
       const caption = item.querySelector('.vault-caption');
+      const tag = item.dataset.tag || (caption ? caption.querySelector('div:first-child')?.textContent.trim() : 'CLASSIFIED HOLO ARCHIVE');
+      const subtag = item.dataset.subtag || (caption ? caption.querySelector('div:last-child')?.textContent.trim() : 'CANON ARTWORK ARCHIVE');
       if (img) {
         openLightbox(
           img.src,
-          caption ? caption.textContent.trim() : 'CLASSIFIED HOLO ARCHIVE',
-          'CANON ARTWORK ARCHIVE'
+          tag || 'CLASSIFIED HOLO ARCHIVE',
+          subtag || 'CANON ARTWORK ARCHIVE'
         );
       }
     });
   });
+
+  // Origin Phase Media Fullscreen Lightbox
+  document.querySelectorAll('.origin-phase-media').forEach((media) => {
+    media.addEventListener('click', () => {
+      const img = media.querySelector('img');
+      const card = media.closest('.origin-phase-card');
+      const title = card ? card.querySelector('.origin-phase-title') : null;
+      const step = card ? card.querySelector('.origin-phase-step-badge') : null;
+      if (img) {
+        openLightbox(
+          img.src,
+          step ? step.textContent.trim() : 'ORIGIN ARCHIVE // KEI (京)',
+          title ? title.textContent.trim() : 'THE TRIPLE CONFLUENCE'
+        );
+      }
+    });
+  });
+
+  // Vault Category Filtering (Supports both Curated Sections and Items)
+  const vaultFilterBtns = document.querySelectorAll('.vault-filter-btn');
+  const vaultSections = document.querySelectorAll('.vault-section');
+  if (vaultFilterBtns.length > 0) {
+    vaultFilterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        sound.playNavClick();
+        vaultFilterBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+
+        if (vaultSections.length > 0) {
+          vaultSections.forEach((sec) => {
+            if (filter === 'all' || sec.dataset.section === filter) {
+              sec.style.display = '';
+            } else {
+              sec.style.display = 'none';
+            }
+          });
+        }
+
+        document.querySelectorAll('.vault-item').forEach((item) => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+      btn.addEventListener('mouseenter', () => sound.playNavHover());
+    });
+  }
 
   // 10. Initialize Eclipse In-Character Holographic Comms Chatbot
   chat.init();

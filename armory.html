@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEI (京) // WEAPONS - Arsenal & Blueprint Lab</title>
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+</head>
+<body>
+  <!-- Dynamic Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Fullscreen Test Slash FX Layer -->
+  <div id="slash-overlay">
+    <div class="slash-blade-line"></div>
+  </div>
+
+  <!-- Fullscreen Mode Transformation FX Layer -->
+  <div id="mode-fx-overlay"></div>
+
+  <!-- Main Content Layer -->
+  <div class="content-layer">
+    <!-- Top HUD Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="./index.html" class="logo-tag">
+          <span class="logo-badge">RIFT-ANCHOR</span>
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
+        </a>
+
+        <nav class="main-nav">
+          <a href="./index.html">// COMMAND</a>
+          <a href="./modes.html">// THE 2 MODES</a>
+          <a href="./armory.html" class="active">// WEAPONS</a>
+          <a href="./origin.html">// ORIGIN</a>
+          <a href="./simulator.html">// RIFT SIMULATOR</a>
+          <a href="./vault.html">// VAULT</a>
+          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">// TALK TO KEI</a>
+        </nav>
+
+        <div class="nav-controls">
+          <!-- Master Mode Switch (REDMAGIC Style) -->
+          <div class="mode-switch-wrapper cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              <span class="pulse-dot"></span>
+              MODE I
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              <span class="pulse-dot"></span>
+              MODE II
+            </button>
+          </div>
+
+          <!-- SFX Audio Toggle -->
+          <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
+            <span id="sfx-label">SFX: ON</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Subpage Main Content -->
+    <main class="subpage-container">
+      <!-- Sector Header -->
+      <div class="subpage-header">
+        <div class="subpage-breadcrumb">
+          <a href="./index.html">COMMAND</a>
+          <span>//</span>
+          <span>SECTOR 02: ARSENAL &amp; BLUEPRINT LAB</span>
+        </div>
+        <h1 class="subpage-title">
+          WEAPON <span class="glow-primary">SPECIFICATIONS</span>
+        </h1>
+        <p class="subpage-desc">
+          High-precision spatial blueprints and kinetic combat matrices. Inspect the two master weapons forged to channel Kei's gravimetric and hard-light reality-warping soul.
+        </p>
+      </div>
+
+      <!-- Top Weapon Switcher Tabs -->
+      <div style="max-width: 900px; margin: 0 auto 2.5rem; display: flex; gap: 1rem;">
+        <button class="weapon-tab-btn active cyber-cut" data-weapon="odachi">
+          01. COMPRESSED ODACHI (MODE I)
+        </button>
+        <button class="weapon-tab-btn cyber-cut" data-weapon="nihil">
+          02. NIHIL VERITAS (MODE II)
+        </button>
+      </div>
+
+      <!-- Integrated Side-by-Side Weapon Showcase Deck -->
+      <div class="weapon-showcase-stage" id="weapon-showcase-stage">
+        <!-- Left: High-Tech Widescreen Blueprint Stage -->
+        <div class="weapon-blueprint-stage cyber-cut">
+          <div class="stage-hud-top">
+            <div class="stage-hud-left">
+              <span id="armory-frame-tag">WEAPON DOSSIER // CLASSIFIED</span>
+              <span id="armory-frame-mode" style="color: var(--theme-primary); font-weight: 700;">EVENT HORIZON ARSENAL</span>
+            </div>
+            <div class="bp-stage-tools">
+              <div class="bp-sub-pills" id="bp-sub-pills">
+                <button class="bp-sub-pill active cyber-cut" id="btn-sub-blade" data-subview="blade" title="View Full Weapon Blueprint">
+                  <span class="bp-pill-dot">●</span> BLADE SCHEMATIC
+                </button>
+                <button class="bp-sub-pill cyber-cut" id="btn-sub-comp" data-subview="component" title="View Weapon Component/Core Blueprint">
+                  <span class="bp-pill-dot">●</span> <span id="bp-comp-label">SCABBARD MATRIX</span>
+                </button>
+              </div>
+              <button class="btn-icon cyber-cut" id="btn-expand-blueprint" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">
+                ⛶ CLICK TO ZOOM
+              </button>
+            </div>
+          </div>
+
+          <!-- Blueprint Image Viewport -->
+          <div class="blueprint-img-wrapper" id="blueprint-clickable-viewport" title="Click to view full resolution">
+            <img id="armory-weapon-img" src="./assets/weapon-compressed-odachi.jpg" alt="Weapon Blueprint" />
+          </div>
+
+          <div class="stage-hud-bottom">
+            <div>
+              <span style="font-weight: 700; color: #fff; font-size: 1.05rem;" id="armory-frame-title">THE COMPRESSED ODACHI</span>
+              <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 0.75rem;" id="armory-frame-desc">SLENDER OBSIDIAN SPATIAL BLADE</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #a0ff90;">
+              ● SPECIFICATION SHEET VERIFIED
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Dedicated Tactical Cleave & Slash Simulator Console -->
+        <div class="tactical-slash-sidebar cyber-card cyber-cut">
+          <div class="slash-sidebar-hud-top">
+            <div class="slash-status-line">
+              <span class="slash-pulse-pip"></span>
+              <span class="slash-status-badge" id="slash-status-badge">TACTICAL COMBAT CALIBRATION // ARMED</span>
+            </div>
+            <span class="slash-sys-id" id="slash-sys-id">TACTICAL CLEAVE MATRIX</span>
+          </div>
+
+          <div class="slash-sidebar-content">
+            <div class="slash-title-line" id="slash-heading-text">SIMULATE SPATIAL KINETIC CLEAVE</div>
+            <div class="slash-sub-line" id="slash-sub-text">Deploy relativistic molecular cut at 0.94c with vacuum wake and ringing folded steel overtone</div>
+
+            <!-- Primary Test Slash Action Trigger -->
+            <button id="btn-test-slash" class="btn-slash-primary cyber-cut btn-slash-side">
+              <span class="btn-slash-icon">⚡</span>
+              <span class="btn-slash-text">ENGAGE TEST SLASH</span>
+            </button>
+
+            <!-- Quick Calibration Telemetry Stack -->
+            <div class="slash-telemetry-stack">
+              <div class="slash-telemetry-row">
+                <span class="t-label">COMBAT HARMONICS</span>
+                <span class="t-val highlight" id="telemetry-harmonics">942.8 THz // SYNCHRONIZED</span>
+              </div>
+              <div class="slash-telemetry-row">
+                <span class="t-label">VELOCITY PROFILE</span>
+                <span class="t-val" id="telemetry-velocity">0.94c // RELATIVISTIC</span>
+              </div>
+              <div class="slash-telemetry-row">
+                <span class="t-label">SEVERANCE RATING</span>
+                <span class="t-val highlight" id="telemetry-cleave">0.1nm SUB-ATOMIC CUT</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="slash-sidebar-hud-bottom">
+            <span class="slash-ready-dot">● SIMULATOR ARMED</span>
+            <span class="slash-trigger-hint">[ AUDIO &amp; PARTICLES SYNCED ]</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Telemetry & Component Architecture Grid -->
+      <div class="weapon-data-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1240px; margin: 3rem auto 0;">
+        <!-- Left: Structural Component Breakdown -->
+        <div class="weapon-schematic-card cyber-cut">
+          <div class="card-tech-header">
+            <span class="tech-header-tag">// STRUCTURAL COMPONENT BREAKDOWN</span>
+            <span class="tech-header-meta">SUB-MOLECULAR ARCHITECTURE</span>
+          </div>
+          
+          <!-- Interactive Anatomy Pipeline Track -->
+          <div class="component-pipeline" id="component-pipeline"></div>
+
+          <!-- Component Specification Cards -->
+          <div class="component-cards-list" id="component-cards-list"></div>
+        </div>
+
+        <!-- Right: Performance Metrics & Diagnostics -->
+        <div class="weapon-schematic-card cyber-cut">
+          <div class="card-tech-header">
+            <span class="tech-header-tag">// COMBAT TELEMETRY &amp; PERFORMANCE METRICS</span>
+            <span class="tech-header-meta">QUANTUM HARMONICS</span>
+          </div>
+
+          <div id="weapon-metrics-container">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <!-- Auxiliary Diagnostic Matrix -->
+          <div class="aux-diagnostics-container" id="aux-diagnostics-container">
+          </div>
+        </div>
+      </div>
+
+      <!-- Dedicated Complete Weapon Blueprint Archive -->
+      <section class="armory-schematics-section">
+        <div class="section-header-row">
+          <div>
+            <div class="tech-tag" style="color: var(--theme-primary); font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.15em; margin-bottom: 0.35rem;">
+              // ARCHIVAL CLASSIFIED SCHEMATICS
+            </div>
+            <h2 style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: #fff; margin: 0; letter-spacing: 0.05em;">
+              COMPLETE WEAPON <span class="glow-primary">BLUEPRINT ARCHIVE</span>
+            </h2>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-align: right;">
+            <span>FOUR MASTER SPECIFICATIONS</span> &bull; <span style="color: #a0ff90;">4K LIGHTBOX EXPANDABLE</span>
+          </div>
+        </div>
+
+        <!-- 2x2 Blueprint Matrix Grid -->
+        <div class="vault-grid" style="margin-top: 1.5rem;">
+          <!-- Blueprint 01: The Compressed Odachi (Full Blade) -->
+          <div class="vault-item is-landscape cyber-cut armory-bp-card" data-src="./assets/weapon-compressed-odachi.jpg" data-tag="WPN-01 // BLADE SPECIFICATION" data-subtag="THE COMPRESSED ODACHI - 160CM OBSIDIAN SPATIAL MONOFILAMENT">
+            <span class="vault-ratio-pill">16:9 SCHEMATIC</span>
+            <img src="./assets/weapon-compressed-odachi.jpg" alt="Compressed Odachi Blade Schematic" loading="lazy" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-primary);">MODE I // BLADE SCHEMATIC</div>
+              <div>THE COMPRESSED ODACHI // 160CM MONOFILAMENT</div>
+            </div>
+          </div>
+
+          <!-- Blueprint 02: Spatial Scabbard & Sheath Matrix -->
+          <div class="vault-item is-landscape cyber-cut armory-bp-card" data-src="./assets/weapon-scabbard-schematic.jpg" data-tag="WPN-01-EXT // SCABBARD MATRIX" data-subtag="SPATIAL SCABBARD & 25-TESLA MAGNETIC SHEATH ASSEMBLY">
+            <span class="vault-ratio-pill">16:9 COMPONENT</span>
+            <img src="./assets/weapon-scabbard-schematic.jpg" alt="Spatial Scabbard & Sheath Blueprint" loading="lazy" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-primary);">MODE I COMPONENT // SCHEMATIC</div>
+              <div>SPATIAL SCABBARD &amp; 25T MAGNETIC SHEATH</div>
+            </div>
+          </div>
+
+          <!-- Blueprint 03: Nihil Veritas (Full Blade) -->
+          <div class="vault-item is-landscape cyber-cut armory-bp-card" data-src="./assets/weapon-nihil-veritas.jpg" data-tag="WPN-02 // EXTINCTION BLADE SPECIFICATION" data-subtag="NIHIL VERITAS - 165CM SOLIDIFIED EVENT HORIZON GREATSWORD">
+            <span class="vault-ratio-pill">16:9 SCHEMATIC</span>
+            <img src="./assets/weapon-nihil-veritas.jpg" alt="Nihil Veritas Space Greatsword Blueprint" loading="lazy" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-secondary);">MODE II // BLADE SCHEMATIC</div>
+              <div>NIHIL VERITAS // SOLIDIFIED EVENT HORIZON</div>
+            </div>
+          </div>
+
+          <!-- Blueprint 04: Singularity Core & Hard-Light Emitter -->
+          <div class="vault-item is-landscape cyber-cut armory-bp-card" data-src="./assets/weapon-nihil-core-schematic.jpg" data-tag="WPN-02-EXT // CORE MATRIX" data-subtag="COSMIC SINGULARITY CORE & HARD-LIGHT CORONAL EMITTER">
+            <span class="vault-ratio-pill">16:9 COMPONENT</span>
+            <img src="./assets/weapon-nihil-core-schematic.jpg" alt="Nihil Veritas Singularity Core Blueprint" loading="lazy" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-secondary);">MODE II COMPONENT // SCHEMATIC</div>
+              <div>COSMIC SINGULARITY CORE &amp; EMITTER MATRIX</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sector Navigation Footer -->
+      <div class="sector-navigator">
+        <a href="./modes.html" class="sector-nav-link cyber-cut">
+          <span class="sector-nav-sub">&larr; PREVIOUS SECTOR</span>
+          <span class="sector-nav-title">THE 2 MODES</span>
+        </a>
+        <a href="./origin.html" class="sector-nav-link cyber-cut" style="text-align: right;">
+          <span class="sector-nav-sub">NEXT SECTOR &rarr;</span>
+          <span class="sector-nav-title">CLASSIFIED ORIGIN</span>
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 0.3rem;">
+            KEI (京) // THE DUAL SOVEREIGN
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em;">
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
+          </div>
+        </div>
+
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-align: right;">
+          <div>DESIGN ARCHITECTURE: ROG STRIX &amp; REDMAGIC INSPIRED</div>
+          <div style="color: var(--theme-primary); margin-top: 0.25rem;">STATUS: REALITY ANCHOR STABLE [100%]</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- High-Resolution Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Visual Archive Lightbox">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content cyber-cut">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-dot"></span>
+          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // KEI</span>
+        </div>
+        <span class="lightbox-subtag" id="lightbox-subtag">HIGH RESOLUTION CANON MASTER</span>
+      </div>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Fullscreen Visual Preview" />
+      </div>
+      <div class="lightbox-footer-bar">
+        <span class="lightbox-caption" id="lightbox-caption">KEI CANON SPEC</span>
+        <span class="lightbox-hint">&#9003; ESC OR CLICK OUTSIDE TO CLOSE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holographic Comms Floating Trigger Button -->
+  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Talk directly with Kaelen Mercer (Kei)" title="Talk to Kaelen // Direct Hero Link">
+    <div class="fab-radar-ring"></div>
+    <div class="fab-glow-backdrop"></div>
+    <div class="fab-core">
+      <div class="fab-icon-box">
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.25-4 9.5-9 9.95V20a1 1 0 0 1-1-1v-2a1 1 0 0 0-1-1h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9a3 3 0 0 0-3 3v.5"></path>
+          <circle cx="12" cy="12" r="2"></circle>
+          <path d="M4.93 19.07A10 10 0 0 1 2 12"></path>
+        </svg>
+        <span class="fab-pulse-pip"></span>
+      </div>
+      <div class="fab-text">
+        <span class="fab-label">TALK TO HERO</span>
+        <span class="fab-sub">DIRECT LINK &bull; 0.94c ONLINE</span>
+      </div>
+    </div>
+    <span class="fab-unread-badge" id="comms-unread-badge" style="display:none;">!</span>
+  </button>
+
+  <!-- Holographic Comms Terminal Drawer -->
+  <div id="holo-comm-drawer" class="holo-comm-drawer cyber-cut" role="dialog" aria-modal="true" aria-label="Kaelen Mercer Direct Comms Channel">
+    <div class="drawer-holo-scanlines" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-left" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-right" aria-hidden="true"></div>
+
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="drawer-avatar cyber-cut">
+          <img src="./assets/mode-event-horizon-focus.jpg" alt="Kaelen Mercer / Kei" id="drawer-header-avatar-img" />
+          <span class="avatar-live-beacon"></span>
+          <div class="avatar-radar-sweep" aria-hidden="true"></div>
+        </div>
+        <div class="drawer-title-wrap">
+          <div class="drawer-title-row">
+            <span class="drawer-title">KAELEN MERCER</span>
+            <span class="drawer-hero-badge">KEI [京]</span>
+          </div>
+          <div class="drawer-sub" id="comms-mode-pill">
+            <span class="status-pulse-dot"></span> DIRECT HERO COMMS &bull; MODE 01
+          </div>
+        </div>
+        <div class="voice-freq-visualizer" title="Orbital Transmission Signal" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="drawer-header-actions">
+        <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          <span>RESET</span>
+        </button>
+        <button id="comms-close-btn" class="drawer-action-btn drawer-close-x" title="Minimize Comms Terminal" aria-label="Close Comms">&times;</button>
+      </div>
+    </div>
+
+    <div class="comms-telemetry-bar">
+      <div class="telemetry-item">
+        <span class="telemetry-label">HERO:</span>
+        <span class="telemetry-value">KAELEN MERCER [ONLINE]</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">DESCENT:</span>
+        <span class="telemetry-value">0.94c READY</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">CHANNEL:</span>
+        <span class="telemetry-value highlight">DIRECT 1-ON-1 HERO LINK</span>
+      </div>
+    </div>
+
+    <div class="comms-messages-wrap" id="comms-messages-wrap"></div>
+
+    <div class="comms-typing-indicator" id="comms-typing-indicator" style="display: none;">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-label">Kaelen is replying...</span>
+    </div>
+
+    <div class="comms-quick-replies" id="comms-quick-replies"></div>
+
+    <div class="comms-input-bar">
+      <textarea id="comms-input" class="comms-textarea" rows="1" placeholder="Talk directly with Kaelen..."></textarea>
+      <button id="comms-send-btn" class="comms-send-btn cyber-cut" aria-label="Send Message to Kaelen">
+        <span>SEND</span>
+        <span class="send-arrow">&rarr;</span>
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

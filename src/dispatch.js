@@ -60,11 +60,11 @@ export async function sendIncidentEmail(citizen, activeMode) {
         Accept: 'application/json'
       },
       body: JSON.stringify({
-        _subject: `[ECLIPSE ALERT] Priority Incident #${citizen.incidentId} — ${citizen.location}`,
+        _subject: `[KEI (京) ALERT] Priority Incident #${citizen.incidentId} — ${citizen.location}`,
         _template: 'table',
         _captcha: 'false',
         _replyto: citizenEmail,
-        _autoresponse: `Greetings ${citizen.name},\n\nYour emergency distress beacon (Incident #${citizen.incidentId}) has been successfully received and locked onto Dr. Kaelen Mercer's (ECLIPSE) visor HUD.\n\nTELEMETRY SPECIFICATIONS:\n- Incident ID: ${citizen.incidentId}\n- Sector Coordinates: ${citizen.location}\n- Status: PRIORITY ALPHA // HERO EN ROUTE AT 0.94c\n- Inbound ETA: ~4.5 Seconds\n- Tactical Mode Deployed: ${modeLabel}\n\nSURVIVAL DIRECTIVE:\n1. Seek reinforced subterranean or interior cover immediately.\n2. Stay low and clear of exterior windows and spatial distortions.\n3. Keep your communications receiver active.\n\n— Dr. Kaelen Mercer // ECLIPSE Exosphere Planetary Defense Grid`,
+        _autoresponse: `Greetings ${citizen.name},\n\nYour emergency distress beacon (Incident #${citizen.incidentId}) has been successfully received and locked onto Dr. Kaelen Mercer's (KEI // 京) visor HUD.\n\nTELEMETRY SPECIFICATIONS:\n- Incident ID: ${citizen.incidentId}\n- Sector Coordinates: ${citizen.location}\n- Status: PRIORITY ALPHA // HERO EN ROUTE AT 0.94c\n- Inbound ETA: ~4.5 Seconds\n- Tactical Mode Deployed: ${modeLabel}\n\nSURVIVAL DIRECTIVE:\n1. Seek reinforced subterranean or interior cover immediately.\n2. Stay low and clear of exterior windows and spatial distortions.\n3. Keep your communications receiver active.\n\n— Dr. Kaelen Mercer // KEI (京) Exosphere Planetary Defense Grid`,
         email: citizenEmail,
         'Incident ID': citizen.incidentId,
         'Citizen Name': citizen.name,
@@ -82,10 +82,10 @@ export async function sendIncidentEmail(citizen, activeMode) {
       deliveryReport.developerDelivery.success = true;
       deliveryReport.developerDelivery.method = 'FORMSUBMIT_DEVELOPER_INBOX';
       deliveryReport.success = true;
-      console.log('[ECLIPSE DISPATCH] Headquarters developer alert transmitted via FormSubmit');
+      console.log('[KEI DISPATCH] Headquarters developer alert transmitted via FormSubmit');
     }
   } catch (fsDevErr) {
-    console.warn('[ECLIPSE DISPATCH] FormSubmit developer gateway warning:', fsDevErr);
+    console.warn('[KEI DISPATCH] FormSubmit developer gateway warning:', fsDevErr);
   }
 
   // Secondary Developer Gateway: Web3Forms
@@ -100,8 +100,8 @@ export async function sendIncidentEmail(citizen, activeMode) {
         },
         body: JSON.stringify({
           access_key: web3formsKey,
-          subject: `[ECLIPSE ALERT] Priority Incident #${citizen.incidentId} — ${citizen.location}`,
-          from_name: `ECLIPSE Tactical Dispatch (${citizen.name})`,
+          subject: `[KEI (京) ALERT] Priority Incident #${citizen.incidentId} — ${citizen.location}`,
+          from_name: `KEI (京) Tactical Dispatch (${citizen.name})`,
           name: citizen.name,
           email: citizenEmail,
           message: `CITIZEN IDENTITY:\n- Name: ${citizen.name} (Age: ${citizen.age})\n- Location/Sector: ${citizen.location}\n- Contact Email: ${citizenEmail}\n- Operational Mode: ${modeLabel}\n\nSUBMITTED CITIZEN GRIEVANCE:\n"${citizen.grievance}"\n\nDISPATCH TELEMETRY:\n- Incident ID: ${citizen.incidentId}\n- Logged At: ${citizen.timestamp}\n- Radar Slipstream: 0.94c Atmospheric Entry Lock`
@@ -131,7 +131,7 @@ export async function sendIncidentEmail(citizen, activeMode) {
           Accept: 'application/json'
         },
         body: JSON.stringify({
-          _subject: `[ECLIPSE DISPATCH RECEIPT] Incident #${citizen.incidentId} Confirmed — Stand By`,
+          _subject: `[KEI (京) DISPATCH RECEIPT] Incident #${citizen.incidentId} Confirmed — Stand By`,
           _template: 'table',
           _captcha: 'false',
           _replyto: developerEmail,
@@ -152,10 +152,10 @@ export async function sendIncidentEmail(citizen, activeMode) {
       if (fsCitizenResponse.ok) {
         deliveryReport.citizenDelivery.success = true;
         deliveryReport.citizenDelivery.method = 'FORMSUBMIT_CITIZEN_RECEIPT';
-        console.log(`[ECLIPSE DISPATCH] Confirmation receipt dispatched to citizen: ${citizenEmail}`);
+        console.log(`[KEI DISPATCH] Confirmation receipt dispatched to citizen: ${citizenEmail}`);
       }
     } catch (fsCitizenErr) {
-      console.warn('[ECLIPSE DISPATCH] Citizen confirmation dispatch warning:', fsCitizenErr);
+      console.warn('[KEI DISPATCH] Citizen confirmation dispatch warning:', fsCitizenErr);
     }
   }
 

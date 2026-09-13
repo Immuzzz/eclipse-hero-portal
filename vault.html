@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEI (京) // VAULT - Official 4K Canon Visual Archive</title>
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+</head>
+<body>
+  <!-- Dynamic Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Fullscreen Test Slash FX Layer -->
+  <div id="slash-overlay">
+    <div class="slash-blade-line"></div>
+  </div>
+
+  <!-- Fullscreen Mode Transformation FX Layer -->
+  <div id="mode-fx-overlay"></div>
+
+  <!-- Main Content Layer -->
+  <div class="content-layer">
+    <!-- Top HUD Navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="./index.html" class="logo-tag">
+          <span class="logo-badge">RIFT-ANCHOR</span>
+          KEI <span style="font-size:0.8rem; color:var(--theme-primary); font-family:sans-serif; margin-left:2px;">京</span>
+        </a>
+
+        <nav class="main-nav">
+          <a href="./index.html">// COMMAND</a>
+          <a href="./modes.html">// THE 2 MODES</a>
+          <a href="./armory.html">// WEAPONS</a>
+          <a href="./origin.html">// ORIGIN</a>
+          <a href="./simulator.html">// RIFT SIMULATOR</a>
+          <a href="./vault.html" class="active">// VAULT</a>
+          <a href="#comms" id="nav-comms-link" class="nav-comms-highlight">// TALK TO KEI</a>
+        </nav>
+
+        <div class="nav-controls">
+          <!-- Master Mode Switch (REDMAGIC Style) -->
+          <div class="mode-switch-wrapper cyber-cut">
+            <button class="mode-btn active" data-mode="event-horizon">
+              <span class="pulse-dot"></span>
+              MODE I
+            </button>
+            <button class="mode-btn" data-mode="transcendent">
+              <span class="pulse-dot"></span>
+              MODE II
+            </button>
+          </div>
+
+          <!-- SFX Audio Toggle -->
+          <button class="btn-icon cyber-cut" id="btn-sfx-toggle" title="Toggle Sound FX">
+            <span id="sfx-label">SFX: ON</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Subpage Main Content -->
+    <main class="subpage-container">
+      <!-- Sector Header -->
+      <div class="subpage-header">
+        <div class="subpage-breadcrumb">
+          <a href="./index.html">COMMAND</a>
+          <span>//</span>
+          <span>SECTOR 05: OFFICIAL VISUAL ARCHIVE</span>
+        </div>
+        <h1 class="subpage-title">
+          CANON VISUAL <span class="glow-primary">VAULT</span>
+        </h1>
+        <p class="subpage-desc">
+          Official high-resolution master gallery for Kei (京). Inspect all canon illustrations, combat action records, and classified technical blueprints in uncropped 4K Ultra-HD.
+        </p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="vault-filter-bar">
+        <button class="vault-filter-btn active cyber-cut" data-filter="all">
+          // ALL ARCHIVES (18)
+        </button>
+        <button class="vault-filter-btn cyber-cut" data-filter="origin">
+          // ORIGIN DOSSIER (4)
+        </button>
+        <button class="vault-filter-btn cyber-cut" data-filter="mode1">
+          // MODE 01: EVENT HORIZON (5)
+        </button>
+        <button class="vault-filter-btn cyber-cut" data-filter="mode2">
+          // MODE 02: TRANSCENDENT (5)
+        </button>
+        <button class="vault-filter-btn cyber-cut" data-filter="weapons">
+          // WEAPON BLUEPRINTS (4)
+        </button>
+      </div>
+
+      <!-- SECTOR 01: ORIGIN DOSSIER (4 PHASES) -->
+      <section class="vault-section" data-section="origin">
+        <div class="vault-section-header">
+          <div class="vault-section-tag" style="color: #a0ff90;">
+            <span class="pulse-dot" style="background: #a0ff90;"></span>
+            <span>SECTOR 01 // ORIGIN DOSSIER (4 PHASES)</span>
+          </div>
+          <h2 class="vault-section-title">THE TRIPLE CONFLUENCE</h2>
+          <p class="vault-section-desc">
+            Chronological records of Kei's cosmic convergence — from his human baseline to the synthesis of the Solar Bastion and Abyssal Maw into the Dual Sovereign.
+          </p>
+        </div>
+
+        <div class="vault-grid">
+          <!-- Origin Phase 01 -->
+          <div class="vault-item is-landscape cyber-cut" data-category="origin">
+            <span class="vault-ratio-pill">16:9 DOSSIER</span>
+            <img src="./assets/origin-human-core.jpg" alt="Origin Phase 01: The Human Core" />
+            <div class="vault-caption">
+              <div style="color: #a0ff90;">ORIGIN 01 // GROUNDING</div>
+              <div>THE HUMAN CORE // NEO-SHINJUKU</div>
+            </div>
+          </div>
+
+          <!-- Origin Phase 02 -->
+          <div class="vault-item is-landscape cyber-cut" data-category="origin">
+            <span class="vault-ratio-pill">16:9 DOSSIER</span>
+            <img src="./assets/origin-solar-bastion.jpg" alt="Origin Phase 02: The Solar Bastion" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">ORIGIN 02 // ORDER &amp; LIGHT</div>
+              <div>THE SOLAR ARCHITECTS // HARD-LIGHT BASTION</div>
+            </div>
+          </div>
+
+          <!-- Origin Phase 03 -->
+          <div class="vault-item is-landscape cyber-cut" data-category="origin">
+            <span class="vault-ratio-pill">16:9 DOSSIER</span>
+            <img src="./assets/origin-abyssal-maw.jpg" alt="Origin Phase 03: The Abyssal Maw" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">ORIGIN 03 // PRIMORDIAL ENTROPY</div>
+              <div>THE ABYSSAL MAW // VOID SINGULARITY</div>
+            </div>
+          </div>
+
+          <!-- Origin Phase 04 -->
+          <div class="vault-item is-landscape cyber-cut" data-category="origin">
+            <span class="vault-ratio-pill">16:9 DOSSIER</span>
+            <img src="./assets/origin-dual-emergence.jpg" alt="Origin Phase 04: The Dual Sovereign Emergence" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-primary);">ORIGIN 04 // THE EMERGENCE</div>
+              <div>THE DUAL SOVEREIGN // KEI (京) AWAKENING</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTOR 02: MODE 01 EVENT HORIZON (5 RECORDS) -->
+      <section class="vault-section" data-section="mode1">
+        <div class="vault-section-header">
+          <div class="vault-section-tag" style="color: #ff5500;">
+            <span class="pulse-dot" style="background: #ff5500;"></span>
+            <span>SECTOR 02 // MODE 01: EVENT HORIZON (5 RECORDS)</span>
+          </div>
+          <h2 class="vault-section-title">TERRESTRIAL DEFENSE COMBAT ARCHIVES</h2>
+          <p class="vault-section-desc">
+            Surgical, high-velocity duelist operations at Mach 20+ to 0.94c slipstream velocity. Urban interceptions with zero collateral dispersion.
+          </p>
+        </div>
+
+        <div class="vault-grid">
+          <!-- Featured Panoramic Combat Cut -->
+          <div class="vault-item is-landscape cyber-cut vault-featured-card" data-category="mode1">
+            <span class="vault-ratio-pill">16:9 4K CINEMATIC</span>
+            <img src="./assets/mode-event-horizon-blitz.jpg" alt="Event Horizon Velocity Blitz" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">FEATURED CINEMATIC // KINETIC ACCELERATION</div>
+              <div>HYPER-VELOCITY BLITZ // AFTERIMAGE SONIC BOOM (0.94c)</div>
+            </div>
+          </div>
+
+          <!-- Mode 01: Action Iaido -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode1">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-event-horizon-action.jpg" alt="Event Horizon Action Iaido" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">MODE 01 // TACTICAL DUEL</div>
+              <div>ACTION IAIDO CUT // 0.94c SLIPSTREAM</div>
+            </div>
+          </div>
+
+          <!-- Mode 01: Ground Zero Vigil -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode1">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-event-horizon-stand.jpg" alt="Event Horizon Ground Zero Stand" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">MODE 01 // GROUND ZERO</div>
+              <div>PROTOTYPE VIGIL // ZERO-POINT STANCE</div>
+            </div>
+          </div>
+
+          <!-- Mode 01: Focus Draw -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode1">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-event-horizon-focus.jpg" alt="Event Horizon Duelist Focus" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">MODE 01 // RELATIVISTIC FOCUS</div>
+              <div>SPATIAL VORTEX DRAW // AMBER SIGHT</div>
+            </div>
+          </div>
+
+          <!-- Mode 01: Rooftop Sentinel -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode1">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-event-horizon-guardian.jpg" alt="Event Horizon Rooftop Sentinel" />
+            <div class="vault-caption">
+              <div style="color: #ff5500;">MODE 01 // URBAN SENTINEL</div>
+              <div>NEO-SHINJUKU VIGIL // NIGHTFALL PATROL</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTOR 03: MODE 02 TRANSCENDENT (5 RECORDS) -->
+      <section class="vault-section" data-section="mode2">
+        <div class="vault-section-header">
+          <div class="vault-section-tag" style="color: #ffd000;">
+            <span class="pulse-dot" style="background: #ffd000;"></span>
+            <span>SECTOR 03 // MODE 02: TRANSCENDENT (5 RECORDS)</span>
+          </div>
+          <h2 class="vault-section-title">PLANETARY EXTINCTION &amp; ORBITAL SUTURE</h2>
+          <p class="vault-section-desc">
+            Cosmic stabilization in the upper exosphere. Starlight sutures repairing planetary tectonic fault lines and dimensional anomalies.
+          </p>
+        </div>
+
+        <div class="vault-grid">
+          <!-- Featured Panoramic Reality Suture -->
+          <div class="vault-item is-landscape cyber-cut vault-featured-card" data-category="mode2">
+            <span class="vault-ratio-pill">16:9 4K CINEMATIC</span>
+            <img src="./assets/mode-transcendent-stitch.jpg" alt="Transcendent Planetary Suture" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">FEATURED CINEMATIC // ORBITAL REALITY SUTURE</div>
+              <div>STARLIGHT THREADS SUTURE CONTINENTAL RIFT</div>
+            </div>
+          </div>
+
+          <!-- Mode 02: Savior Ascension -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode2">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-transcendent-action.jpg" alt="Transcendent Savior Ascension" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">MODE 02 // EXISTENTIAL SAVIOR</div>
+              <div>PLANETARY SAVIOR ASCENSION // EXOSPHERE</div>
+            </div>
+          </div>
+
+          <!-- Mode 02: Genesis Cleave -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode2">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-transcendent-cleave.jpg" alt="Transcendent Genesis Cleave" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">MODE 02 // DIMENSIONAL CLEAVE</div>
+              <div>GENESIS CLEAVE // CONTINENTAL FAULT SUTURE</div>
+            </div>
+          </div>
+
+          <!-- Mode 02: Cosmic Maelstrom -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode2">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-transcendent-maelstrom.jpg" alt="Transcendent Cosmic Maelstrom" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">MODE 02 // COSMIC MAELSTROM</div>
+              <div>STARFALL &amp; VOID MAELSTROM // CONVERGENCE</div>
+            </div>
+          </div>
+
+          <!-- Mode 02: Canon Cosmic Form -->
+          <div class="vault-item is-portrait cyber-cut" data-category="mode2">
+            <span class="vault-ratio-pill">3:4 CANON</span>
+            <img src="./assets/mode-transcendent.jpg" alt="Transcendent Canon Cosmic Stance" />
+            <div class="vault-caption">
+              <div style="color: #ffd000;">MODE 02 // CANON REFERENCE</div>
+              <div>WHITE CREST &amp; NIHIL VERITAS VOID CANON</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTOR 04: CLASSIFIED WEAPON SCHEMATICS (4 BLUEPRINTS) -->
+      <section class="vault-section" data-section="weapons">
+        <div class="vault-section-header">
+          <div class="vault-section-tag" style="color: #00e5ff;">
+            <span class="pulse-dot" style="background: #00e5ff;"></span>
+            <span>SECTOR 04 // CLASSIFIED WEAPON SCHEMATICS (4 BLUEPRINTS)</span>
+          </div>
+          <h2 class="vault-section-title">ENGINEERING BLUEPRINTS &amp; COMPONENT ARCHIVES</h2>
+          <p class="vault-section-desc">
+            Complete technical schematics for Kei's two bonded reality-cutting instruments: The Compressed Odachi and Nihil Veritas, alongside internal component engineering.
+          </p>
+        </div>
+
+        <div class="vault-grid">
+          <!-- Weapon 01: Compressed Odachi -->
+          <div class="vault-item is-landscape cyber-cut" data-category="weapons">
+            <span class="vault-ratio-pill">16:9 SCHEMATIC</span>
+            <img src="./assets/weapon-compressed-odachi.jpg" alt="The Compressed Odachi Blueprint" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-primary);">WEAPON 01 // SCHEMATIC</div>
+              <div>THE COMPRESSED ODACHI // 160CM MONOFILAMENT</div>
+            </div>
+          </div>
+
+          <!-- Weapon 01 Component: Spatial Scabbard & Sheath -->
+          <div class="vault-item is-landscape cyber-cut" data-category="weapons">
+            <span class="vault-ratio-pill">16:9 COMPONENT</span>
+            <img src="./assets/weapon-scabbard-schematic.jpg" alt="Spatial Scabbard & Sheath Blueprint" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-primary);">WEAPON 01 COMPONENT // SCHEMATIC</div>
+              <div>SPATIAL SCABBARD &amp; MAGNETIC SHEATH MATRIX</div>
+            </div>
+          </div>
+
+          <!-- Weapon 02: Nihil Veritas -->
+          <div class="vault-item is-landscape cyber-cut" data-category="weapons">
+            <span class="vault-ratio-pill">16:9 SCHEMATIC</span>
+            <img src="./assets/weapon-nihil-veritas.jpg" alt="Nihil Veritas Technical Blueprint" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-secondary);">WEAPON 02 // SCHEMATIC</div>
+              <div>NIHIL VERITAS // SOLIDIFIED EVENT HORIZON</div>
+            </div>
+          </div>
+
+          <!-- Weapon 02 Component: Cosmic Singularity Core -->
+          <div class="vault-item is-landscape cyber-cut" data-category="weapons">
+            <span class="vault-ratio-pill">16:9 COMPONENT</span>
+            <img src="./assets/weapon-nihil-core-schematic.jpg" alt="Nihil Veritas Singularity Core Blueprint" />
+            <div class="vault-caption">
+              <div style="color: var(--theme-secondary);">WEAPON 02 COMPONENT // SCHEMATIC</div>
+              <div>COSMIC SINGULARITY CORE &amp; EMITTER BLUEPRINT</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sector Navigation Footer -->
+      <div class="sector-navigator">
+        <a href="./simulator.html" class="sector-nav-link cyber-cut">
+          <span class="sector-nav-sub">&larr; PREVIOUS SECTOR</span>
+          <span class="sector-nav-title">RIFT SIMULATOR</span>
+        </a>
+        <a href="./index.html" class="sector-nav-link cyber-cut" style="text-align: right;">
+          <span class="sector-nav-sub">RETURN TO COMMAND &rarr;</span>
+          <span class="sector-nav-title">COMMAND CENTER (HOME)</span>
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 0.3rem;">
+            KEI (京) // THE DUAL SOVEREIGN
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em;">
+            THE 2 DEFINITIVE MODES &bull; EVENT HORIZON &amp; TRANSCENDENT
+          </div>
+        </div>
+
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-align: right;">
+          <div>DESIGN ARCHITECTURE: ROG STRIX &amp; REDMAGIC INSPIRED</div>
+          <div style="color: var(--theme-primary); margin-top: 0.25rem;">STATUS: REALITY ANCHOR STABLE [100%]</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- High-Resolution Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Visual Archive Lightbox">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content cyber-cut">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-header-bar">
+        <div class="lightbox-title-wrap">
+          <span class="lightbox-dot"></span>
+          <span class="lightbox-tag" id="lightbox-tag">CLASSIFIED HOLO ARCHIVE // KEI</span>
+        </div>
+        <span class="lightbox-subtag" id="lightbox-subtag">HIGH RESOLUTION CANON MASTER</span>
+      </div>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Fullscreen Visual Preview" />
+      </div>
+      <div class="lightbox-footer-bar">
+        <span class="lightbox-caption" id="lightbox-caption">KEI CANON SPEC</span>
+        <span class="lightbox-hint">&#9003; ESC OR CLICK OUTSIDE TO CLOSE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holographic Comms Floating Trigger Button -->
+  <button id="holo-comm-fab" class="holo-comm-fab cyber-cut" aria-label="Talk directly with Kaelen Mercer (Kei)" title="Talk to Kaelen // Direct Hero Link">
+    <div class="fab-radar-ring"></div>
+    <div class="fab-glow-backdrop"></div>
+    <div class="fab-core">
+      <div class="fab-icon-box">
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.25-4 9.5-9 9.95V20a1 1 0 0 1-1-1v-2a1 1 0 0 0-1-1h-1a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9a3 3 0 0 0-3 3v.5"></path>
+          <circle cx="12" cy="12" r="2"></circle>
+          <path d="M4.93 19.07A10 10 0 0 1 2 12"></path>
+        </svg>
+        <span class="fab-pulse-pip"></span>
+      </div>
+      <div class="fab-text">
+        <span class="fab-label">TALK TO HERO</span>
+        <span class="fab-sub">DIRECT LINK &bull; 0.94c ONLINE</span>
+      </div>
+    </div>
+    <span class="fab-unread-badge" id="comms-unread-badge" style="display:none;">!</span>
+  </button>
+
+  <!-- Holographic Comms Terminal Drawer -->
+  <div id="holo-comm-drawer" class="holo-comm-drawer cyber-cut" role="dialog" aria-modal="true" aria-label="Kaelen Mercer Direct Comms Channel">
+    <div class="drawer-holo-scanlines" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-left" aria-hidden="true"></div>
+    <div class="drawer-hud-corner top-right" aria-hidden="true"></div>
+
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="drawer-avatar cyber-cut">
+          <img src="./assets/mode-event-horizon-focus.jpg" alt="Kaelen Mercer / Kei" id="drawer-header-avatar-img" />
+          <span class="avatar-live-beacon"></span>
+          <div class="avatar-radar-sweep" aria-hidden="true"></div>
+        </div>
+        <div class="drawer-title-wrap">
+          <div class="drawer-title-row">
+            <span class="drawer-title">KAELEN MERCER</span>
+            <span class="drawer-hero-badge">KEI [京]</span>
+          </div>
+          <div class="drawer-sub" id="comms-mode-pill">
+            <span class="status-pulse-dot"></span> DIRECT HERO COMMS &bull; MODE 01
+          </div>
+        </div>
+        <div class="voice-freq-visualizer" title="Orbital Transmission Signal" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="drawer-header-actions">
+        <button id="comms-reset-btn" class="drawer-action-btn" title="Start New Conversation with Kaelen" aria-label="Reset Conversation">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          <span>RESET</span>
+        </button>
+        <button id="comms-close-btn" class="drawer-action-btn drawer-close-x" title="Minimize Comms Terminal" aria-label="Close Comms">&times;</button>
+      </div>
+    </div>
+
+    <div class="comms-telemetry-bar">
+      <div class="telemetry-item">
+        <span class="telemetry-label">HERO:</span>
+        <span class="telemetry-value">KAELEN MERCER [ONLINE]</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">DESCENT:</span>
+        <span class="telemetry-value">0.94c READY</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">CHANNEL:</span>
+        <span class="telemetry-value highlight">DIRECT 1-ON-1 HERO LINK</span>
+      </div>
+    </div>
+
+    <div class="comms-messages-wrap" id="comms-messages-wrap"></div>
+
+    <div class="comms-typing-indicator" id="comms-typing-indicator" style="display: none;">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-label">Kaelen is replying...</span>
+    </div>
+
+    <div class="comms-quick-replies" id="comms-quick-replies"></div>
+
+    <div class="comms-input-bar">
+      <textarea id="comms-input" class="comms-textarea" rows="1" placeholder="Talk directly with Kaelen..."></textarea>
+      <button id="comms-send-btn" class="comms-send-btn cyber-cut" aria-label="Send Message to Kaelen">
+        <span>SEND</span>
+        <span class="send-arrow">&rarr;</span>
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
