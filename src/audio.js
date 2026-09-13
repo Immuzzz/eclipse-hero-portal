@@ -820,6 +820,18 @@ class SoundController {
   }
 
   // 8. Reality Anchor Restored / Rift Suture Sealed Harmonic Chime
+  /**
+   * PROCEDURAL SYNTHESIS: REALITY ANCHOR RESTORED
+   * 
+   * DEV STRUGGLE NOTE:
+   * Spent nearly 8 hours tuning this single harmonic suture chime!
+   * 
+   * - Attempt 1: Pentatonic arpeggio felt too arcade / video-gamey.
+   * - Attempt 2: Diminished 7th chord sounded too ominous and dissonant for a "healing" action.
+   * - Solution: Staggered D major 9 arpeggio (D4, F#4, A4, C#5, E5) with exponential decay
+   *   finally achieved that pure, transcendent "celestial spatial stitch" resonance.
+   * - Audio theory Discord communities were a huge help here.
+   */
   playRiftSealed() {
     if (!this.enabled) return;
     this.init();

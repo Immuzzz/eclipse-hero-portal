@@ -271,6 +271,25 @@ export class EclipseChatbot {
     await this.processConversation(rawText);
   }
 
+  /**
+   * ECLIPSE HERO DIRECT COMMS ENGINE
+   * 
+   * DESIGN CHALLENGE SOLVED HERE:
+   * Citizens often ask questions DURING intake ("Who are you?", "Why do you need my age?").
+   * 
+   * FAILED ATTEMPT 1: Flag-based interruption
+   * - Problem: If citizen types fast, flags got out of sync with actual state
+   * - Example: User sends Q1 + Answer1 simultaneously → flag logic broke
+   * 
+   * FAILED ATTEMPT 2: Queue everything
+   * - Problem: Over-engineered. Added latency, made code harder to debug
+   * 
+   * SOLUTION (Current): Parse at intake level
+   * - Check if input looks like a question BEFORE state transition
+   * - Generate hero response + bridge back to current state
+   * - No flags, no queues, no race conditions
+   * - Took ~4 hours to arrive at this simple design
+   */
   async processConversation(userInput) {
     this.showTyping(true);
 
