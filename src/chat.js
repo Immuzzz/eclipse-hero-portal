@@ -380,7 +380,17 @@ export class EclipseChatbot {
       // 2. Normal State Progression
       switch (this.state) {
         case STATES.GREETING_NAME: {
-          this.citizen.name = this.extractName(userInput);
+          const extracted = this.extractName(userInput);
+          if (!extracted) {
+            const heroReply = this.handleFreeChat(userInput);
+            const prompt = `My name is Kaelen Mercer—most people call me Kei (京) or Eclipse.\n\nNow talk to me—who am I speaking with down on the surface? What's your name?`;
+            this.addMessage('eclipse', heroReply ? `${heroReply}\n\nBy the way, who am I speaking with down on the surface? What's your name?` : prompt);
+            this.updateQuickReplies();
+            this.updatePlaceholder();
+            break;
+          }
+
+          this.citizen.name = extracted;
           this.state = STATES.AGE;
           const reply = `Good to meet you, ${this.citizen.name}. I've got your signal locked onto my visor.\n\nQuick question: how old are you? I ask so I know who I'm looking out for down there and what kind of evacuation or medical support to prep when I touch down.`;
           this.addMessage('eclipse', reply);
@@ -530,15 +540,40 @@ export class EclipseChatbot {
   }
 
   extractName(input) {
-    if (!input) return 'Citizen';
+    if (!input) return '';
     const cleaned = input.trim();
-    const match = cleaned.match(/(?:my name is|i am called|i am|i'm|call me|this is|it's|it is)\s+([A-Za-z0-9_\-\.\s]{1,30})/i);
-    if (match && match[1]) {
-      const extracted = match[1].trim().replace(/[!,;?]+$/, '');
-      if (extracted.length > 0) return extracted;
+    const q = cleaned.toLowerCase();
+
+    // Reject questions, greetings, and non-name conversational phrases
+    const invalidPhrases = [
+      'what is your name', 'what is ur name', 'whats your name', "what's your name",
+      'who are you', 'who is this', 'who are u', 'what is this', 'why', 'what', 'who', 'how',
+      'hello', 'hi', 'hey', 'yo', 'sup', 'none', 'unknown', 'skip', 'idk', "don't know",
+      'not saying', 'no', 'nope', 'nah'
+    ];
+    if (invalidPhrases.some((p) => q === p || q.startsWith(p + ' ') || q.startsWith(p + '?') || q.endsWith(' ' + p))) {
+      return '';
     }
-    const simple = cleaned.replace(/[!,;?]+$/, '').trim();
-    return simple.slice(0, 30) || 'Citizen';
+
+    const match = cleaned.match(/(?:my name is|i am called|i am|i'm|im|call me|this is|it's|it is)\s+([A-Za-z0-9_\-\.\s]{1,30})/i);
+    let candidate = '';
+    if (match && match[1]) {
+      candidate = match[1].trim().replace(/[!,;?]+$/, '');
+    } else {
+      candidate = cleaned.replace(/[!,;?]+$/, '').trim();
+    }
+
+    const candLower = candidate.toLowerCase();
+    if (invalidPhrases.some((p) => candLower === p || candLower.includes('what is') || candLower.includes('who are') || candLower.includes('your name') || candLower.includes('ur name'))) {
+      return '';
+    }
+
+    if (!candidate || candidate.length < 2 || candidate.length > 30) {
+      return '';
+    }
+
+    // Capitalize properly
+    return candidate.charAt(0).toUpperCase() + candidate.slice(1);
   }
 
   isQuestionOrInquiry(input, state) {
@@ -678,7 +713,33 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       return null;
     }
 
-    const name = this.citizen.name || 'friend';
+    // 0.5 Name Introduction or Correction in Chat (e.g. "I'm immu", "My name is Immu", "Call me Immu", or single-word name)
+    const nameMatch = q.match(/^(?:i'm|im|i am|my name is|call me|name is|it's|its)\s+([a-zA-Z0-9_\-\.]{2,25})/i);
+    const isSingleWordName = /^[a-zA-Z]{2,20}$/.test(q) && (!this.citizen.name || this.citizen.name === 'Citizen' || this.citizen.name.toLowerCase().includes('what is') || this.citizen.name.toLowerCase().includes('your name'));
+    
+    if (nameMatch || isSingleWordName) {
+      const rawExtracted = nameMatch ? nameMatch[1] : q;
+      const lowerCandidate = rawExtracted.toLowerCase();
+      const nonNames = ['hello', 'hi', 'hey', 'yes', 'yeah', 'no', 'okay', 'ok', 'sure', 'fine', 'cool', 'what', 'who', 'how', 'why', 'help', 'status', 'reset', 'clear', 'bye', 'mode', 'form', 'suit', 'gear', 'joke'];
+      if (!nonNames.includes(lowerCandidate)) {
+        const formatted = lowerCandidate.charAt(0).toUpperCase() + lowerCandidate.slice(1);
+        this.citizen.name = formatted;
+        this.saveSession();
+        return `Got it, ${formatted}! I've calibrated your callsign on my visor telemetry. It's an honor to stand guard over you down in ${this.citizen.location || 'your sector'}.\n\nHow are things holding up where you are? Keep me posted on any changes.`;
+      }
+    }
+
+    // 0.6 Direct Question: What is your name? / Who are you? / What's your name?
+    if (q.includes('what is your name') || q.includes('what is ur name') || q.includes('whats your name') || q.includes("what's your name") || q.includes('your name') || q.includes('ur name') || q.includes('who are you') || q.includes('who are u') || q.includes('what do i call you') || q.includes('what should i call you') || q.includes('who is this')) {
+      const citizenGreeting = (this.citizen.name && this.citizen.name !== 'Citizen' && !this.citizen.name.toLowerCase().includes('what is') && !this.citizen.name.toLowerCase().includes('your name'))
+        ? `And you're ${this.citizen.name}, locked safely onto my orbital radar.`
+        : `What about you? What's your name down on the surface?`;
+      return `My name is **Kaelen Mercer**—tactical callsign **Kei** (京), also known across the grid as **Eclipse**.\n\nI'm transmitting to you right now from high orbit (~420 km altitude). Earth is my home, and I took an oath at Ground Zero to stand between innocent people and dimensional collapse.\n\n${citizenGreeting}`;
+    }
+
+    const name = (this.citizen.name && this.citizen.name !== 'Citizen' && !this.citizen.name.toLowerCase().includes('what is') && !this.citizen.name.toLowerCase().includes('your name'))
+      ? this.citizen.name
+      : 'friend';
     const loc = this.citizen.location || 'your sector';
     const isTranscendent = this.currentMode === 'transcendent';
 
@@ -811,8 +872,16 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       return `Hey ${name}! Reading your signal loud and clear over the orbital link. Telemetry on ${loc} is active.\n\nHow are things holding up where you are? Let me know if you see any anomalies, or ask me whatever you need to know while I monitor the grid.`;
     }
 
-    // 19. Contextual Smart Fallback (No canned AI error!)
-    return `I hear you loud and clear, ${name}. Reading your signal cleanly from ${loc}.\n\nTell me more about what you're seeing down there, ask me about my drop vector, gear, or tactics, or just talk to me to keep steady while I monitor your sector. I'm right here.`;
+    // 19. Contextual Smart Hero Responses (Varied & Natural)
+    const displayName = (name && name !== 'Citizen' && !name.toLowerCase().includes('what is') && !name.toLowerCase().includes('your name')) ? name : 'friend';
+    const heroFallbacks = [
+      `Reading your signal loud and clear over the orbital link, ${displayName}.\n\nTelemetry on ${loc} is steady. Keep me updated on what you're seeing around you, or ask me about my drop vector, armor, or tactics while I maintain overwatch. I'm right here with you.`,
+      `Copy that, ${displayName}. My radar array is holding lock on your position in ${loc}.\n\nIf the situation shifts or you hear anomalies spiking, ping me immediately. Otherwise, feel free to ask me anything to keep your focus steady.`,
+      `I'm tracking with you, ${displayName}. Orbital telemetry is scanning clean across ${loc}.\n\nTake a slow breath and keep under reinforced cover. What's your current visibility like down there?`,
+      `Signal received, ${displayName}. Channel is encrypted and active.\n\nI'm monitoring the atmospheric envelope right above your sector. Talk to me—how are you holding up?`
+    ];
+    this.fallbackIndex = ((this.fallbackIndex || 0) + 1) % heroFallbacks.length;
+    return heroFallbacks[this.fallbackIndex];
   }
 
   addMessage(sender, text) {
@@ -1221,6 +1290,14 @@ I'm right here with you. What does it look like around you right now? Or ask me 
             timestamp: null,
             status: 'AWAITING_INPUT'
           }, parsed.citizen || {});
+
+          // Auto-heal corrupted name from previous question input
+          if (this.citizen.name) {
+            const lower = this.citizen.name.toLowerCase();
+            if (lower.includes('what is') || lower.includes('ur name') || lower.includes('your name') || lower.includes('who are')) {
+              this.citizen.name = '';
+            }
+          }
         }
       }
     } catch (err) {
