@@ -83,6 +83,15 @@ export class EclipseChatbot {
       this.isOpen = true;
     }
 
+    // Always ensure fresh, interactive submission state on init
+    this.isTyping = false;
+    this.submissionInFlight = false;
+    this.showTyping(false);
+    if (this.sendBtn) {
+      this.sendBtn.disabled = false;
+      this.sendBtn.removeAttribute('aria-busy');
+    }
+
     this.bindEvents();
     this.loadSession();
 
@@ -171,7 +180,8 @@ export class EclipseChatbot {
 
     // Send on button click
     if (this.sendBtn) {
-      this.sendBtn.addEventListener('click', () => {
+      this.sendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         this.handleUserSubmit();
       });
     }
@@ -205,10 +215,12 @@ export class EclipseChatbot {
   }
 
   submitQueryText(text) {
-    if (this.isTyping) return;
+    if (this.isTyping || this.submissionInFlight) return;
     if (this.inputField) {
       this.inputField.value = text;
-      sound.playNavClick();
+      try {
+        sound.playNavClick();
+      } catch (_) {}
       this.handleUserSubmit();
     }
   }
@@ -229,7 +241,9 @@ export class EclipseChatbot {
     if (this.unreadBadge) {
       this.unreadBadge.style.display = 'none';
     }
-    sound.playCommsOpen();
+    try {
+      sound.playCommsOpen();
+    } catch (_) {}
     setTimeout(() => {
       if (this.inputField) {
         this.inputField.focus();
@@ -242,7 +256,9 @@ export class EclipseChatbot {
     this.isOpen = false;
     this.drawer.classList.remove('active');
     this.fab.classList.remove('drawer-open');
-    sound.playNavClick();
+    try {
+      sound.playNavClick();
+    } catch (_) {}
   }
 
   sendInitialGreeting() {
@@ -258,6 +274,7 @@ export class EclipseChatbot {
   }
 
   async handleUserSubmit() {
+    if (!this.inputField) return;
     const rawText = this.inputField.value.trim();
     if (!rawText || this.isTyping || this.submissionInFlight) return;
 
@@ -270,7 +287,9 @@ export class EclipseChatbot {
     try {
       // Clear input
       this.inputField.value = '';
-      sound.playCommsSend();
+      try {
+        sound.playCommsSend();
+      } catch (_) {}
 
       // Add user message
       this.addMessage('user', rawText);
@@ -278,11 +297,18 @@ export class EclipseChatbot {
 
       // Process intake or Q&A
       await this.processConversation(rawText);
+    } catch (err) {
+      console.error('[ECLIPSE COMMS] Submit error:', err);
+      this.showErrorBanner('Communication glitch detected. Please try again.');
     } finally {
       this.submissionInFlight = false;
+      this.showTyping(false);
       if (this.sendBtn) {
         this.sendBtn.disabled = false;
         this.sendBtn.removeAttribute('aria-busy');
+      }
+      if (this.inputField) {
+        this.inputField.focus();
       }
     }
   }
@@ -309,187 +335,187 @@ export class EclipseChatbot {
   async processConversation(userInput) {
     this.showTyping(true);
 
-    // Natural conversational pacing (550ms - 800ms)
-    await new Promise((res) => setTimeout(res, 620));
+    try {
+      // Natural conversational pacing (550ms - 800ms)
+      await new Promise((res) => setTimeout(res, 620));
 
-    const q = userInput.trim().toLowerCase();
+      const q = userInput.trim().toLowerCase();
 
-    // 1. Check for Mid-Intake Questions or Inquiries
-    if (this.state !== STATES.COMPLETE && this.state !== STATES.FREE_CHAT) {
-      // Check for Skip commands first for AGE or EMAIL
-      if (this.state === STATES.AGE && this.isSkipCommand(userInput)) {
-        this.citizen.age = 'Undisclosed';
-        this.state = STATES.LOCATION;
-        const reply = `No problem at all, ${this.citizen.name || 'friend'}—I'll calibrate my medical sensors for standard civilian baseline telemetry.\n\nNow, tell me where you are right now. Which city, district, street, or landmark are you at? Give me your exact spot so I can calculate my atmospheric entry vector and drop right to you.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        this.showTyping(false);
-        this.saveSession();
-        return;
-      }
-
-      if (this.state === STATES.EMAIL && this.isSkipCommand(userInput)) {
-        this.citizen.email = 'civilian-priority@sector-grid.local';
-        this.state = STATES.GRIEVANCE;
-        const reply = `Understood, ${this.citizen.name}—we won't waste time on email. I've routed your connection through an anonymous priority channel (\`civilian-priority@sector-grid.local\`) so our comms remain encrypted.\n\nNow tell me what's happening. What danger or crisis are you facing down in ${this.citizen.location}?\n\nWhether it's a cosmic anomaly, syndicate violence, trapped civilians, or anything threatening your safety—don't hold back. Tell me everything. I'm listening.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        this.showTyping(false);
-        this.saveSession();
-        return;
-      }
-
-      // Check if this is an in-between inquiry or question
-      if (this.isQuestionOrInquiry(userInput, this.state)) {
-        const heroReply = this.handleFreeChat(userInput);
-        const resumeBridge = this.getIntakeResumePrompt(this.state);
-        this.addMessage('eclipse', `${heroReply}\n\n${resumeBridge}`);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        this.showTyping(false);
-        this.saveSession();
-        return;
-      }
-    }
-
-    // 2. Normal State Progression
-    switch (this.state) {
-      case STATES.GREETING_NAME: {
-        this.citizen.name = this.extractName(userInput);
-        this.state = STATES.AGE;
-        const reply = `Good to meet you, ${this.citizen.name}. I've got your signal locked onto my visor.\n\nQuick question: how old are you? I ask so I know who I'm looking out for down there and what kind of evacuation or medical support to prep when I touch down.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        break;
-      }
-
-      case STATES.AGE: {
-        const parsedAge = parseInt(userInput.replace(/[^0-9]/g, ''), 10);
-        if (isNaN(parsedAge) || parsedAge < 3 || parsedAge > 125) {
-          const retry = `Comms crackled for a second, ${this.citizen.name}—could you send me your age in numbers (like 24 or 35), or just say 'skip'? I want to make sure my gear and response parameters are calibrated for you.`;
-          this.addMessage('eclipse', retry);
+      // 1. Check for Mid-Intake Questions or Inquiries
+      if (this.state !== STATES.COMPLETE && this.state !== STATES.FREE_CHAT) {
+        // Check for Skip commands first for AGE or EMAIL
+        if (this.state === STATES.AGE && this.isSkipCommand(userInput)) {
+          this.citizen.age = 'Undisclosed';
+          this.state = STATES.LOCATION;
+          const reply = `No problem at all, ${this.citizen.name || 'friend'}—I'll calibrate my medical sensors for standard civilian baseline telemetry.\n\nNow, tell me where you are right now. Which city, district, street, or landmark are you at? Give me your exact spot so I can calculate my atmospheric entry vector and drop right to you.`;
+          this.addMessage('eclipse', reply);
           this.updateQuickReplies();
-          break;
+          this.updatePlaceholder();
+          return;
         }
 
-        this.citizen.age = parsedAge;
-        this.state = STATES.LOCATION;
-        const reply = `Got it, ${this.citizen.name}—noted.\n\nNow, tell me where you are right now. Which city, district, street, or landmark are you at? Give me your exact spot so I can calculate my atmospheric entry vector and drop right to you.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        break;
-      }
-
-      case STATES.LOCATION: {
-        this.citizen.location = userInput;
-        this.state = STATES.EMAIL;
-        const reply = `Locking onto [${this.citizen.location}] now. My telemetry is scanning your grid.\n\nWhat's your email address? I'll send you an encrypted incident tracking link and local shelter coordinates right to your inbox, and make sure my backup team logs your contact in case our comms cut out.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        break;
-      }
-
-      case STATES.EMAIL: {
-        const emailRegex = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(userInput)) {
-          const retry = `Hey ${this.citizen.name}, that didn't look like a valid email. Could you double-check it for me (like name@example.com), or say 'skip' if you don't have one? I want to make sure my shelter updates and tracking packet reach you safely.`;
-          this.addMessage('eclipse', retry);
+        if (this.state === STATES.EMAIL && this.isSkipCommand(userInput)) {
+          this.citizen.email = 'civilian-priority@sector-grid.local';
+          this.state = STATES.GRIEVANCE;
+          const reply = `Understood, ${this.citizen.name || 'citizen'}—we won't waste time on email. I've routed your connection through an anonymous priority channel (\`civilian-priority@sector-grid.local\`) so our comms remain encrypted.\n\nNow tell me what's happening. What danger or crisis are you facing down in ${this.citizen.location || 'your sector'}?\n\nWhether it's a cosmic anomaly, syndicate violence, trapped civilians, or anything threatening your safety—don't hold back. Tell me everything. I'm listening.`;
+          this.addMessage('eclipse', reply);
           this.updateQuickReplies();
+          this.updatePlaceholder();
+          return;
+        }
+
+        // Check if this is an in-between inquiry or question
+        if (this.isQuestionOrInquiry(userInput, this.state)) {
+          const heroReply = this.handleFreeChat(userInput);
+          if (heroReply) {
+            const resumeBridge = this.getIntakeResumePrompt(this.state);
+            this.addMessage('eclipse', `${heroReply}\n\n${resumeBridge}`);
+            this.updateQuickReplies();
+            this.updatePlaceholder();
+          }
+          return;
+        }
+      }
+
+      // 2. Normal State Progression
+      switch (this.state) {
+        case STATES.GREETING_NAME: {
+          this.citizen.name = this.extractName(userInput);
+          this.state = STATES.AGE;
+          const reply = `Good to meet you, ${this.citizen.name}. I've got your signal locked onto my visor.\n\nQuick question: how old are you? I ask so I know who I'm looking out for down there and what kind of evacuation or medical support to prep when I touch down.`;
+          this.addMessage('eclipse', reply);
+          this.updateQuickReplies();
+          this.updatePlaceholder();
           break;
         }
 
-        this.citizen.email = userInput;
-        this.state = STATES.GRIEVANCE;
-        const reply = `Got your email saved, ${this.citizen.name}. You're registered in my active emergency queue.\n\nNow tell me what's happening. What danger or crisis are you facing down in ${this.citizen.location}?\n\nWhether it's a cosmic anomaly, syndicate violence, trapped civilians, or anything threatening your safety—don't hold back. Tell me everything. I'm listening.`;
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        break;
-      }
+        case STATES.AGE: {
+          const parsedAge = parseInt(userInput.replace(/[^0-9]/g, ''), 10);
+          if (isNaN(parsedAge) || parsedAge < 3 || parsedAge > 125) {
+            const retry = `Comms crackled for a second, ${this.citizen.name || 'friend'}—could you send me your age in numbers (like 24 or 35), or just say 'skip'? I want to make sure my gear and response parameters are calibrated for you.`;
+            this.addMessage('eclipse', retry);
+            this.updateQuickReplies();
+            break;
+          }
 
-      case STATES.GRIEVANCE: {
-        // Prevent accidental double-submit
-        if (this.lastSubmittedGrievance === userInput) {
-          this.addMessage('eclipse', `I already have this incident logged, ${this.citizen.name}. Hold tight while I route the deployment.`);
-          this.showTyping(false);
+          this.citizen.age = parsedAge;
+          this.state = STATES.LOCATION;
+          const reply = `Got it, ${this.citizen.name}—noted.\n\nNow, tell me where you are right now. Which city, district, street, or landmark are you at? Give me your exact spot so I can calculate my atmospheric entry vector and drop right to you.`;
+          this.addMessage('eclipse', reply);
+          this.updateQuickReplies();
+          this.updatePlaceholder();
           break;
         }
-        this.lastSubmittedGrievance = userInput;
 
-        this.citizen.grievance = userInput;
-        this.citizen.incidentId = `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
-        this.citizen.timestamp = new Date().toLocaleString('en-US', {
-          dateStyle: 'medium',
-          timeStyle: 'short'
-        });
-        this.citizen.status = 'DISPATCH_COMMITTED';
-        this.citizen.emailDispatch = 'TRANSMITTING';
-        this.state = STATES.COMPLETE;
+        case STATES.LOCATION: {
+          this.citizen.location = userInput;
+          this.state = STATES.EMAIL;
+          const reply = `Locking onto [${this.citizen.location}] now. My telemetry is scanning your grid.\n\nWhat's your email address? I'll send you an encrypted incident tracking link and local shelter coordinates right to your inbox, and make sure my backup team logs your contact in case our comms cut out.`;
+          this.addMessage('eclipse', reply);
+          this.updateQuickReplies();
+          this.updatePlaceholder();
+          break;
+        }
 
-        // Play Incident Locked Audio Chord
-        sound.playIncidentLocked();
-
-        // Render Incident Dossier Message
-        this.addIncidentDossier(this.citizen);
-
-        // Automatically dispatch incident email to developer AND citizen confirmation
-        const capturedCitizen = { ...this.citizen };
-        sendIncidentEmail(capturedCitizen, this.currentMode).then((result) => {
-          this.citizen.emailDispatch = result.success ? 'SENT' : 'LOCAL_LOG';
-          this.citizen.emailRecipient = result.recipient;
-          this.citizen.citizenConfirmed = result.citizenDelivery?.success === true;
-          const relayEl = document.getElementById(`email-relay-${capturedCitizen.incidentId}`);
-          if (relayEl) {
-            relayEl.className = `dossier-email-relay ${result.success ? 'delivered' : 'failed'} cyber-cut`;
-            relayEl.innerHTML = `
-              <div class="dossier-relay-row">
-                <span class="relay-check">${result.success ? '&#10003;' : '&#9888;'}</span>
-                <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(result.recipient || 'UNAVAILABLE')} [${result.success ? 'DELIVERED' : 'FAILED'}]</span>
-              </div>
-              <div class="dossier-relay-row">
-                <span class="relay-check">${result.citizenDelivery?.success ? '&#10003;' : '&#9888;'}</span>
-                <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(capturedCitizen.email || 'NOT PROVIDED')} [${result.citizenDelivery?.success ? 'DISPATCHED TO INBOX' : 'NOT SENT'}]</span>
-              </div>
-            `;
+        case STATES.EMAIL: {
+          const emailRegex = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          if (!emailRegex.test(userInput)) {
+            const retry = `Hey ${this.citizen.name || 'friend'}, that didn't look like a valid email. Could you double-check it for me (like name@example.com), or say 'skip' if you don't have one? I want to make sure my shelter updates and tracking packet reach you safely.`;
+            this.addMessage('eclipse', retry);
+            this.updateQuickReplies();
+            break;
           }
-          if (!result.success) {
-            this.showErrorBanner('Dispatch failed. Your incident is saved locally; please retry when communications recover.');
+
+          this.citizen.email = userInput;
+          this.state = STATES.GRIEVANCE;
+          const reply = `Got your email saved, ${this.citizen.name}. You're registered in my active emergency queue.\n\nNow tell me what's happening. What danger or crisis are you facing down in ${this.citizen.location}?\n\nWhether it's a cosmic anomaly, syndicate violence, trapped civilians, or anything threatening your safety—don't hold back. Tell me everything. I'm listening.`;
+          this.addMessage('eclipse', reply);
+          this.updateQuickReplies();
+          this.updatePlaceholder();
+          break;
+        }
+
+        case STATES.GRIEVANCE: {
+          // Prevent accidental double-submit
+          if (this.lastSubmittedGrievance === userInput) {
+            this.addMessage('eclipse', `I already have this incident logged, ${this.citizen.name || 'citizen'}. Hold tight while I route the deployment.`);
+            break;
           }
-          this.saveSession();
-        }).catch((error) => {
-          this.citizen.emailDispatch = 'FAILED';
-          this.showErrorBanner('Dispatch failed. Your incident is saved locally; please retry when communications recover.');
-          console.error('[ECLIPSE COMMS] Incident dispatch failed:', error);
-          this.saveSession();
-        });
+          this.lastSubmittedGrievance = userInput;
 
-        // Immediate Superhero Personal Reassurance
-        const reassurance = this.generateReassurance(this.citizen);
-        await new Promise((res) => setTimeout(res, 500));
-        this.addMessage('eclipse', reassurance);
+          this.citizen.grievance = userInput;
+          this.citizen.incidentId = `INC-KEI-${Math.floor(1000 + Math.random() * 9000)}`;
+          this.citizen.timestamp = new Date().toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          });
+          this.citizen.status = 'DISPATCH_COMMITTED';
+          this.citizen.emailDispatch = 'TRANSMITTING';
+          this.state = STATES.COMPLETE;
 
-        this.state = STATES.FREE_CHAT;
-        this.updateQuickReplies();
-        this.updatePlaceholder();
-        break;
+          // Play Incident Locked Audio Chord safely
+          try {
+            sound.playIncidentLocked();
+          } catch (_) {}
+
+          // Render Incident Dossier Message
+          this.addIncidentDossier(this.citizen);
+
+          // Automatically dispatch incident email to developer AND citizen confirmation
+          const capturedCitizen = { ...this.citizen };
+          sendIncidentEmail(capturedCitizen, this.currentMode).then((result) => {
+            this.citizen.emailDispatch = result.success ? 'SENT' : 'LOCAL_LOG';
+            this.citizen.emailRecipient = result.recipient;
+            this.citizen.citizenConfirmed = result.citizenDelivery?.success === true;
+            const relayEl = document.getElementById(`email-relay-${capturedCitizen.incidentId}`);
+            if (relayEl) {
+              relayEl.className = `dossier-email-relay ${result.success ? 'delivered' : 'failed'} cyber-cut`;
+              relayEl.innerHTML = `
+                <div class="dossier-relay-row">
+                  <span class="relay-check">${result.success ? '&#10003;' : '&#9888;'}</span>
+                  <span class="relay-text">HQ DISPATCH: ${this.escapeHtml(result.recipient || 'LOCAL LOG')} [${result.success ? 'DELIVERED' : 'COMMITTED'}]</span>
+                </div>
+                <div class="dossier-relay-row">
+                  <span class="relay-check">${result.citizenDelivery?.success ? '&#10003;' : '&#9888;'}</span>
+                  <span class="relay-text">CITIZEN RECEIPT: ${this.escapeHtml(capturedCitizen.email || 'LOCAL CACHE')} [${result.citizenDelivery?.success ? 'DISPATCHED TO INBOX' : 'STORED'}]</span>
+                </div>
+              `;
+            }
+            this.saveSession();
+          }).catch((error) => {
+            this.citizen.emailDispatch = 'LOCAL_LOG';
+            console.warn('[ECLIPSE COMMS] Incident dispatch fallback to local log:', error);
+            this.saveSession();
+          });
+
+          // Immediate Superhero Personal Reassurance
+          const reassurance = this.generateReassurance(this.citizen);
+          await new Promise((res) => setTimeout(res, 500));
+          this.addMessage('eclipse', reassurance);
+
+          this.state = STATES.FREE_CHAT;
+          this.updateQuickReplies();
+          this.updatePlaceholder();
+          break;
+        }
+
+        case STATES.COMPLETE:
+        case STATES.FREE_CHAT: {
+          const reply = this.handleFreeChat(userInput);
+          if (reply) {
+            this.addMessage('eclipse', reply);
+            this.updateQuickReplies();
+          }
+          break;
+        }
       }
-
-      case STATES.COMPLETE:
-      case STATES.FREE_CHAT: {
-        const reply = this.handleFreeChat(userInput);
-        this.addMessage('eclipse', reply);
-        this.updateQuickReplies();
-        break;
-      }
+    } catch (err) {
+      console.error('[ECLIPSE COMMS] Conversation processing error:', err);
+      this.addMessage('eclipse', "Comms telemetry encountered momentary interference, citizen. I've stabilized the channel. What's your status?");
+    } finally {
+      this.showTyping(false);
+      this.saveSession();
     }
-
-    this.showTyping(false);
-    this.saveSession();
   }
 
   isSkipCommand(input) {
@@ -519,16 +545,28 @@ export class EclipseChatbot {
     if (!input) return false;
     const q = input.trim().toLowerCase();
 
+    // In GRIEVANCE state, almost anything the user enters is their emergency report/grievance,
+    // even if it contains questions (e.g. "Help! Can you save us? There's an anomaly outside!").
+    // We only intercept explicit off-topic meta inquiries about hero lore or bot identity.
+    if (state === STATES.GRIEVANCE) {
+      const grievanceInquiryTerms = [
+        'what weapons do you fight with',
+        'what weapon',
+        'what blade',
+        'what sword',
+        'who are you',
+        'are you real',
+        'are you an ai',
+        'are you ai',
+        'is this an ai',
+        'is this a bot',
+        'who is this'
+      ];
+      return grievanceInquiryTerms.some((term) => q.includes(term));
+    }
+
     // 1. Explicit question mark
     if (input.includes('?')) {
-      // In GRIEVANCE, if citizen describes an uncertain crisis (e.g. "There's a strange creature outside?")
-      if (state === STATES.GRIEVANCE) {
-        const heroTerms = ['you', 'your', 'weapon', 'blade', 'sword', 'speed', 'fast', 'arrive', 'reach', 'who', 'how', 'when', 'real', 'ai', 'bot', 'can you', 'are you'];
-        const isAboutHero = heroTerms.some((k) => q.includes(k));
-        if (!isAboutHero && q.length > 25) {
-          return false; // Treat as crisis description
-        }
-      }
       return true;
     }
 
@@ -628,6 +666,18 @@ I'm right here with you. What does it look like around you right now? Or ask me 
 
   handleFreeChat(input) {
     const q = input.toLowerCase().trim();
+
+    // 0. Reset / New Emergency Report (Must take precedence before generic keywords like 'report' or 'status')
+    const isResetQuery = [
+      'new report', 'another incident', 'reset', 'start over', 'new emergency',
+      'clear', 'another emergency', 'report emergency', 'report another', 'fresh session'
+    ].some((t) => q.includes(t));
+
+    if (isResetQuery) {
+      this.resetSession();
+      return null;
+    }
+
     const name = this.citizen.name || 'friend';
     const loc = this.citizen.location || 'your sector';
     const isTranscendent = this.currentMode === 'transcendent';
@@ -746,11 +796,6 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       }
     }
 
-    // 16. Reset / New Report
-    if (q.includes('new report') || q.includes('another incident') || q.includes('reset') || q.includes('start over') || q.includes('new emergency') || q.includes('clear')) {
-      this.resetSession();
-      return `Distress channel reset. Opening a fresh emergency link. Who am I speaking with for this new dispatch? Tell me your name.`;
-    }
 
     // 17. Gratitude & Goodbyes
     if (q.includes('thank') || q.includes('appreciate') || q.includes('grateful')) {
@@ -783,7 +828,9 @@ I'm right here with you. What does it look like around you right now? Or ask me 
     this.scrollToBottom();
 
     if (sender === 'eclipse') {
-      sound.playCommsMessage();
+      try {
+        sound.playCommsMessage();
+      } catch (_) {}
       if (!this.isOpen) {
         this.hasUnread = true;
         if (this.unreadBadge) {
@@ -813,7 +860,18 @@ I'm right here with you. What does it look like around you right now? Or ask me 
     row.className = `comms-message-row comms-msg-${msg.sender}`;
 
     if (msg.type === 'dossier') {
-      const c = msg.citizen;
+      const rawC = msg.citizen || this.citizen || {};
+      const c = {
+        incidentId: rawC.incidentId || 'INC-KEI-ARCHIVED',
+        name: rawC.name || 'Citizen',
+        age: rawC.age != null ? rawC.age : 'Undisclosed',
+        location: rawC.location || 'Sector Grid',
+        email: rawC.email || 'civilian-priority@sector-grid.local',
+        timestamp: rawC.timestamp || msg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        grievance: rawC.grievance || 'Priority distress report logged.',
+        emailDispatch: rawC.emailDispatch || 'SENT',
+        emailRecipient: rawC.emailRecipient || 'shieldxshield7@gmail.com'
+      };
       row.innerHTML = `
         <div class="comms-dossier-card cyber-cut">
           <div class="dossier-card-header">
@@ -1093,7 +1151,9 @@ I'm right here with you. What does it look like around you right now? Or ask me 
       chip.className = 'comms-quick-chip cyber-cut';
       chip.textContent = text;
       chip.addEventListener('click', () => {
-        sound.playNavClick();
+        try {
+          sound.playNavClick();
+        } catch (_) {}
         this.inputField.value = text;
         this.handleUserSubmit();
       });
@@ -1110,7 +1170,7 @@ I'm right here with you. What does it look like around you right now? Or ask me 
   }
 
   escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -1151,7 +1211,16 @@ I'm right here with you. What does it look like around you right now? Or ask me 
         if (parsed.messages && Array.isArray(parsed.messages)) {
           this.messages = parsed.messages;
           this.state = parsed.state || STATES.GREETING_NAME;
-          this.citizen = parsed.citizen || this.citizen;
+          this.citizen = Object.assign({
+            name: '',
+            age: null,
+            location: '',
+            email: '',
+            grievance: '',
+            incidentId: null,
+            timestamp: null,
+            status: 'AWAITING_INPUT'
+          }, parsed.citizen || {});
         }
       }
     } catch (err) {
@@ -1178,7 +1247,9 @@ I'm right here with you. What does it look like around you right now? Or ask me 
     if (this.messagesContainer) {
       this.messagesContainer.innerHTML = '';
     }
-    sound.playToggleSound(false);
+    try {
+      sound.playToggleSound(false);
+    } catch (_) {}
     this.sendInitialGreeting();
   }
 }

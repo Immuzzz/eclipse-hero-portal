@@ -8,18 +8,25 @@ class SoundController {
   }
 
   init() {
-    if (!this.ctx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioContext();
-    }
-    // HACK: iOS Safari unconditionally starts AudioContext in 'suspended' state
-    // until a direct user touch/click gesture occurs. Checking and resuming here on first interaction.
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    try {
+      if (!this.ctx && typeof window !== 'undefined') {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          this.ctx = new AudioContext();
+        }
+      }
+      // HACK: iOS Safari unconditionally starts AudioContext in 'suspended' state
+      // until a direct user touch/click gesture occurs. Checking and resuming here on first interaction.
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+    } catch (err) {
+      console.warn('[ECLIPSE AUDIO] AudioContext initialization suppressed:', err);
     }
   }
 
   loadAudioAssets() {
+    if (typeof window === 'undefined') return;
     const assets = {
       'saiyan-mode1': './assets/audio/saiyan-mode1-burst.wav',
       'saiyan-mode2': './assets/audio/saiyan-mode2-transcendent.wav',
@@ -35,10 +42,13 @@ class SoundController {
         })
         .then((buf) => {
           this.init();
+          if (!this.ctx) return null;
           return this.ctx.decodeAudioData(buf);
         })
         .then((decoded) => {
-          this.audioBuffers[key] = decoded;
+          if (decoded) {
+            this.audioBuffers[key] = decoded;
+          }
         })
         .catch(() => {
           // Graceful fallback to procedural Dragon Ball synthesis
@@ -74,67 +84,76 @@ class SoundController {
   // 1. UI Subtle Nav Hover (Light tick)
   playNavHover() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1600, t);
-    osc.frequency.exponentialRampToValueAtTime(2400, t + 0.02);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1600, t);
+      osc.frequency.exponentialRampToValueAtTime(2400, t + 0.02);
 
-    gain.gain.setValueAtTime(0.02, t);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
+      gain.gain.setValueAtTime(0.02, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
 
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.02);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.02);
+    } catch (_) {}
   }
 
   // 2. UI Nav Click (Tactile mechanical key switch click)
   playNavClick() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
 
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(320, t);
-    osc.frequency.exponentialRampToValueAtTime(80, t + 0.035);
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, t);
+      osc.frequency.exponentialRampToValueAtTime(80, t + 0.035);
 
-    gain.gain.setValueAtTime(0.15, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
 
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.035);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.035);
+    } catch (_) {}
   }
 
   // 3. High-Tech HUD Telemetry Chirp (Apex/Cyberpunk telemetry blip)
   playHudChirp() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
 
-    [2200, 3300].forEach((freq, idx) => {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      const delay = idx * 0.025;
+      [2200, 3300].forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const delay = idx * 0.025;
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, t + delay);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + delay);
 
-      gain.gain.setValueAtTime(0.04, t + delay);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.03);
+        gain.gain.setValueAtTime(0.04, t + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.03);
 
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t + delay);
-      osc.stop(t + delay + 0.03);
-    });
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t + delay);
+        osc.stop(t + delay + 0.03);
+      });
+    } catch (_) {}
   }
 
   // 4. Mode I: EVENT HORIZON Activation (Dragon Ball Goku Super Saiyan 2 / Kaio-Ken Ki Flare)
@@ -662,128 +681,151 @@ class SoundController {
 
   // 11. Audio System Power On / Off Feedback
   playToggleSound(isOn) {
-    this.init();
-    const t = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
 
-    osc.type = 'sine';
-    if (isOn) {
-      osc.frequency.setValueAtTime(440, t);
-      osc.frequency.exponentialRampToValueAtTime(880, t + 0.12);
-    } else {
-      osc.frequency.setValueAtTime(880, t);
-      osc.frequency.exponentialRampToValueAtTime(220, t + 0.12);
-    }
+      osc.type = 'sine';
+      if (isOn) {
+        osc.frequency.setValueAtTime(440, t);
+        osc.frequency.exponentialRampToValueAtTime(880, t + 0.12);
+      } else {
+        osc.frequency.setValueAtTime(880, t);
+        osc.frequency.exponentialRampToValueAtTime(220, t + 0.12);
+      }
 
-    gain.gain.setValueAtTime(0.12, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
 
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.15);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.15);
+    } catch (_) {}
   }
 
   // 12. Holographic Comms Audio Suite
   playCommsOpen() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
-    
-    // Rising aperture harmonic (480Hz -> 960Hz)
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(480, t);
-    osc.frequency.exponentialRampToValueAtTime(960, t + 0.18);
-    gain.gain.setValueAtTime(0.09, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.22);
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      
+      // Rising aperture harmonic (480Hz -> 960Hz)
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(480, t);
+      osc.frequency.exponentialRampToValueAtTime(960, t + 0.18);
+      gain.gain.setValueAtTime(0.09, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.22);
 
-    // Subtle atmospheric hiss release
-    const bufSize = Math.floor(this.ctx.sampleRate * 0.12);
-    const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
-    const noise = this.ctx.createBufferSource();
-    noise.buffer = buf;
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(3200, t);
-    const nGain = this.ctx.createGain();
-    nGain.gain.setValueAtTime(0.04, t);
-    nGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-    noise.connect(filter);
-    filter.connect(nGain);
-    nGain.connect(this.ctx.destination);
-    noise.start(t);
-    noise.stop(t + 0.12);
+      // Subtle atmospheric hiss release
+      const bufSize = Math.floor(this.ctx.sampleRate * 0.12);
+      const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buf;
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(3200, t);
+      const nGain = this.ctx.createGain();
+      nGain.gain.setValueAtTime(0.04, t);
+      nGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      noise.connect(filter);
+      filter.connect(nGain);
+      nGain.connect(this.ctx.destination);
+      noise.start(t);
+      noise.stop(t + 0.12);
+    } catch (err) {
+      console.warn('[ECLIPSE AUDIO] playCommsOpen suppressed:', err);
+    }
   }
 
   playCommsMessage() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
 
-    // Incoming telemetry double-chirp
-    [1046, 1318].forEach((freq, idx) => {
-      const start = t + idx * 0.055;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, start);
-      gain.gain.setValueAtTime(0.08, start);
-      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.08);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(start);
-      osc.stop(start + 0.08);
-    });
+      // Incoming telemetry double-chirp
+      [1046, 1318].forEach((freq, idx) => {
+        const start = t + idx * 0.055;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.08, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.08);
+      });
+    } catch (err) {
+      console.warn('[ECLIPSE AUDIO] playCommsMessage suppressed:', err);
+    }
   }
 
   playCommsSend() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
 
-    // Outgoing packet blip
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(740, t);
-    osc.frequency.exponentialRampToValueAtTime(1180, t + 0.07);
-    gain.gain.setValueAtTime(0.09, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.09);
+      // Outgoing packet blip
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(740, t);
+      osc.frequency.exponentialRampToValueAtTime(1180, t + 0.07);
+      gain.gain.setValueAtTime(0.09, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.09);
+    } catch (err) {
+      console.warn('[ECLIPSE AUDIO] playCommsSend suppressed:', err);
+    }
   }
 
   playIncidentLocked() {
     if (!this.enabled) return;
-    this.init();
-    const t = this.ctx.currentTime;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
 
-    // Resonant locking chord (F#3, A#3, C#4, F#4)
-    const freqs = [185.00, 233.08, 277.18, 369.99];
-    freqs.forEach((freq, idx) => {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = idx === 0 ? 'sawtooth' : 'sine';
-      osc.frequency.setValueAtTime(freq, t);
-      const startGain = idx === 0 ? 0.12 : 0.06;
-      gain.gain.setValueAtTime(startGain, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.7);
-    });
+      // Resonant locking chord (F#3, A#3, C#4, F#4)
+      const freqs = [185.00, 233.08, 277.18, 369.99];
+      freqs.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = idx === 0 ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        const startGain = idx === 0 ? 0.12 : 0.06;
+        gain.gain.setValueAtTime(startGain, t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.7);
+      });
+    } catch (err) {
+      console.warn('[ECLIPSE AUDIO] playIncidentLocked suppressed:', err);
+    }
   }
 
   // 7. Tactical Rift Anomaly Detected Klaxon
